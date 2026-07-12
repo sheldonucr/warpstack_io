@@ -188,6 +188,22 @@
   .chip{font-family:var(--mono); font-size:12px; color:var(--cyan); border:1px solid var(--border-strong); border-radius:100px; padding:6px 12px; background:rgba(34,211,238,.06)}
   .note{color:var(--muted-2); font-size:12.5px; margin-top:16px; line-height:1.65}
 
+  /* agentic flow */
+  .flowpts{list-style:none; padding:0; margin:6px 0 0; display:flex; flex-direction:column; gap:15px}
+  .flowpts li{position:relative; padding-left:26px; color:var(--muted); font-size:14.5px; line-height:1.6}
+  .flowpts li::before{content:"→"; position:absolute; left:0; top:0; color:var(--cyan); font-family:var(--mono)}
+  .flowpts li b{color:var(--text)}
+  .floloop{border:1px solid var(--border); border-radius:var(--radius); padding:20px; background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(10,16,32,.6))}
+  .floloop-head{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted-2); display:flex; align-items:center; gap:9px; margin-bottom:14px}
+  .loopdot{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); flex:none}
+  .flonode{border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:14px 16px; background:rgba(14,22,40,.7)}
+  .flonode .ft{font-family:var(--mono); font-size:13px; color:var(--cyan)}
+  .flonode.engine{border-color:rgba(251,146,60,.32)}
+  .flonode.engine .ft{color:#ff7a52}
+  .flonode .fd{color:var(--muted); font-size:13px; margin-top:5px; line-height:1.55}
+  .floarrow{display:flex; align-items:center; gap:9px; padding:9px 0 9px 4px; color:var(--muted-2); font-size:12.5px; font-family:var(--mono)}
+  .floarrow .ax{color:var(--cyan); font-size:16px; line-height:1}
+
   /* results */
   .res-group{margin-bottom:36px}
   .res-label{font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:14px; margin:0 0 18px}
@@ -305,6 +321,7 @@
     <nav class="nav-links" id="navlinks">
       <a href="#why">Why warpage</a>
       <a href="#features">Features</a>
+      <a href="#agentic">Agentic flow</a>
       <a href="#technology">How it works</a>
       <a href="#results">Results</a>
       <a href="#contact">Contact</a>
@@ -558,6 +575,56 @@
   </div>
 </section>
 
+<!-- ============ AGENTIC FLOW ============ -->
+<section id="agentic">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Workflow · agentic integration</div>
+      <h2>Built for agentic EDA flows</h2>
+      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call fast 2D or detailed 3D warpage analysis, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="reveal">
+        <ul class="flowpts">
+          <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
+          <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
+          <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed 3D−2D difference maps out, ready for closed-loop automation.</li>
+          <li><b>Warpage-aware optimization</b> — agents sweep floorplans, stack-ups, materials, and thermal conditions, then use WarpStack results to steer the next candidate toward lower bow.</li>
+          <li><b>Reliability sign-off</b> — fast 2D screens the whole design space; detailed 3D signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
+        </ul>
+        <div class="chips" style="margin-top:24px">
+          <span class="chip">agentic-flow ready</span>
+          <span class="chip">CLI-first</span>
+          <span class="chip">structured data interface</span>
+          <span class="chip">warpage-aware optimization</span>
+          <span class="chip">reliability sign-off</span>
+          <span class="chip">chiplet &amp; advanced package</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="floloop">
+          <div class="floloop-head"><span class="loopdot"></span>Closed-loop warpage optimization</div>
+          <div class="flonode">
+            <div class="ft">◆ Agentic EDA / system-design flow</div>
+            <div class="fd">An autonomous agent drives floorplan, stack-up, and material decisions for the chiplet or advanced package.</div>
+          </div>
+          <div class="floarrow"><span class="ax">↓</span> invokes WarpStack — CLI + structured data interface</div>
+          <div class="flonode engine">
+            <div class="ft">▣ WarpStack warpage analysis</div>
+            <div class="fd">Fast 2D screening or detailed 3D sign-off runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
+          </div>
+          <div class="floarrow"><span class="ax">↓</span> returns structured, machine-readable results</div>
+          <div class="flonode">
+            <div class="ft">↻ Fed back to the agent</div>
+            <div class="fd">Warpage hotspots, peak-to-peak bow, and reliability margins steer the next floorplan, stack, or material iteration automatically.</div>
+          </div>
+        </div>
+        <p class="note">Warpage analysis becomes a callable step inside your agentic flow — not a hand-run GUI task.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ TECHNOLOGY ============ -->
 <section id="technology">
   <div class="wrap">
@@ -776,6 +843,7 @@
           <h5>Product</h5>
           <a href="#why">Why warpage</a>
           <a href="#features">Features</a>
+          <a href="#agentic">Agentic flow</a>
           <a href="#technology">How it works</a>
           <a href="#results">Results</a>
         </div>
@@ -784,6 +852,7 @@
           <span>Fast 2D warpage screening</span>
           <span>Detailed 3D warpage sign-off</span>
           <span>2D vs 3D compare mode</span>
+          <span>Agentic-flow integration</span>
           <span>2.5D / 3D · up to 11 layers</span>
         </div>
         <div class="foot-col">

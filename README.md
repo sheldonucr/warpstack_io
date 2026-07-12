@@ -91,6 +91,35 @@ where design-space exploration needs it most.
 
 ---
 
+## Agentic-flow ready
+
+WarpStack is built to drop straight into **agentic EDA and system-design workflows**, and to work with
+*any* agentic flow. A first-class CLI and structured data interface let autonomous design agents call
+fast 2D or detailed 3D warpage analysis, read back machine-readable results, and feed them into
+floorplanning, stack-up, and material-selection loops — for **warpage-aware optimization** and
+**warpage reliability sign-off** of chiplets and advanced packages in system design.
+
+- **Agentic-flow ready** — driven by autonomous agents; nothing in the loop needs a GUI.
+- **CLI-first & headless** — every analysis is scriptable from the command line.
+- **Structured data interface** — machine-readable floorplans in; warpage surfaces, peak-to-peak bow,
+  and signed `3D − 2D` difference maps out, ready for closed-loop automation.
+- **Warpage-aware optimization** — agents sweep floorplans, stack-ups, materials, and thermal
+  conditions, then use WarpStack results to steer the next candidate toward lower bow.
+- **Reliability sign-off** — fast 2D screens the whole design space; detailed 3D signs off the critical
+  designs against warpage limits before tape-out and assembly.
+
+```text
+Agentic EDA / system-design flow
+        │  invokes WarpStack (CLI + structured data)
+        ▼
+WarpStack warpage analysis  ──►  warpage maps + peak-to-peak margins
+        │  returns machine-readable results
+        ▼
+Fed back to the agent  ──►  steers the next floorplan / stack / material iteration
+```
+
+---
+
 ## What's in this repository
 
 ```text
