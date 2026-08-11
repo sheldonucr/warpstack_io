@@ -179,6 +179,4 @@ WarpStack is in active development. For access or a walkthrough on your own 2.5D
 
 - **Email:** <stan@ece.ucr.edu>
 
-Developed at the University of California, Riverside.
-
-© 2026 WarpStack · Developed at UC Riverside. All rights reserved.
+© 2026 NoveetyAI, Inc. All rights reserved.
