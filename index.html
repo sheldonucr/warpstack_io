@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WarpStack — Fast Thermal-Mechanical Warpage Analysis for 2.5D/3D Chiplets</title>
-<meta name="description" content="WarpStack predicts thermal warpage for 2.5D and 3D chiplet stacks: a fast 2D FEM solver that returns any design in under half a second, plus an accurate 3D layer-wise FEM solver for many-layer packages — up to 1400× apart in runtime." />
-<meta property="og:title" content="WarpStack — Warpage Analysis for 2.5D/3D Chiplet Reliability" />
-<meta property="og:description" content="Fast 2D FEM warpage screening in ~0.35 s, and accurate 3D warpage sign-off for multi-layer chiplet designs — in one tool." />
+<title>WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets</title>
+<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: fast 2D numerical screening, accurate 3D numerical sign-off, and WarpStack-GNN — an AI-accelerated method that returns numerical-grade warpage maps in ~1.5 ms and generalizes to unseen designs." />
+<meta property="og:title" content="WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets" />
+<meta property="og:description" content="Fast 2D numerical screening, accurate 3D numerical sign-off, and WarpStack-GNN AI inference in ~1.5 ms at ~1% numerical-grade accuracy — one hybrid warpage engine." />
 <meta property="og:type" content="website" />
 <style>
   :root{
@@ -170,6 +170,9 @@
   .pipe-step::after{content:""; position:absolute; left:36px; bottom:-14px; width:2px; height:14px; background:var(--border-strong)}
   .pipe-step:last-child::after{display:none}
   .twocard{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px}
+  .threecard{display:flex; flex-direction:column; gap:12px; margin-top:8px}
+  .solver.ai{border-color:rgba(139,147,248,.32)}
+  .solver.ai .nm{color:#a78bfa}
   .solver{border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px; background:rgba(14,22,40,.6)}
   .solver .nm{font-family:var(--mono); font-weight:700; font-size:15px}
   .solver.fast .nm{color:#22d3ee}.solver.acc .nm{color:#ff7a52}
@@ -209,6 +212,8 @@
   .res-label{font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:14px; margin:0 0 18px}
   .res-label::after{content:""; flex:1; height:1px; background:var(--border)}
   .res-label.warm{color:var(--orange)}
+  .res-label.ai{color:#a78bfa}
+  table.data tr.ai td{color:#c4b5fd; font-weight:700}
   .res-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px}
   .panel{
     border:1px solid var(--border); border-radius:var(--radius); padding:26px;
@@ -220,6 +225,7 @@
   .panel .psub{color:var(--muted); font-size:13.5px}
   .badge{font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:100px; border:1px solid var(--border-strong); color:var(--cyan); background:rgba(34,211,238,.06); white-space:nowrap}
   .badge.warn{color:var(--orange); background:rgba(251,146,60,.07)}
+  .badge.ai{color:#c4b5fd; border-color:rgba(167,139,250,.4); background:rgba(167,139,250,.08)}
   table.data{width:100%; border-collapse:collapse; margin-top:14px; font-size:14px}
   table.data th,table.data td{text-align:left; padding:10px 8px; border-bottom:1px solid var(--border)}
   table.data th{color:var(--muted-2); font-weight:600; font-family:var(--mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase}
@@ -341,17 +347,17 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow"><span class="pulse"></span>Warpage analysis for 2.5D / 3D chiplets</span>
+      <span class="eyebrow"><span class="pulse"></span>Hybrid numerical + AI warpage analysis</span>
       <h1>See how your chiplet stack <span class="grad-text">bends</span> — before it ships.</h1>
-      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages. Run a <b>fast 2D analysis</b> to screen a whole design space in seconds, then switch to a <b>detailed 3D analysis</b> for accurate sign-off on the trickiest multi-layer stacks — all from the same floorplan, in one tool.</p>
+      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages with a <b>hybrid engine</b>: <b>fast 2D numerical analysis</b> to screen a whole design space, <b>detailed 3D numerical analysis</b> for accurate sign-off, and <b>WarpStack-GNN</b> — an AI-accelerated method that returns numerical-grade warpage maps in milliseconds. Numerical when you need ground truth, AI when you need it now.</p>
       <div class="hero-cta">
         <a class="btn btn-primary btn-lg" href="#contact">Request access</a>
         <a class="btn btn-ghost btn-lg" href="#results">See the results</a>
       </div>
       <div class="hero-sub">
-        <span><span class="check">✦</span> 2D warpage in ~0.35 s, any design</span>
-        <span><span class="check">✦</span> 3D accuracy up to 11 layers</span>
-        <span><span class="check">✦</span> One floorplan in, warpage maps out</span>
+        <span><span class="check">✦</span> 2D numerical in ~0.35 s, any design</span>
+        <span><span class="check">✦</span> 3D numerical accuracy up to 11 layers</span>
+        <span><span class="check">✦</span> AI inference in ~1.5 ms</span>
       </div>
     </div>
 
@@ -370,10 +376,10 @@
 <!-- ============ STATS ============ -->
 <div class="stats">
   <div class="wrap stats-grid">
-    <div class="stat reveal"><div class="num c1">~0.35 s</div><div class="lbl">2D warpage solve, any design</div></div>
-    <div class="stat reveal"><div class="num c2">1400×</div><div class="lbl">2D faster than 3D on an 11-layer stack</div></div>
-    <div class="stat reveal"><div class="num c3">11</div><div class="lbl">stacked layers analyzed in 3D</div></div>
-    <div class="stat reveal"><div class="num c4">9</div><div class="lbl">2.5D &amp; 3D benchmark designs</div></div>
+    <div class="stat reveal"><div class="num c1">~1.5 ms</div><div class="lbl">WarpStack-GNN AI inference</div></div>
+    <div class="stat reveal"><div class="num c2">120,000×</div><div class="lbl">AI faster than 3D numerical</div></div>
+    <div class="stat reveal"><div class="num c3">1.3%</div><div class="lbl">AI error vs numerical ground truth</div></div>
+    <div class="stat reveal"><div class="num c4">3</div><div class="lbl">methods — 2D · 3D · AI</div></div>
   </div>
 </div>
 
@@ -537,19 +543,24 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">What it does</div>
-      <h2>Two solvers, one workflow</h2>
-      <p>WarpStack pairs a fast 2D warpage solver for rapid screening with a detailed 3D solver for accurate sign-off — both driven from the same simple design description, so you can move between speed and accuracy without changing your inputs.</p>
+      <h2>Three methods, one workflow — numerical and AI</h2>
+      <p>WarpStack is a hybrid engine: a fast 2D numerical method for screening, a detailed 3D numerical method for accurate sign-off, and <b>WarpStack-GNN</b> — an AI-accelerated method for near-instant, numerical-grade warpage. All three run from the same simple design description, so you move between speed, accuracy, and real-time inference without changing your inputs.</p>
     </div>
     <div class="features">
       <div class="feat reveal">
-        <div class="tag">FAST</div>
-        <h3><span class="emoji">⚡</span> 2D screening in a blink</h3>
-        <p>The fast 2D analysis returns a full warpage map in about a third of a second — the same speed whether the design has 3 layers or 11. Sweep hundreds of floorplans and stack-ups without waiting.</p>
+        <div class="tag">FAST · NUMERICAL</div>
+        <h3><span class="emoji">⚡</span> 2D numerical screening in a blink</h3>
+        <p>The fast 2D numerical returns a full warpage map in about a third of a second — the same speed whether the design has 3 layers or 11. Sweep hundreds of floorplans and stack-ups without waiting.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">ACCURATE</div>
-        <h3><span class="emoji">🎯</span> 3D for the hard cases</h3>
-        <p>The detailed 3D analysis resolves the package through its full thickness, layer by layer — the fidelity you want for complex, interleaved multi-layer stacks where a fast estimate isn't enough.</p>
+        <div class="tag">ACCURATE · NUMERICAL</div>
+        <h3><span class="emoji">🎯</span> 3D numerical for the hard cases</h3>
+        <p>The detailed 3D numerical resolves the package through its full thickness, layer by layer — the fidelity you want for complex, interleaved multi-layer stacks where a fast estimate isn't enough.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="tag">REAL-TIME · AI</div>
+        <h3><span class="emoji">🧠</span> WarpStack-GNN inference</h3>
+        <p>An AI-accelerated method, trained on numerical ground truth, predicts full warpage maps in <b>~1.5 ms</b> at <b>~1% error</b> — fast enough to put warpage inside a live optimization loop, and it generalizes to designs it has never seen.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">SCOPE</div>
@@ -581,7 +592,7 @@
     <div class="sec-head reveal">
       <div class="kicker">Workflow · agentic integration</div>
       <h2>Built for agentic EDA flows</h2>
-      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call fast 2D or detailed 3D warpage analysis, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design.</p>
+      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call fast 2D numerical, detailed 3D numerical, or <b>WarpStack-GNN AI inference</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
     </div>
     <div class="tech-grid">
       <div class="reveal">
@@ -589,16 +600,16 @@
           <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
           <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
           <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed 3D−2D difference maps out, ready for closed-loop automation.</li>
-          <li><b>Warpage-aware optimization</b> — agents sweep floorplans, stack-ups, materials, and thermal conditions, then use WarpStack results to steer the next candidate toward lower bow.</li>
-          <li><b>Reliability sign-off</b> — fast 2D screens the whole design space; detailed 3D signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
+          <li><b>Warpage-aware optimization</b> — at ~1.5 ms per evaluation, WarpStack-GNN lets agents sweep thousands of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow in real time.</li>
+          <li><b>Reliability sign-off</b> — AI or fast 2D screens the whole design space; detailed 3D numerical signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
         </ul>
         <div class="chips" style="margin-top:24px">
           <span class="chip">agentic-flow ready</span>
           <span class="chip">CLI-first</span>
           <span class="chip">structured data interface</span>
+          <span class="chip">AI-accelerated</span>
           <span class="chip">warpage-aware optimization</span>
           <span class="chip">reliability sign-off</span>
-          <span class="chip">chiplet &amp; advanced package</span>
         </div>
       </div>
       <div class="reveal">
@@ -611,7 +622,7 @@
           <div class="floarrow"><span class="ax">↓</span> invokes WarpStack — CLI + structured data interface</div>
           <div class="flonode engine">
             <div class="ft">▣ WarpStack warpage analysis</div>
-            <div class="fd">Fast 2D screening or detailed 3D sign-off runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
+            <div class="fd">WarpStack-GNN AI inference, fast 2D numerical, or detailed 3D numerical runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
           </div>
           <div class="floarrow"><span class="ax">↓</span> returns structured, machine-readable results</div>
           <div class="flonode">
@@ -631,7 +642,7 @@
     <div class="sec-head reveal">
       <div class="kicker">How it works</div>
       <h2>From one floorplan to a warpage map</h2>
-      <p>You describe the package once — its layers, materials, and where each die sits. WarpStack builds a mechanical model of the stack, applies the thermal load, and solves for how the surface deflects. Pick the fast 2D method for screening or the detailed 3D method for accuracy; the inputs are identical.</p>
+      <p>You describe the package once — its layers, materials, and where each die sits. WarpStack builds a mechanical model of the stack, applies the thermal load, and solves for how the surface deflects. Then pick the method that fits the moment: fast 2D numerical, detailed 3D numerical, or WarpStack-GNN AI inference. The inputs are identical.</p>
     </div>
     <div class="tech-grid">
       <div class="pipe reveal">
@@ -645,43 +656,49 @@
         </div>
         <div class="pipe-step">
           <span class="n">3</span>
-          <div><h4>Solve for the shape</h4><p>A finite-element solver computes how the surface deflects across the package. Choose the fast 2D method or the detailed 3D method — same inputs, different fidelity.</p></div>
+          <div><h4>Solve — or predict — the shape</h4><p>A numerical solver computes how the surface deflects — a fast 2D method for screening, a detailed 3D method for sign-off. Or skip the solve entirely and let <b>WarpStack-GNN</b> — an AI-accelerated method trained on that same numerical output — predict the warpage map in milliseconds.</p></div>
         </div>
         <div class="pipe-step">
           <span class="n">4</span>
-          <div><h4>Read the result</h4><p>Out come warpage heatmaps, cross-sections, and the peak-to-peak bow in microns — ready to view, compare, or drop into your own scripts.</p></div>
+          <div><h4>Read the result</h4><p>Out come warpage heatmaps, cross-sections, and the peak-to-peak bow in microns — identical format from every method, ready to view, compare, or drop into your own scripts.</p></div>
         </div>
       </div>
 
       <div>
-        <div class="twocard reveal">
+        <div class="threecard reveal">
           <div class="solver fast">
-            <div class="nm">2D analysis</div>
-            <div class="role">fast · screening</div>
-            <p>Reduces the stack to an equivalent laminate and solves the bow on a plane. The lowest-cost warpage estimate — ideal for sweeping many designs.</p>
+            <div class="nm">2D numerical</div>
+            <div class="role">numerical · fast · screening</div>
+            <p>A fast numerical method that solves the bow on a plane — the lowest-cost estimate, ideal for sweeping many designs.</p>
             <div class="kv"><span><b>~0.35 s</b><br>per design</span><span><b>3–11</b><br>layers</span></div>
           </div>
           <div class="solver acc">
-            <div class="nm">3D analysis</div>
-            <div class="role">detailed · sign-off</div>
-            <p>Meshes the package as a full 3D solid, resolving every layer through its thickness. The fidelity to trust for complex interleaved stacks.</p>
+            <div class="nm">3D numerical</div>
+            <div class="role">numerical · detailed · sign-off</div>
+            <p>A detailed numerical method that resolves the package through its full thickness — the ground-truth fidelity for complex, interleaved stacks.</p>
             <div class="kv"><span><b>9 s–8 min</b><br>per design</span><span><b>full</b><br>3D field</span></div>
+          </div>
+          <div class="solver ai">
+            <div class="nm">WarpStack-GNN</div>
+            <div class="role">AI · real-time · in-the-loop</div>
+            <p>An AI-accelerated method, trained on numerical ground truth, that predicts the full warpage map directly — no solve required.</p>
+            <div class="kv"><span><b>~1.5 ms</b><br>per design</span><span><b>~1%</b><br>error vs numerical</span></div>
           </div>
         </div>
 
         <div class="eqbox reveal">
-          <div class="label">Fast, then accurate</div>
-          <p class="why">The two solvers are built to work together. Use the fast 2D analysis to explore — it screens an entire design space in the time a single 3D run would take. Then reach for the detailed 3D analysis on the designs that matter most, where the layers interleave in ways a flat model can't fully capture. Same floorplan, same materials — you simply choose how much detail you need.</p>
+          <div class="label">Numerical for truth, AI for speed</div>
+          <p class="why">The three methods are built to work together. Screen the whole space with the fast 2D method, sign off the critical designs with the detailed 3D method, and — once WarpStack-GNN is trained on that numerical output — call the AI for near-instant maps whenever you need warpage inside a live loop. Because the AI learns from the same numerical engine that validates it, you get numerical-grade answers at AI speed. Same floorplan, same materials — you simply choose truth, detail, or speed.</p>
           <div class="chips">
-            <span class="chip">fast 2D screening</span>
-            <span class="chip">accurate 3D sign-off</span>
-            <span class="chip">arbitrary layer stacks</span>
-            <span class="chip">per-die placement</span>
-            <span class="chip">warpage maps &amp; cross-sections</span>
+            <span class="chip">2D numerical screening</span>
+            <span class="chip">3D numerical sign-off</span>
+            <span class="chip">AI-accelerated</span>
+            <span class="chip">trained on numerical data</span>
+            <span class="chip">generalizes to unseen designs</span>
             <span class="chip">CLI &amp; structured data</span>
           </div>
         </div>
-        <p class="note">Warpage is reported as peak-to-peak deflection in microns, alongside the full surface map for every run.</p>
+        <p class="note">Warpage is reported as peak-to-peak deflection in microns with the full surface map — in the same format from the numerical methods and from the AI.</p>
       </div>
     </div>
   </div>
@@ -692,8 +709,8 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Results</div>
-      <h2>Fast where you can, accurate where you must</h2>
-      <p>Below is a batch of nine 2.5D and 3D benchmark designs — from a simple 3-layer module to an 11-layer 3D chiplet — each solved with both methods. The pattern is consistent: 2D is fast enough to run on everything, and for a large share of designs it already lands close to the 3D answer.</p>
+      <h2>Fast where you can, accurate where you must, instant when it counts</h2>
+      <p>First, the numerical engine on a batch of nine 2.5D and 3D benchmark designs — fast 2D numerical and detailed 3D numerical, from a 3-layer module to an 11-layer chiplet. Then <b>WarpStack-GNN</b>, benchmarked against numerical ground truth: numerical-grade warpage in milliseconds, even on designs it has never seen.</p>
     </div>
 
     <!-- 2D RESULTS -->
@@ -756,7 +773,7 @@
           </figure>
           <figure class="fig reveal">
             <img src="assets/figs/warpage_hbm3_2d.png" alt="2D warpage map of the HBM3 stack — a single smooth central bowl with no per-die structure" loading="lazy">
-            <figcaption><span class="figtag f2d">Fast 2D · screening</span><b>2D laminate result.</b> One smooth bowl, ~10&nbsp;µm peak-to-peak — a fast, whole-package estimate with the stack collapsed to a plane.</figcaption>
+            <figcaption><span class="figtag f2d">Fast 2D · screening</span><b>2D numerical result.</b> One smooth bowl, ~10&nbsp;µm peak-to-peak — a fast, whole-package estimate with the stack collapsed to a plane.</figcaption>
           </figure>
           <figure class="fig reveal">
             <img src="assets/figs/warpage_hbm3_3d_active.png" alt="3D active-surface warpage map of the HBM3 stack showing each DRAM die deflecting individually within its outline" loading="lazy">
@@ -812,6 +829,48 @@
         </div>
       </div>
     </div>
+
+    <!-- AI RESULTS -->
+    <div class="res-group">
+      <div class="res-label ai reveal">WarpStack-GNN — numerical-grade warpage in milliseconds</div>
+      <div class="res-grid">
+        <!-- AI vs numerical table -->
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>AI inference vs numerical solve</h3><div class="psub">Per-design runtime and accuracy</div></div>
+            <span class="badge ai">up to 120,000×</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D numerical</th><th class="r">Error vs numerical</th></tr></thead>
+            <tbody>
+              <tr><td>3D numerical <span class="muted-tag">reference</span></td><td class="mono r">174.5 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
+              <tr><td>2D numerical <span class="muted-tag">screening</span></td><td class="mono r">~0.35 s</td><td class="mono r">~500×</td><td class="mono r">est.</td></tr>
+              <tr class="ai"><td>WarpStack-GNN <span class="muted-tag">AI</span></td><td class="mono r">1.46 ms</td><td class="mono r">119,766×</td><td class="mono r">1.26%</td></tr>
+            </tbody>
+          </table>
+          <div class="note"><b style="color:#c4b5fd">WarpStack-GNN</b> returns a full warpage map in <b>1.46 ms</b> — about <b>120,000×</b> faster than a 3D numerical reference and <b>~200×</b> faster than the fast 2D numerical method — at <b>1.26%</b> normalized RMSE and <b>2.21%</b> peak-warpage error against numerical ground truth. It also trains efficiently: ~33 minutes, roughly <b>70% less</b> training time than a comparable AI baseline at equal accuracy.</div>
+        </div>
+
+        <!-- transferability -->
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>Generalizes to unseen designs</h3><div class="psub">Held-out design families, never seen in training</div></div>
+            <span class="badge ai">≤ 3.7% RMSE</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Unseen dataset</th><th class="r">Norm. RMSE</th><th class="r">Norm. MAE</th></tr></thead>
+            <tbody>
+              <tr><td>Case ①</td><td class="mono r">2.32%</td><td class="mono r">1.78%</td></tr>
+              <tr><td>Case ②</td><td class="mono r">2.62%</td><td class="mono r">1.86%</td></tr>
+              <tr><td>Case ③</td><td class="mono r">3.01%</td><td class="mono r">2.31%</td></tr>
+              <tr class="ai"><td>Case ④</td><td class="mono r">3.69%</td><td class="mono r">2.68%</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Point the trained network at floorplans and stack-ups it never saw and the accuracy holds — at most <b>3.69%</b> normalized RMSE across four held-out design families, at the same millisecond runtime. Accurate enough to keep warpage inside an early-stage optimization loop on brand-new designs, without retraining.</div>
+        </div>
+      </div>
+      <div class="note" style="margin-top:22px">WarpStack-GNN is an <b>AI-accelerated</b> warpage predictor trained on numerical ground truth. Because it learns from the same numerical engine that validates it, the numerical and AI paths stay consistent — so you get numerical-grade warpage maps at AI speed.</div>
+    </div>
   </div>
 </section>
 
@@ -822,10 +881,10 @@
       <h2>Put warpage in the loop.</h2>
       <p>WarpStack is in active development. Request access or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
       <div class="cta-btns">
-        <a class="btn btn-primary btn-lg" href="mailto:stan@ece.ucr.edu?subject=WarpStack%20access%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20access%20to%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request access</a>
-        <a class="btn btn-ghost btn-lg" href="mailto:stan@ece.ucr.edu?subject=WarpStack%20demo%20request">Request a demo</a>
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20access%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20access%20to%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request access</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request">Request a demo</a>
       </div>
-      <div class="cta-meta">stan@ece.ucr.edu</div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
     </div>
   </div>
 </section>
@@ -836,7 +895,7 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top"><span class="dot"></span>WarpStack</a>
-        <p>Thermal-mechanical warpage analysis for 2.5D and 3D chiplet reliability — fast 2D screening and detailed 3D sign-off, from a single design description.</p>
+        <p>Hybrid numerical + AI warpage analysis for 2.5D and 3D chiplet reliability — fast 2D numerical, detailed 3D numerical, and WarpStack-GNN AI inference, from a single design description.</p>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
@@ -849,21 +908,21 @@
         </div>
         <div class="foot-col">
           <h5>Capabilities</h5>
-          <span>Fast 2D warpage screening</span>
-          <span>Detailed 3D warpage sign-off</span>
-          <span>2D vs 3D compare mode</span>
+          <span>Fast 2D numerical screening</span>
+          <span>Detailed 3D numerical sign-off</span>
+          <span>WarpStack-GNN AI inference</span>
           <span>Agentic-flow integration</span>
           <span>2.5D / 3D · up to 11 layers</span>
         </div>
         <div class="foot-col">
           <h5>Contact</h5>
-          <a href="mailto:stan@ece.ucr.edu">stan@ece.ucr.edu</a>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
           <a href="#contact">Request access</a>
         </div>
       </div>
     </div>
     <div class="cite">
-      WarpStack computes thermal warpage for multi-layer 2.5D/3D chiplet, module, and package stacks using a fast 2D laminate finite-element method and a detailed 3D layer-wise finite-element method. Figures and timings above are from a batch of nine benchmark designs (3–11 layers, 10–18 dies), each solved with both methods.
+      WarpStack is a hybrid warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks, combining fast and detailed <b>numerical</b> analysis with an <b>AI-accelerated</b> approach. Reported figures and timings are from a batch of nine benchmark designs (3–11 layers, 10–18 dies).
     </div>
     <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
   </div>

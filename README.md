@@ -1,17 +1,20 @@
 # WarpStack
 
-**Fast thermal-mechanical warpage analysis for 2.5D / 3D chiplet reliability.**
+**Hybrid numerical + AI warpage analysis for 2.5D / 3D chiplet reliability.**
 
 WarpStack predicts how a chiplet, module, or package stack **bends** under thermal load. From a single
 structured floorplan description it builds a mechanical model of the layer stack, applies the
-assembly-to-operating thermal load, and solves the out-of-plane warpage on a finite-element (FEM) grid.
-It ships two solvers on the same inputs:
+assembly-to-operating thermal load, and returns the out-of-plane warpage. It is a **hybrid engine** with
+three methods on the same inputs — numerical when you need ground truth, AI when you need it now:
 
-- **2D analysis** — a fast laminate FEM that returns a full warpage map for *any* design in about a
+- **2D numerical** — a fast numerical method that returns a full warpage map for *any* design in about a
   third of a second. Ideal for screening a whole design space.
-- **3D analysis** — a detailed layer-wise prism FEM that resolves the package through its full thickness,
+- **3D numerical** — a detailed numerical method that resolves the package through its full thickness,
   reporting warpage **per surface** (die-level active surface *and* continuous package surface). The
-  fidelity to trust for complex, interleaved multi-layer stacks.
+  ground-truth fidelity for complex, interleaved multi-layer stacks.
+- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth that predicts the full
+  warpage map in **~1.5 ms** at **~1% error**, and generalizes to designs it has never seen. Fast enough
+  to put warpage inside a live optimization loop.
 
 This repository hosts the **WarpStack** promotion site, live at
 **<https://sheldonucr.github.io/warpstack_io/>**.
@@ -89,24 +92,45 @@ where design-space exploration needs it most.
 | HBM3 memory stack | 33× |
 | 3-layer module | 26× |
 
+### WarpStack-GNN — AI inference, benchmarked against numerical ground truth
+
+Once trained on numerical ground truth, **WarpStack-GNN** predicts a full warpage map in **~1.5 ms** —
+orders of magnitude faster than a numerical solve — while staying within ~1–2% of the numerical answer.
+
+| Method | Type | Runtime / design | Speedup vs 3D | Error vs numerical |
+| --- | --- | ---: | ---: | ---: |
+| 3D numerical | numerical | 174.5 s | 1× (reference) | ground truth |
+| 2D numerical | numerical | ~0.35 s | ~500× | screening |
+| **WarpStack-GNN** | **AI** | **1.46 ms** | **119,766×** | **1.26% NRMSE / 2.21%** |
+
+- **~120,000× faster than the 3D numerical reference** and **~200× faster than the fast 2D numerical
+  method**, at **1.26%** normalized RMSE, **2.21%** peak-warpage error, and **0.97%** normalized MAE
+  against numerical ground truth.
+- **Efficient to train:** ~33 minutes — roughly **70% less** training time than a comparable AI baseline
+  at equal accuracy.
+- **Generalizes to unseen designs:** on four held-out design families never seen in training, accuracy
+  holds at **≤ 3.69%** normalized RMSE, at the same millisecond runtime — accurate enough for early-stage
+  warpage-aware optimization on brand-new designs, without retraining.
+
 ---
 
 ## Agentic-flow ready
 
 WarpStack is built to drop straight into **agentic EDA and system-design workflows**, and to work with
 *any* agentic flow. A first-class CLI and structured data interface let autonomous design agents call
-fast 2D or detailed 3D warpage analysis, read back machine-readable results, and feed them into
-floorplanning, stack-up, and material-selection loops — for **warpage-aware optimization** and
-**warpage reliability sign-off** of chiplets and advanced packages in system design.
+fast 2D numerical, detailed 3D numerical, or **WarpStack-GNN AI inference**, read back machine-readable results, and
+feed them into floorplanning, stack-up, and material-selection loops — for **warpage-aware optimization**
+and **warpage reliability sign-off** of chiplets and advanced packages in system design. With millisecond
+AI inference, warpage finally runs at the speed of the loop itself.
 
 - **Agentic-flow ready** — driven by autonomous agents; nothing in the loop needs a GUI.
-- **CLI-first & headless** — every analysis is scriptable from the command line.
+- **CLI-first & headless** — every method is scriptable from the command line.
 - **Structured data interface** — machine-readable floorplans in; warpage surfaces, peak-to-peak bow,
   and signed `3D − 2D` difference maps out, ready for closed-loop automation.
-- **Warpage-aware optimization** — agents sweep floorplans, stack-ups, materials, and thermal
-  conditions, then use WarpStack results to steer the next candidate toward lower bow.
-- **Reliability sign-off** — fast 2D screens the whole design space; detailed 3D signs off the critical
-  designs against warpage limits before tape-out and assembly.
+- **Warpage-aware optimization** — at ~1.5 ms per evaluation, WarpStack-GNN lets agents sweep thousands
+  of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow.
+- **Reliability sign-off** — AI or fast 2D numerical screens the whole design space; detailed 3D
+  numerical signs off the critical designs against warpage limits before tape-out and assembly.
 
 ```text
 Agentic EDA / system-design flow
@@ -131,7 +155,7 @@ Fed back to the agent  ──►  steers the next floorplan / stack / material i
 │       ├── warpage_cores_16_1.png          2D warpage map (16-die array)
 │       ├── stack_cores_16_1.png            3D structure view (16-die array)
 │       ├── stack_hbm3.png                  3D structure view (HBM3 stack)
-│       ├── warpage_hbm3_2d.png             HBM3 — 2D laminate result
+│       ├── warpage_hbm3_2d.png             HBM3 — 2D numerical result
 │       ├── warpage_hbm3_3d_active.png      HBM3 — 3D active (die) surface
 │       └── warpage_hbm3_3d_package.png     HBM3 — 3D package surface
 └── README.md
@@ -158,17 +182,19 @@ Or open `index.html` directly in a browser.
 
 ## About the WarpStack tool
 
-The site presents results from **WarpStack**, a single-floorplan FEM warpage analysis tool for chiplet,
-module, and package stacks. It reads a structured floorplan JSON (package geometry, an arbitrary
-mechanical layer stack with per-layer materials, and per-die/module placement), builds the laminate or
-3D solid model, applies the thermal delta, and writes warpage CSVs plus a simulation report.
+The site presents results from **WarpStack**, a hybrid single-floorplan warpage analysis tool for
+chiplet, module, and package stacks. It reads a structured floorplan JSON (package geometry, an arbitrary
+mechanical layer stack with per-layer materials, and per-die/module placement), builds the mechanical
+model, applies the thermal delta, and writes warpage CSVs plus a simulation report — or predicts the
+warpage map directly with the trained AI method.
 
-- **2D laminate method** (default) — reduces the package/core stacks to laminate stiffness and thermal
-  moments and solves the bow on a plane.
-- **3D layer-wise FEM** (`--3d`) — 6-node triangular prism solid elements on a conforming x/y mesh,
-  resolving every layer interface through thickness; writes both the active-surface and package-surface
-  warpage.
-- **Compare mode** (`--compare`) — runs both solvers and writes signed `3D − 2D` difference maps.
+- **2D numerical method** (default) — a fast numerical model that solves the bow on a plane.
+- **3D numerical method** (`--3d`) — a detailed numerical model that resolves the package through its
+  full thickness; writes both the active-surface and package-surface warpage.
+- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth: it predicts the full
+  warpage map directly, returns warpage in the same format as the numerical methods in milliseconds, and
+  generalizes to unseen designs.
+- **Compare mode** (`--compare`) — runs both numerical solvers and writes signed `3D − 2D` difference maps.
 - **CLI-first & scriptable** — structured JSON in, CSV/JSON reports out; run one design or a whole batch.
 
 ---
@@ -177,6 +203,6 @@ mechanical layer stack with per-layer materials, and per-die/module placement), 
 
 WarpStack is in active development. For access or a walkthrough on your own 2.5D/3D chiplet designs:
 
-- **Email:** <stan@ece.ucr.edu>
+- **Email:** <noveetyai@noveetymanagement.com>
 
 © 2026 NoveetyAI, Inc. All rights reserved.
