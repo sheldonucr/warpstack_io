@@ -201,7 +201,7 @@ warpage map directly with the trained AI method.
 
 ## Contact
 
-WarpStack is in active development. For access or a walkthrough on your own 2.5D/3D chiplet designs:
+WarpStack is in active development. For a demo or a walkthrough on your own 2.5D/3D chiplet designs:
 
 - **Email:** <noveetyai@noveetymanagement.com>
 
