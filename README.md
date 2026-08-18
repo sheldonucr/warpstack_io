@@ -12,7 +12,7 @@ three methods on the same inputs — numerical when you need ground truth, AI wh
 - **3D numerical** — a detailed numerical method that resolves the package through its full thickness,
   reporting warpage **per surface** (die-level active surface *and* continuous package surface). The
   ground-truth fidelity for complex, interleaved multi-layer stacks.
-- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth that predicts the full
+- **WarpStack-AI (GNN)** — an AI-accelerated method trained on numerical ground truth that predicts the full
   warpage map in **~1.5 ms** at **~1% error**, and generalizes to designs it has never seen. Fast enough
   to put warpage inside a live optimization loop.
 
@@ -92,16 +92,16 @@ where design-space exploration needs it most.
 | HBM3 memory stack | 33× |
 | 3-layer module | 26× |
 
-### WarpStack-GNN — AI inference, benchmarked against numerical ground truth
+### WarpStack-AI (GNN) — AI inference, benchmarked against numerical ground truth
 
-Once trained on numerical ground truth, **WarpStack-GNN** predicts a full warpage map in **~1.5 ms** —
+Once trained on numerical ground truth, **WarpStack-AI (GNN)** predicts a full warpage map in **~1.5 ms** —
 orders of magnitude faster than a numerical solve — while staying within ~1–2% of the numerical answer.
 
 | Method | Type | Runtime / design | Speedup vs 3D | Error vs numerical |
 | --- | --- | ---: | ---: | ---: |
 | 3D numerical | numerical | 174.5 s | 1× (reference) | ground truth |
 | 2D numerical | numerical | ~0.35 s | ~500× | screening |
-| **WarpStack-GNN** | **AI** | **1.46 ms** | **119,766×** | **1.26% NRMSE / 2.21%** |
+| **WarpStack-AI (GNN)** | **AI** | **1.46 ms** | **119,766×** | **1.26% NRMSE / 2.21%** |
 
 - **~120,000× faster than the 3D numerical reference** and **~200× faster than the fast 2D numerical
   method**, at **1.26%** normalized RMSE, **2.21%** peak-warpage error, and **0.97%** normalized MAE
@@ -118,7 +118,7 @@ orders of magnitude faster than a numerical solve — while staying within ~1–
 
 WarpStack is built to drop straight into **agentic EDA and system-design workflows**, and to work with
 *any* agentic flow. A first-class CLI and structured data interface let autonomous design agents call
-fast 2D numerical, detailed 3D numerical, or **WarpStack-GNN AI inference**, read back machine-readable results, and
+fast 2D numerical, detailed 3D numerical, or **WarpStack-AI (GNN) inference**, read back machine-readable results, and
 feed them into floorplanning, stack-up, and material-selection loops — for **warpage-aware optimization**
 and **warpage reliability sign-off** of chiplets and advanced packages in system design. With millisecond
 AI inference, warpage finally runs at the speed of the loop itself.
@@ -127,7 +127,7 @@ AI inference, warpage finally runs at the speed of the loop itself.
 - **CLI-first & headless** — every method is scriptable from the command line.
 - **Structured data interface** — machine-readable floorplans in; warpage surfaces, peak-to-peak bow,
   and signed `3D − 2D` difference maps out, ready for closed-loop automation.
-- **Warpage-aware optimization** — at ~1.5 ms per evaluation, WarpStack-GNN lets agents sweep thousands
+- **Warpage-aware optimization** — at ~1.5 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands
   of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow.
 - **Reliability sign-off** — AI or fast 2D numerical screens the whole design space; detailed 3D
   numerical signs off the critical designs against warpage limits before tape-out and assembly.
@@ -194,7 +194,7 @@ warpage map directly with the trained AI method.
 - **2D numerical method** (default) — a fast numerical model that solves the bow on a plane.
 - **3D numerical method** (`--3d`) — a detailed numerical model that resolves the package through its
   full thickness; writes both the active-surface and package-surface warpage.
-- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth: it predicts the full
+- **WarpStack-AI (GNN)** — an AI-accelerated method trained on numerical ground truth: it predicts the full
   warpage map directly, returns warpage in the same format as the numerical methods in milliseconds, and
   generalizes to unseen designs.
 - **Compare mode** (`--compare`) — runs both numerical solvers and writes signed `3D − 2D` difference maps.
