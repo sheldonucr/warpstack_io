@@ -188,6 +188,9 @@ mechanical layer stack with per-layer materials, and per-die/module placement), 
 model, applies the thermal delta, and writes warpage CSVs plus a simulation report — or predicts the
 warpage map directly with the trained AI method.
 
+- **IEEE 3Dblox input** — accepts designs described in **IEEE 3Dblox**, the IEEE-standard modular
+  description language for physical stacking, dimensions, and logical connectivity in 2.5D and 3D-IC
+  designs, alongside WarpStack's native floorplan JSON.
 - **2D numerical method** (default) — a fast numerical model that solves the bow on a plane.
 - **3D numerical method** (`--3d`) — a detailed numerical model that resolves the package through its
   full thickness; writes both the active-surface and package-surface warpage.
