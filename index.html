@@ -251,7 +251,8 @@
   .fig-3 .fig{margin-top:0}
   .fig-3 figcaption{font-size:12.5px; padding:12px 14px}
   .fig-4{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:6px}
-  .fig-4 .fig{margin-top:0}
+  .fig-4 .fig{margin-top:0; display:flex; flex-direction:column}
+  .fig-4 .fig figcaption{flex:1}
   .fig-4 figcaption{font-size:12px; padding:11px 13px}
   .figtag.fst{color:#a9b6cc}
   @media(max-width:900px){.fig-4{grid-template-columns:repeat(2,1fr)}}
@@ -771,11 +772,11 @@
             <figcaption><span class="figtag fst">Design · 3D structure</span><b>The stack.</b> 108 chiplet instances, 237 mechanical layers, straight from IEEE 3Dblox.</figcaption>
           </figure>
           <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="3D numerical warpage map of the stiffened-substrate variant" loading="lazy">
+            <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by the 3D numerical method for the stiffened-substrate variant — a broad dome peaking at the package centre and falling away steeply at the corners" loading="lazy">
             <figcaption><span class="figtag f3d">Detailed 3D · reference</span><b>3D numerical.</b> 1372.7 µm peak-to-peak, solved from scratch in 40.6 s.</figcaption>
           </figure>
           <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm4_2nm_mor_whatif.png" alt="MOR-model warpage map of the same stiffened-substrate variant, visually identical to the 3D numerical map" loading="lazy">
+            <img src="assets/figs/warpage_hbm4_2nm_mor_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by the MOR-model for the same stiffened-substrate variant — visually indistinguishable from the 3D numerical surface beside it" loading="lazy">
             <figcaption><span class="figtag f2d">MOR-model · same point</span><b>MOR-model.</b> 1372.6 µm peak-to-peak — returned in 51 µs.</figcaption>
           </figure>
           <figure class="fig reveal">
