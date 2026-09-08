@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets</title>
-<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: detailed 3D numerical sign-off, the MOR-model for design-space exploration at a fraction of the cost, and WarpStack-AI (GNN) — an AI-accelerated method that returns numerical-grade warpage maps in ~1.5 ms and generalizes to unseen designs." />
+<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: detailed 3D numerical sign-off, the MOR-model for design-space exploration at a fraction of the cost, and WarpStack-AI (GNN) — an AI-accelerated method that returns numerical-grade warpage maps in ~14 ms, 1,315x faster than solving in 3D." />
 <meta property="og:title" content="WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets" />
-<meta property="og:description" content="Accurate 3D numerical sign-off, the MOR-model for fast design-space exploration, and WarpStack-AI (GNN) inference in ~1.5 ms at ~1% numerical-grade accuracy — one hybrid warpage engine." />
+<meta property="og:description" content="Accurate 3D numerical sign-off, the MOR-model for fast design-space exploration, and WarpStack-AI (GNN) inference in ~14 ms at 0.5% numerical-grade accuracy — one hybrid warpage engine." />
 <meta property="og:type" content="website" />
 <style>
   :root{
@@ -220,6 +220,7 @@
     background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(12,19,36,.55));
   }
   .panel.full{grid-column:1/-1}
+  .panel{min-width:0}
   .panel .phead{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:6px; flex-wrap:wrap}
   .panel h3{font-size:19px}
   .panel .psub{color:var(--muted); font-size:13.5px}
@@ -246,6 +247,10 @@
   .fig img{display:block; width:100%; height:auto; background:#f5f7fb}
   .fig figcaption{padding:13px 18px; color:var(--muted); font-size:13px; border-top:1px solid var(--border); line-height:1.55; background:var(--surface)}
   .fig figcaption b{color:var(--text)}
+  .figscroll{overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch}
+  .figscroll img{min-width:660px}
+  .figscroll::-webkit-scrollbar{height:8px}
+  .figscroll::-webkit-scrollbar-thumb{background:rgba(120,140,170,.45); border-radius:100px}
   .fig-2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
   .fig-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:6px}
   .fig-3 .fig{margin-top:0}
@@ -263,7 +268,7 @@
   .warpfig figcaption{color:var(--muted); font-size:13.5px; line-height:1.62; padding:14px 4px 10px; border-top:1px solid var(--border); margin-top:8px}
   .warpfig figcaption b{color:var(--text)}
   .figtag{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:5px}
-  .figtag.f2d{color:#22d3ee}.figtag.f3d{color:#ff7a52}
+  .figtag.f2d{color:#22d3ee}.figtag.f3d{color:#ff7a52}.figtag.fai{color:#a78bfa}
   @media(max-width:860px){.fig-3{grid-template-columns:1fr}}
   @media(max-width:640px){.fig-2{grid-template-columns:1fr}}
 
@@ -358,7 +363,7 @@
       <div class="hero-sub">
         <span><span class="check">✦</span> MOR-model in 51 µs per design point</span>
         <span><span class="check">✦</span> 3D numerical on 200+ layer stacks</span>
-        <span><span class="check">✦</span> AI inference in ~1.5 ms</span>
+        <span><span class="check">✦</span> AI inference in 13.7 ms</span>
       </div>
     </div>
 
@@ -561,7 +566,7 @@
       <div class="feat reveal">
         <div class="tag">REAL-TIME · AI</div>
         <h3><span class="emoji">🧠</span> WarpStack-AI (GNN) inference</h3>
-        <p>An AI-accelerated method, trained on numerical ground truth, predicts full warpage maps in <b>~1.5 ms</b> at <b>~1% error</b> — fast enough to put warpage inside a live optimization loop, and it generalizes to designs it has never seen.</p>
+        <p>An AI-accelerated method, trained on numerical ground truth, predicts full warpage maps in <b>13.7 ms</b> at <b>0.5% error</b> — 1,315x faster than solving the same package in 3D, and fast enough to put warpage inside a live optimization loop.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">SCOPE</div>
@@ -606,7 +611,7 @@
           <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
           <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
           <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed difference maps out, ready for closed-loop automation.</li>
-          <li><b>Warpage-aware optimization</b> — at ~1.5 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow in real time.</li>
+          <li><b>Warpage-aware optimization</b> — at 13.7 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands of material and thermal design points in a live loop, steering each candidate toward lower bow in real time.</li>
           <li><b>Reliability sign-off</b> — the MOR-model or AI screens the whole design space; detailed 3D numerical signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
         </ul>
         <div class="chips" style="margin-top:24px">
@@ -688,8 +693,8 @@
           <div class="solver ai">
             <div class="nm">WarpStack-AI (GNN)</div>
             <div class="role">AI · real-time · in-the-loop</div>
-            <p>An AI-accelerated method, trained on numerical ground truth, that predicts the full warpage map directly — no solve required.</p>
-            <div class="kv"><span><b>~1.5 ms</b><br>per design</span><span><b>~1%</b><br>error vs numerical</span></div>
+            <p>An AI-accelerated method, trained on numerical ground truth, that predicts the full warpage map directly from the design description — no solve required.</p>
+            <div class="kv"><span><b>13.7 ms</b><br>per design</span><span><b>0.5%</b><br>error vs numerical</span></div>
           </div>
         </div>
 
@@ -701,7 +706,6 @@
             <span class="chip">MOR-model exploration</span>
             <span class="chip">AI-accelerated</span>
             <span class="chip">trained on numerical data</span>
-            <span class="chip">generalizes to unseen designs</span>
             <span class="chip">CLI &amp; structured data</span>
             <span class="chip">IEEE 3Dblox input</span>
           </div>
@@ -718,7 +722,7 @@
     <div class="sec-head reveal">
       <div class="kicker">Results</div>
       <h2>Sign off with 3D, explore with the MOR-model, iterate with AI</h2>
-      <p>One reference design, measured end to end: a <b>2nm CoWoS</b> package — 8 HBM stacks of 12-hi DRAM, 2 GPU dies, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer. The detailed 3D numerical method is the reference. The <b>MOR-model</b> reproduces it to within 0.036 µm at 798,000× the speed, and <b>WarpStack-AI (GNN)</b> adds millisecond inference on top.</p>
+      <p>Measured end to end on real designs, with the detailed 3D numerical method as the reference throughout. The 3D and <b>MOR-model</b> results below are a <b>2nm CoWoS</b> package — 8 HBM stacks of 12-hi DRAM, 2 GPU dies, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer — where the MOR-model reproduces the 3D surface to within 0.036 µm at 798,000× the speed. <b>WarpStack-AI (GNN)</b> is measured on a <b>7nm HBM + CPU stepped</b> package, where it predicts the warpage map 1,315× faster than solving it.</p>
     </div>
 
     <!-- DESIGN + 3D REFERENCE -->
@@ -826,43 +830,95 @@
 
     <!-- AI RESULTS -->
     <div class="res-group">
-      <div class="res-label ai reveal">WarpStack-AI (GNN) — numerical-grade warpage in milliseconds</div>
-      <div class="res-grid">
+      <div class="res-label ai reveal">WarpStack-AI (GNN) — numerical-grade warpage maps in milliseconds</div>
+
+      <div class="panel full reveal">
+        <div class="phead">
+          <div><h3>Predicted vs solved, on a design point the network never saw</h3><div class="psub">7nm HBM + CPU stepped package · 55 × 30 mm · active surface</div></div>
+          <span class="badge ai">1,315× faster</span>
+        </div>
+        <p class="psub" style="margin:2px 0 10px; max-width:920px"><b style="color:#e9eef8">WarpStack-AI (GNN)</b> learns a package’s warpage behaviour from results produced by the detailed 3D method, then returns the full map without solving. Here it is asked for a design point held out of training, and the same point is solved from scratch in 3D for comparison.</p>
+        <figure class="fig reveal" style="margin-top:0">
+          <div class="figscroll"><img src="assets/figs/warpage_hbm_7nm_gnn_vs_3d.png" alt="Three warpage maps side by side: the 3D numerical reference at 1072.1 µm peak-to-peak, the WarpStack-AI (GNN) prediction at 1074.0 µm, and the signed difference between them, which is two orders of magnitude smaller than the warpage itself" loading="lazy"></div>
+          <figcaption><span class="figtag fai">Detailed 3D · WarpStack-AI (GNN) · difference</span><b>Left — the 3D reference,</b> 1072.1 µm peak-to-peak, solved from scratch in 18.0 s. <b>Centre — the GNN prediction,</b> 1074.0 µm, returned in 13.7 ms. <b>Right — the signed difference,</b> spanning 15.4 µm across a surface that bows by more than a millimetre.</figcaption>
+        </figure>
+      </div>
+
+      <div class="res-grid" style="margin-top:18px">
         <!-- AI vs numerical table -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>AI inference vs numerical solve</h3><div class="psub">Per-design runtime and accuracy</div></div>
-            <span class="badge ai">up to 120,000×</span>
+            <div><h3>AI inference vs numerical solve</h3><div class="psub">Per-design runtime and accuracy · single core</div></div>
+            <span class="badge ai">1,315×</span>
           </div>
           <table class="data">
-            <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D numerical</th><th class="r">Error vs numerical</th></tr></thead>
+            <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D numerical</th><th class="r">Error vs 3D</th></tr></thead>
             <tbody>
-              <tr><td>3D numerical <span class="muted-tag">reference</span></td><td class="mono r">174.5 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
-              <tr class="ai"><td>WarpStack-AI <span class="muted-tag">GNN</span></td><td class="mono r">1.46 ms</td><td class="mono r">119,766×</td><td class="mono r">1.26%</td></tr>
+              <tr><td>3D numerical <span class="muted-tag">reference</span></td><td class="mono r">17.97 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
+              <tr class="ai"><td>WarpStack-AI <span class="muted-tag">GNN</span></td><td class="mono r">13.7 ms</td><td class="mono r">1,315×</td><td class="mono r">0.25%</td></tr>
             </tbody>
           </table>
-          <div class="note"><b style="color:#c4b5fd">WarpStack-AI (GNN)</b> returns a full warpage map in <b>1.46 ms</b> — about <b>120,000×</b> faster than a 3D numerical reference — at <b>1.26%</b> normalized RMSE and <b>2.21%</b> peak-warpage error against numerical ground truth. It also trains efficiently: ~33 minutes, roughly <b>70% less</b> training time than a comparable AI baseline at equal accuracy.</div>
+          <div class="note"><b style="color:#c4b5fd">WarpStack-AI (GNN)</b> returns a full warpage map in <b>13.7 ms</b> — <b>1,315×</b> faster than solving the same package in 3D. Measured against three independent full 3D solves, the whole-map difference is <b>0.25%</b> of peak-to-peak and the peak-to-peak bow itself lands within <b>0.18%</b>.</div>
         </div>
 
-        <!-- transferability -->
+        <!-- held-out accuracy -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>Generalizes to unseen designs</h3><div class="psub">Held-out design families, never seen in training</div></div>
-            <span class="badge ai">≤ 3.7% RMSE</span>
+            <div><h3>How closely the GNN tracks 3D</h3><div class="psub">512 held-out design points, materials and thermal load varied</div></div>
+            <span class="badge ai">0.48% RMSE</span>
           </div>
           <table class="data">
-            <thead><tr><th>Unseen dataset</th><th class="r">Norm. RMSE</th><th class="r">Norm. MAE</th></tr></thead>
+            <thead><tr><th>Quantity</th><th class="r">Held-out set</th><th class="r">Fresh 3D solves</th></tr></thead>
             <tbody>
-              <tr><td>Case ①</td><td class="mono r">2.32%</td><td class="mono r">1.78%</td></tr>
-              <tr><td>Case ②</td><td class="mono r">2.62%</td><td class="mono r">1.86%</td></tr>
-              <tr><td>Case ③</td><td class="mono r">3.01%</td><td class="mono r">2.31%</td></tr>
-              <tr class="ai"><td>Case ④</td><td class="mono r">3.69%</td><td class="mono r">2.68%</td></tr>
+              <tr><td>Design points</td><td class="mono r">512</td><td class="mono r">3</td></tr>
+              <tr><td>Mean 3D peak-to-peak</td><td class="mono r">869 µm</td><td class="mono r">974 µm</td></tr>
+              <tr class="ai"><td>Whole-map difference</td><td class="mono r">0.48%</td><td class="mono r">0.25%</td></tr>
+              <tr><td>Peak-to-peak error</td><td class="mono r">1.65%</td><td class="mono r">0.18%</td></tr>
+              <tr><td>Correlation with 3D</td><td class="mono r">0.9998</td><td class="mono r">0.99997</td></tr>
             </tbody>
           </table>
-          <div class="note">Point the trained network at floorplans and stack-ups it never saw and the accuracy holds — at most <b>3.69%</b> normalized RMSE across four held-out design families, at the same millisecond runtime. Accurate enough to keep warpage inside an early-stage optimization loop on brand-new designs, without retraining.</div>
+          <div class="note">Every held-out point varies the material set <em>and</em> the thermal load, and the held-out material configurations are kept entirely out of training — so the network is scored on combinations it was never shown.</div>
         </div>
       </div>
-      <div class="note" style="margin-top:22px">WarpStack-AI (GNN) is an <b>AI-accelerated</b> warpage predictor trained on numerical ground truth. Because it learns from the same numerical engine that validates it, the numerical and AI paths stay consistent — so you get numerical-grade warpage maps at AI speed.</div>
+
+      <div class="res-grid" style="margin-top:18px">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>The design it was measured on</h3><div class="psub">7nm HBM + CPU stepped stack, imported from IEEE 3Dblox</div></div>
+            <span class="badge warn">3D reference</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Package</td><td class="mono r">55.0 × 30.0 mm</td></tr>
+              <tr><td>Stacked die columns</td><td class="mono r">63</td></tr>
+              <tr><td>Mechanical layers</td><td class="mono r">48</td></tr>
+              <tr><td>Solid elements</td><td class="mono r">24,132</td></tr>
+              <tr><td>Degrees of freedom</td><td class="mono r">93,138</td></tr>
+              <tr class="win"><td>3D numerical solve</td><td class="mono r">17.97 s</td></tr>
+            </tbody>
+          </table>
+          <div class="note">A stepped HBM + CPU stack read straight from its IEEE 3Dblox description — every layer, material, and die placement taken from the source design with no hand re-entry. WarpStack-AI is trained per design, on warpage produced by the detailed 3D method for that same stack.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What it costs to get there</h3><div class="psub">One-time training, then milliseconds per design point</div></div>
+            <span class="badge ai">pays back in 131 points</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Training labels (1,792 points)</td><td class="mono r">16.2 min</td></tr>
+              <tr><td>Network training</td><td class="mono r">23.1 min</td></tr>
+              <tr class="win"><td>Total one-time cost</td><td class="mono r">39.3 min</td></tr>
+              <tr><td>Per design point afterwards</td><td class="mono r">13.7 ms</td></tr>
+              <tr><td>Break-even vs solving directly</td><td class="mono r">131 points</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Training data comes from WarpStack’s own 3D formulation, generated far more efficiently than a brute-force sweep of solves — 1,792 labelled warpage fields in 16 minutes rather than the hours a design point at a time would cost. Past 131 design points the network is cheaper than solving directly, and a 1,000-point sweep drops from 5.0 hours to 39 minutes.</div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:22px">WarpStack-AI (GNN) is an <b>AI-accelerated</b> warpage predictor trained on numerical ground truth. Because it learns from the same numerical engine that validates it, the numerical and AI paths stay consistent — so you get numerical-grade warpage maps at AI speed. The figures quoted here are measured on the 7nm stepped package above, on an Apple M3 with inference on a single CPU core; a network is trained per design, and accuracy is reported against the 3D method rather than against measurement.</div>
     </div>
   </div>
 </section>
