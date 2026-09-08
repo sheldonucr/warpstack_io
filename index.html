@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets</title>
-<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: fast 2D numerical screening, accurate 3D numerical sign-off, and WarpStack-AI (GNN) — an AI-accelerated method that returns numerical-grade warpage maps in ~1.5 ms and generalizes to unseen designs." />
+<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: detailed 3D numerical sign-off, the MOR-model for design-space exploration at a fraction of the cost, and WarpStack-AI (GNN) — an AI-accelerated method that returns numerical-grade warpage maps in ~1.5 ms and generalizes to unseen designs." />
 <meta property="og:title" content="WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets" />
-<meta property="og:description" content="Fast 2D numerical screening, accurate 3D numerical sign-off, and WarpStack-AI (GNN) inference in ~1.5 ms at ~1% numerical-grade accuracy — one hybrid warpage engine." />
+<meta property="og:description" content="Accurate 3D numerical sign-off, the MOR-model for fast design-space exploration, and WarpStack-AI (GNN) inference in ~1.5 ms at ~1% numerical-grade accuracy — one hybrid warpage engine." />
 <meta property="og:type" content="website" />
 <style>
   :root{
@@ -349,14 +349,14 @@
     <div>
       <span class="eyebrow"><span class="pulse"></span>Hybrid numerical + AI warpage analysis</span>
       <h1>See how your chiplet stack <span class="grad-text">bends</span> — before it ships.</h1>
-      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages with a <b>hybrid engine</b>: <b>fast 2D numerical analysis</b> to screen a whole design space, <b>detailed 3D numerical analysis</b> for accurate sign-off, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method that returns numerical-grade warpage maps in milliseconds. Numerical when you need ground truth, AI when you need it now.</p>
+      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages with a <b>hybrid engine</b>: <b>detailed 3D numerical analysis</b> for accurate sign-off, the <b>MOR-model</b> to sweep a whole design space at a fraction of the cost, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method that returns numerical-grade warpage maps in milliseconds. Numerical when you need ground truth, fast when you need to explore.</p>
       <div class="hero-cta">
         <a class="btn btn-primary btn-lg" href="#contact">Request for demo</a>
         <a class="btn btn-ghost btn-lg" href="#results">See the results</a>
       </div>
       <div class="hero-sub">
-        <span><span class="check">✦</span> 2D numerical in ~0.35 s, any design</span>
-        <span><span class="check">✦</span> 3D numerical accuracy up to 11 layers</span>
+        <span><span class="check">✦</span> MOR-model in 51 µs per design point</span>
+        <span><span class="check">✦</span> 3D numerical on 200+ layer stacks</span>
         <span><span class="check">✦</span> AI inference in ~1.5 ms</span>
       </div>
     </div>
@@ -364,11 +364,11 @@
     <!-- Real result visual -->
     <div class="viz-card reveal">
       <div class="viz-head">
-        <span class="viz-title">chiplet_2.5D · warpage · µm</span>
+        <span class="viz-title">2nm CoWoS · warpage · µm</span>
         <span class="viz-dots"><i></i><i></i><i></i></span>
       </div>
-      <img src="assets/figs/warpage_chiplet_2p5d_14.png" alt="WarpStack 2D warpage map of a 2.5D chiplet package — a smooth bowl-shaped deflection with the die array outlined" loading="eager">
-      <div class="viz-cap"><b>A real WarpStack result.</b> The predicted warpage surface of a 14-die 2.5D chiplet package — cool center, warm edges — computed by the fast 2D solver in about a third of a second.</div>
+      <img src="assets/figs/warpage_hbm4_2nm_mor.png" alt="WarpStack warpage map of a 2nm CoWoS package — a broad central dome falling away toward the package corners, with the GPU and HBM outlines drawn" loading="eager">
+      <div class="viz-cap"><b>A real WarpStack result.</b> The predicted warpage surface of a 2nm CoWoS package — 8 HBM stacks, 2 GPU dies, 108 chiplets — returned by the MOR-model in 51 µs, matching the full 3D solve to within 0.04 µm.</div>
     </div>
   </div>
 </section>
@@ -376,10 +376,10 @@
 <!-- ============ STATS ============ -->
 <div class="stats">
   <div class="wrap stats-grid">
-    <div class="stat reveal"><div class="num c1">~1.5 ms</div><div class="lbl">WarpStack-AI (GNN) inference</div></div>
-    <div class="stat reveal"><div class="num c2">120,000×</div><div class="lbl">AI faster than 3D numerical</div></div>
-    <div class="stat reveal"><div class="num c3">1.3%</div><div class="lbl">AI error vs numerical ground truth</div></div>
-    <div class="stat reveal"><div class="num c4">3</div><div class="lbl">methods — 2D · 3D · AI</div></div>
+    <div class="stat reveal"><div class="num c1">51 µs</div><div class="lbl">MOR-model per design point</div></div>
+    <div class="stat reveal"><div class="num c2">798,000×</div><div class="lbl">MOR-model faster than 3D numerical</div></div>
+    <div class="stat reveal"><div class="num c3">0.04 µm</div><div class="lbl">largest difference vs 3D reference</div></div>
+    <div class="stat reveal"><div class="num c4">3</div><div class="lbl">methods — 3D · MOR · AI</div></div>
   </div>
 </div>
 
@@ -544,13 +544,13 @@
     <div class="sec-head reveal">
       <div class="kicker">What it does</div>
       <h2>Three methods, one workflow — numerical and AI</h2>
-      <p>WarpStack is a hybrid engine: a fast 2D numerical method for screening, a detailed 3D numerical method for accurate sign-off, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method for near-instant, numerical-grade warpage. All three run from the same simple design description, so you move between speed, accuracy, and real-time inference without changing your inputs.</p>
+      <p>WarpStack is a hybrid engine: a detailed 3D numerical method for accurate sign-off, the <b>MOR-model</b> for sweeping a design space at a fraction of the cost, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method for near-instant, numerical-grade warpage. All three run from the same simple design description, so you move between accuracy, exploration, and real-time inference without changing your inputs.</p>
     </div>
     <div class="features">
       <div class="feat reveal">
-        <div class="tag">FAST · NUMERICAL</div>
-        <h3><span class="emoji">⚡</span> 2D numerical screening in a blink</h3>
-        <p>The fast 2D numerical returns a full warpage map in about a third of a second — the same speed whether the design has 3 layers or 11. Sweep hundreds of floorplans and stack-ups without waiting.</p>
+        <div class="tag">FAST · COMPACT MODEL</div>
+        <h3><span class="emoji">⚡</span> MOR-model — a design space in the time of one solve</h3>
+        <p>Built once per design from the same 3D formulation, the MOR-model then returns a full warpage map in 51 µs. Sweep thousands of material and thermal design points in the time a single 3D solve would take.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">ACCURATE · NUMERICAL</div>
@@ -565,7 +565,7 @@
       <div class="feat reveal">
         <div class="tag">SCOPE</div>
         <h3><span class="emoji">🧱</span> Real multi-layer stacks</h3>
-        <p>Handles arbitrary layer stacks — substrates, interposers, bumps, dies, spreaders, lids — with per-layer materials and per-die placement. Validated on designs from 3 to 11 layers and 10 to 18 dies.</p>
+        <p>Handles arbitrary layer stacks — substrates, interposers, bumps, dies, spreaders, lids — with per-layer materials and per-die placement. The reference design below is a 2nm CoWoS package: 237 mechanical layers, 135 die regions, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">MAPS</div>
@@ -574,8 +574,8 @@
       </div>
       <div class="feat reveal">
         <div class="tag">COMPARE</div>
-        <h3><span class="emoji">⚖️</span> 2D vs 3D, side by side</h3>
-        <p>A built-in compare mode runs both solvers and shows exactly where they agree and where they differ — so you know which designs the fast 2D can screen and which ones truly need 3D.</p>
+        <h3><span class="emoji">⚖️</span> 3D vs MOR-model, side by side</h3>
+        <p>Run both on the same design and compare them map to map. On the reference package below the MOR-model tracks the 3D solve to within 0.04 µm across the whole surface — so you can see exactly what the fast path costs you.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">SCRIPTABLE</div>
@@ -597,16 +597,16 @@
     <div class="sec-head reveal">
       <div class="kicker">Workflow · agentic integration</div>
       <h2>Built for agentic EDA flows</h2>
-      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call fast 2D numerical, detailed 3D numerical, or <b>WarpStack-AI (GNN) inference</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
+      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call detailed 3D numerical, the <b>MOR-model</b>, or <b>WarpStack-AI (GNN) inference</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
     </div>
     <div class="tech-grid">
       <div class="reveal">
         <ul class="flowpts">
           <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
           <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
-          <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed 3D−2D difference maps out, ready for closed-loop automation.</li>
+          <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed difference maps out, ready for closed-loop automation.</li>
           <li><b>Warpage-aware optimization</b> — at ~1.5 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow in real time.</li>
-          <li><b>Reliability sign-off</b> — AI or fast 2D screens the whole design space; detailed 3D numerical signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
+          <li><b>Reliability sign-off</b> — the MOR-model or AI screens the whole design space; detailed 3D numerical signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
         </ul>
         <div class="chips" style="margin-top:24px">
           <span class="chip">agentic-flow ready</span>
@@ -628,7 +628,7 @@
           <div class="floarrow"><span class="ax">↓</span> invokes WarpStack — CLI + structured data interface</div>
           <div class="flonode engine">
             <div class="ft">▣ WarpStack warpage analysis</div>
-            <div class="fd">WarpStack-AI (GNN) inference, fast 2D numerical, or detailed 3D numerical runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
+            <div class="fd">WarpStack-AI (GNN) inference, the MOR-model, or detailed 3D numerical runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
           </div>
           <div class="floarrow"><span class="ax">↓</span> returns structured, machine-readable results</div>
           <div class="flonode">
@@ -648,7 +648,7 @@
     <div class="sec-head reveal">
       <div class="kicker">How it works</div>
       <h2>From one floorplan to a warpage map</h2>
-      <p>You describe the package once — its layers, materials, and where each die sits. WarpStack builds a mechanical model of the stack, applies the thermal load, and solves for how the surface deflects. Then pick the method that fits the moment: fast 2D numerical, detailed 3D numerical, or WarpStack-AI (GNN) inference. The inputs are identical.</p>
+      <p>You describe the package once — its layers, materials, and where each die sits. WarpStack builds a mechanical model of the stack, applies the thermal load, and solves for how the surface deflects. Then pick the method that fits the moment: detailed 3D numerical, the MOR-model, or WarpStack-AI (GNN) inference. The inputs are identical.</p>
     </div>
     <div class="tech-grid">
       <div class="pipe reveal">
@@ -662,7 +662,7 @@
         </div>
         <div class="pipe-step">
           <span class="n">3</span>
-          <div><h4>Solve — or predict — the shape</h4><p>A numerical solver computes how the surface deflects — a fast 2D method for screening, a detailed 3D method for sign-off. Or skip the solve entirely and let <b>WarpStack-AI (GNN)</b> — an AI-accelerated method trained on that same numerical output — predict the warpage map in milliseconds.</p></div>
+          <div><h4>Solve — or predict — the shape</h4><p>A numerical solver computes how the surface deflects — the detailed 3D method for sign-off, or the <b>MOR-model</b> when you need to sweep. Or skip the solve entirely and let <b>WarpStack-AI (GNN)</b> — an AI-accelerated method trained on that same numerical output — predict the warpage map in milliseconds.</p></div>
         </div>
         <div class="pipe-step">
           <span class="n">4</span>
@@ -673,16 +673,16 @@
       <div>
         <div class="threecard reveal">
           <div class="solver fast">
-            <div class="nm">2D numerical</div>
-            <div class="role">numerical · fast · screening</div>
-            <p>A fast numerical method that solves the bow on a plane — the lowest-cost estimate, ideal for sweeping many designs.</p>
-            <div class="kv"><span><b>~0.35 s</b><br>per design</span><span><b>3–11</b><br>layers</span></div>
+            <div class="nm">MOR-model</div>
+            <div class="role">compact model · fast · exploration</div>
+            <p>A physics-based compact model, built once per design from the same 3D formulation — not a black-box fit to data.</p>
+            <div class="kv"><span><b>51 µs</b><br>per design</span><span><b>0.04 µm</b><br>vs 3D reference</span></div>
           </div>
           <div class="solver acc">
             <div class="nm">3D numerical</div>
             <div class="role">numerical · detailed · sign-off</div>
             <p>A detailed numerical method that resolves the package through its full thickness — the ground-truth fidelity for complex, interleaved stacks.</p>
-            <div class="kv"><span><b>9 s–8 min</b><br>per design</span><span><b>full</b><br>3D field</span></div>
+            <div class="kv"><span><b>40.6 s</b><br>per design</span><span><b>full</b><br>3D field</span></div>
           </div>
           <div class="solver ai">
             <div class="nm">WarpStack-AI (GNN)</div>
@@ -694,10 +694,10 @@
 
         <div class="eqbox reveal">
           <div class="label">Numerical for truth, AI for speed</div>
-          <p class="why">The three methods are built to work together. Screen the whole space with the fast 2D method, sign off the critical designs with the detailed 3D method, and — once WarpStack-AI (GNN) is trained on that numerical output — call the AI for near-instant maps whenever you need warpage inside a live loop. Because the AI learns from the same numerical engine that validates it, you get numerical-grade answers at AI speed. Same floorplan, same materials — you simply choose truth, detail, or speed.</p>
+          <p class="why">The three methods are built to work together. Sign off the critical designs with the detailed 3D method, sweep the design space with the MOR-model built from that same formulation, and — once WarpStack-AI (GNN) is trained on the numerical output — call the AI for near-instant maps whenever you need warpage inside a live loop. Every method is measured against the same 3D reference, so the numbers stay comparable. Same floorplan, same materials — you simply choose truth, exploration, or speed.</p>
           <div class="chips">
-            <span class="chip">2D numerical screening</span>
             <span class="chip">3D numerical sign-off</span>
+            <span class="chip">MOR-model exploration</span>
             <span class="chip">AI-accelerated</span>
             <span class="chip">trained on numerical data</span>
             <span class="chip">generalizes to unseen designs</span>
@@ -716,125 +716,111 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">Results</div>
-      <h2>Fast where you can, accurate where you must, instant when it counts</h2>
-      <p>First, the numerical engine on a batch of nine 2.5D and 3D benchmark designs — fast 2D numerical and detailed 3D numerical, from a 3-layer module to an 11-layer chiplet. Then <b>WarpStack-AI (GNN)</b>, benchmarked against numerical ground truth: numerical-grade warpage in milliseconds, even on designs it has never seen.</p>
+      <h2>Sign off with 3D, explore with the MOR-model, iterate with AI</h2>
+      <p>One reference design, measured end to end: a <b>2nm CoWoS</b> package — 8 HBM stacks of 12-hi DRAM, 2 GPU dies, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer. The detailed 3D numerical method is the reference. The <b>MOR-model</b> reproduces it to within 0.036 µm at 798,000× the speed, and <b>WarpStack-AI (GNN)</b> adds millisecond inference on top.</p>
     </div>
 
-    <!-- 2D RESULTS -->
+    <!-- DESIGN + 3D REFERENCE -->
     <div class="res-group">
-      <div class="res-label reveal">Fast 2D — screen every design in under a second</div>
+      <div class="res-label warm reveal">Detailed 3D — the reference answer</div>
       <div class="res-grid">
-        <!-- 2D CPU table -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>2D solve time by design</h3><div class="psub">One floorplan → one warpage map</div></div>
-            <span class="badge">~0.35 s each</span>
+            <div><h3>The design WarpStack solves</h3><div class="psub">2nm CoWoS · 8 HBM stacks × 12-hi DRAM + 2 GPUs</div></div>
+            <span class="badge warn">40.6 s</span>
           </div>
           <table class="data">
-            <thead><tr><th>Design</th><th class="r">Layers</th><th class="r">Dies</th><th class="r">2D time</th></tr></thead>
             <tbody>
-              <tr><td>3-layer module</td><td class="mono r">3</td><td class="mono r">12</td><td class="mono r">0.342 s</td></tr>
-              <tr><td>Planar 16-die array</td><td class="mono r">3</td><td class="mono r">16</td><td class="mono r">0.347 s</td></tr>
-              <tr><td>Arbitrary-layer module</td><td class="mono r">5</td><td class="mono r">12</td><td class="mono r">0.345 s</td></tr>
-              <tr><td>GaAs RF PA array</td><td class="mono r">5</td><td class="mono r">15</td><td class="mono r">0.347 s</td></tr>
-              <tr><td>HBM3 memory stack</td><td class="mono r">6</td><td class="mono r">10</td><td class="mono r">0.346 s</td></tr>
-              <tr><td>5&nbsp;nm CPU</td><td class="mono r">7</td><td class="mono r">18</td><td class="mono r">0.347 s</td></tr>
-              <tr><td>2.5D chiplet</td><td class="mono r">9</td><td class="mono r">14</td><td class="mono r">0.347 s</td></tr>
-              <tr><td>11-layer 3D chiplet</td><td class="mono r">11</td><td class="mono r">16</td><td class="mono r">0.356 s</td></tr>
+              <tr><td>Package</td><td class="mono r">56.2 × 57.5 mm</td></tr>
+              <tr><td>Chiplet instances</td><td class="mono r">108</td></tr>
+              <tr><td>Die regions</td><td class="mono r">135</td></tr>
+              <tr><td>Mechanical layers</td><td class="mono r">237</td></tr>
+              <tr><td>Solid elements</td><td class="mono r">45,035</td></tr>
+              <tr><td>Degrees of freedom</td><td class="mono r">169,602</td></tr>
+              <tr class="win"><td>3D numerical solve</td><td class="mono r">40.6 s</td></tr>
             </tbody>
           </table>
-          <div class="note">Package sizes here span 5&nbsp;mm to 200&nbsp;mm on a side. The 2D solve time barely moves — every design lands between <b>0.34 s and 0.36 s</b>, regardless of layer count, die count, or package size.</div>
+          <div class="note">A full 3D solve through the thickness of the stack — 8 memory stacks, 12 DRAM tiers each, two large compute dies, every bond layer resolved. One design point, 40.6 s on a single core. Imported straight from the IEEE 3Dblox description, with no hand re-entry.</div>
         </div>
 
-        <!-- 2D figures: structure + warpage -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>From stack to warpage</h3><div class="psub">cores_16_1 · 16-die planar array</div></div>
-            <span class="badge">2D result</span>
+            <div><h3>Its warpage surface</h3><div class="psub">Active surface, assembly to operating temperature</div></div>
+            <span class="badge warn">3D reference</span>
           </div>
           <figure class="fig" style="margin-top:14px">
-            <img src="assets/figs/stack_cores_16_1.png" alt="3D structure view of the cores_16_1 design — 16 die tiles arranged on a large planar substrate" loading="lazy">
-            <figcaption><b>The design.</b> 16 dies on a 200&nbsp;mm, 3-layer planar substrate — the 3D structure WarpStack builds from the floorplan.</figcaption>
-          </figure>
-          <figure class="fig" style="margin-top:16px">
-            <img src="assets/figs/warpage_cores_16_1.png" alt="2D warpage map of a large 16-die planar array — a strong central dome reaching about 1465 microns peak-to-peak" loading="lazy">
-            <figcaption><b>Its 2D warpage.</b> That large, low-layer package bows into a pronounced dome — about <b>1465&nbsp;µm</b> peak-to-peak — solved in 0.35&nbsp;s.</figcaption>
+            <img src="assets/figs/warpage_hbm4_2nm_3d_active.png" alt="3D numerical warpage map of the 2nm CoWoS package — a broad central dome falling away toward the package corners, with GPU and HBM outlines drawn" loading="lazy">
+            <figcaption><b>The 3D answer.</b> A broad central dome falling away at the corners — <b>1332 µm</b> peak-to-peak at FEM mesh 64. This is the surface every other method on this page is measured against.</figcaption>
           </figure>
         </div>
       </div>
     </div>
 
-    <!-- 3D RESULTS -->
+    <!-- MOR vs 3D -->
     <div class="res-group">
-      <div class="res-label warm reveal">Detailed 3D — layer-specific warpage the flat model can't see</div>
+      <div class="res-label reveal">MOR-model vs 3D — change a material, get the answer now</div>
       <div class="panel full reveal">
         <div class="phead">
-          <div><h3>Same design, three surfaces — HBM3 memory stack</h3><div class="psub">A 6-layer, 10-die DRAM stack on a 12&nbsp;mm interposer</div></div>
-          <span class="badge warn">2D vs 3D</span>
+          <div><h3>A what-if the model was never built at</h3><div class="psub">ABF substrate stiffened 24.0 → 28.8 GPa</div></div>
+          <span class="badge">798,000× faster</span>
         </div>
-        <p class="psub" style="margin:2px 0 4px; max-width:820px">The fast 2D method returns a single, smooth package bow. The 3D method resolves the stack layer by layer, so it reports warpage <b style="color:#e9eef8">per surface</b> — the die-level active surface <em>and</em> the continuous package surface — capturing local, die-specific deflection that the flat 2D map averages away.</p>
+        <p class="psub" style="margin:2px 0 4px; max-width:860px">The <b style="color:#e9eef8">MOR-model</b> is a physics-based compact model built once per design from the same 3D formulation — not a black-box fit to data. Here the substrate is stiffened, a change that moves peak-to-peak warpage by <b style="color:#e9eef8">+40.9 µm</b>. The MOR-model resolves that shift to within 0.036 µm — in 51 µs rather than 40.6 s.</p>
         <div class="fig-4">
           <figure class="fig reveal">
-            <img src="assets/figs/stack_hbm3.png" alt="3D structure view of the HBM3 stack — stacked DRAM dies on an interposer beneath an overmold encapsulant" loading="lazy">
-            <figcaption><span class="figtag fst">Design · 3D structure</span><b>The stack.</b> 6 layers — interposer, micro-bumps, three DRAM tiers, and overmold — with 10 dies.</figcaption>
+            <img src="assets/figs/stack_hbm4_2nm.png" alt="3D structure view of the 2nm CoWoS package — two GPU dies flanked by four HBM stacks each side on a silicon interposer over the substrate" loading="lazy">
+            <figcaption><span class="figtag fst">Design · 3D structure</span><b>The stack.</b> 108 chiplet instances, 237 mechanical layers, straight from IEEE 3Dblox.</figcaption>
           </figure>
           <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm3_2d.png" alt="2D warpage map of the HBM3 stack — a single smooth central bowl with no per-die structure" loading="lazy">
-            <figcaption><span class="figtag f2d">Fast 2D · screening</span><b>2D numerical result.</b> One smooth bowl, ~10&nbsp;µm peak-to-peak — a fast, whole-package estimate with the stack collapsed to a plane.</figcaption>
+            <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="3D numerical warpage map of the stiffened-substrate variant" loading="lazy">
+            <figcaption><span class="figtag f3d">Detailed 3D · reference</span><b>3D numerical.</b> 1372.7 µm peak-to-peak, solved from scratch in 40.6 s.</figcaption>
           </figure>
           <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm3_3d_active.png" alt="3D active-surface warpage map of the HBM3 stack showing each DRAM die deflecting individually within its outline" loading="lazy">
-            <figcaption><span class="figtag f3d">Detailed 3D · die surface</span><b>3D active surface.</b> Each DRAM die now bends on its own — the local, die-specific warpage that matters for cracking and bond reliability.</figcaption>
+            <img src="assets/figs/warpage_hbm4_2nm_mor_whatif.png" alt="MOR-model warpage map of the same stiffened-substrate variant, visually identical to the 3D numerical map" loading="lazy">
+            <figcaption><span class="figtag f2d">MOR-model · same point</span><b>MOR-model.</b> 1372.6 µm peak-to-peak — returned in 51 µs.</figcaption>
           </figure>
           <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm3_3d_package.png" alt="3D package-surface warpage map of the HBM3 stack — the continuous encapsulant top surface bowing" loading="lazy">
-            <figcaption><span class="figtag f3d">Detailed 3D · package surface</span><b>3D package surface.</b> The continuous encapsulant top — the global package bow, reported separately from the die-level view.</figcaption>
+            <img src="assets/figs/warpage_hbm4_2nm_diff.png" alt="Signed difference map between the 3D numerical and MOR-model surfaces, four orders of magnitude smaller than the warpage itself" loading="lazy">
+            <figcaption><span class="figtag fst">3D − MOR-model</span><b>The difference.</b> Signed residual, at most 0.036 µm — 0.003% of the warpage being predicted.</figcaption>
           </figure>
         </div>
-        <div class="note">Because the 3D solver models every layer through its thickness, it doesn't just give a more accurate number — it tells you <b>where</b> the warpage lives. The die-level active surface and the package-level surface come out as separate maps, so you can see local die deflection and the overall package bow independently. The flat 2D method, by design, blends all of that into a single averaged surface.</div>
+        <div class="note">Both maps are the active surface at the same mesh and the same thermal load, so this compares the two methods like for like rather than against measurement. On this package the active and continuous package surfaces agree to within 0.1% of peak-to-peak — the bow is global, so the die-level and package-level views coincide.</div>
       </div>
     </div>
 
-    <!-- COMPARISON -->
+    <!-- AGREEMENT + SPEEDUP -->
     <div class="res-group">
-      <div class="res-label reveal">2D vs 3D — where fast is already close enough</div>
       <div class="res-grid">
-        <!-- agreement table -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>Closest-agreement designs</h3><div class="psub">Peak-to-peak warpage, 2D vs 3D</div></div>
-            <span class="badge">2D within ~10–20%</span>
+            <div><h3>How closely the MOR-model tracks 3D</h3><div class="psub">Stiffened-substrate what-if · same mesh, same load</div></div>
+            <span class="badge">within 0.036 µm</span>
           </div>
           <table class="data">
-            <thead><tr><th>Design</th><th class="r">2D</th><th class="r">3D</th><th class="r">Agreement</th></tr></thead>
+            <thead><tr><th>Quantity</th><th class="r">3D numerical</th><th class="r">MOR-model</th></tr></thead>
             <tbody>
-              <tr class="win"><td>Arbitrary-layer module <span class="muted-tag">5L</span></td><td class="mono r">251 µm</td><td class="mono r">269 µm</td><td class="mono r">93%</td></tr>
-              <tr><td>2.5D chiplet <span class="muted-tag">9L</span></td><td class="mono r">50 µm</td><td class="mono r">44 µm</td><td class="mono r">88%</td></tr>
-              <tr><td>Planar 16-die array <span class="muted-tag">3L</span></td><td class="mono r">1465 µm</td><td class="mono r">1256 µm</td><td class="mono r">86%</td></tr>
-              <tr><td>HBM3 memory stack <span class="muted-tag">6L</span></td><td class="mono r">10.1 µm</td><td class="mono r">8.3 µm</td><td class="mono r">83%</td></tr>
-              <tr><td>16-die array, variant <span class="muted-tag">3L</span></td><td class="mono r">1696 µm</td><td class="mono r">1370 µm</td><td class="mono r">81%</td></tr>
+              <tr><td>Peak-to-peak warpage</td><td class="mono r">1372.7 µm</td><td class="mono r">1372.6 µm</td></tr>
+              <tr><td>Time per design point</td><td class="mono r">40.6 s</td><td class="mono r">51 µs</td></tr>
+              <tr class="win"><td>Peak-to-peak difference</td><td class="mono r">reference</td><td class="mono r">0.043 µm</td></tr>
+              <tr><td>Whole-map difference</td><td class="mono r">—</td><td class="mono r">0.003%</td></tr>
+              <tr><td>Largest local difference</td><td class="mono r">—</td><td class="mono r">0.036 µm</td></tr>
             </tbody>
           </table>
-          <div class="note">For these designs the fast 2D map already predicts the 3D peak warpage within roughly 10–20% — close enough to screen and rank candidates before committing to a full 3D run. Deep, interleaved stacks (like the 11-layer chiplet) diverge more — exactly the cases where the 3D analysis earns its extra time.</div>
+          <div class="note">This point was deliberately chosen <em>outside</em> the set the model was built from. A further 8 design points drawn from across the material design space were each solved with full 3D numerical and compared: worst whole-map difference 0.006%.</div>
         </div>
 
-        <!-- speedup bars -->
         <div class="panel reveal">
           <div class="phead">
-            <div><h3>How much faster 2D runs</h3><div class="psub">3D solve time ÷ 2D solve time</div></div>
-            <span class="badge">up to 1400×</span>
+            <div><h3>What that buys you</h3><div class="psub">Design points per hour, single core</div></div>
+            <span class="badge">798,000×</span>
           </div>
           <div class="bars" id="speedbars">
-            <div class="bar-row"><span class="blab">11-layer 3D chiplet</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bval">1411×</span></div>
-            <div class="bar-row"><span class="blab">2.5D chiplet</span><div class="bar-track"><div class="bar-fill" data-w="34"></div></div><span class="bval">285×</span></div>
-            <div class="bar-row"><span class="blab">5&nbsp;nm CPU</span><div class="bar-track"><div class="bar-fill" data-w="22"></div></div><span class="bval">153×</span></div>
-            <div class="bar-row"><span class="blab">GaAs RF PA array</span><div class="bar-track"><div class="bar-fill" data-w="12"></div></div><span class="bval">57×</span></div>
-            <div class="bar-row"><span class="blab">HBM3 memory stack</span><div class="bar-track"><div class="bar-fill" data-w="9"></div></div><span class="bval">33×</span></div>
-            <div class="bar-row"><span class="blab">3-layer module</span><div class="bar-track"><div class="bar-fill" data-w="7"></div></div><span class="bval">26×</span></div>
+            <div class="bar-row"><span class="blab">MOR-model</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bval">70.8M</span></div>
+            <div class="bar-row"><span class="blab">3D numerical</span><div class="bar-track"><div class="bar-fill" data-w="1"></div></div><span class="bval">89</span></div>
           </div>
-          <div class="note">The 3D solve grows with the size and depth of the stack — from about 9&nbsp;s for a simple module to roughly 8&nbsp;minutes for the 11-layer chiplet. The 2D solve stays near 0.35&nbsp;s throughout, so the speed gap widens exactly where design-space exploration needs it most.</div>
+          <div class="note">Building the MOR-model for this design costs 17 min of 3D solves up front — about 25× a single 3D run — after which each additional design point is 51 µs. The investment pays for itself within roughly 25 evaluations, and everything past that is effectively free. That is what turns warpage from a sign-off check into something you sweep.</div>
         </div>
       </div>
+      <div class="note" style="margin-top:22px">Mechanical properties for this reference design are <b>illustrative</b> values for the material classes involved, not calibrated 2nm, HBM4 or CoWoS process data — so absolute warpage in microns is indicative rather than a prediction about specific hardware, and it is quoted at FEM mesh 64. Solver timings, the speedup, and the agreement between the 3D reference and the MOR-model do not depend on those values.</div>
     </div>
 
     <!-- AI RESULTS -->
@@ -851,11 +837,10 @@
             <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D numerical</th><th class="r">Error vs numerical</th></tr></thead>
             <tbody>
               <tr><td>3D numerical <span class="muted-tag">reference</span></td><td class="mono r">174.5 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
-              <tr><td>2D numerical <span class="muted-tag">screening</span></td><td class="mono r">~0.35 s</td><td class="mono r">~500×</td><td class="mono r">est.</td></tr>
               <tr class="ai"><td>WarpStack-AI <span class="muted-tag">GNN</span></td><td class="mono r">1.46 ms</td><td class="mono r">119,766×</td><td class="mono r">1.26%</td></tr>
             </tbody>
           </table>
-          <div class="note"><b style="color:#c4b5fd">WarpStack-AI (GNN)</b> returns a full warpage map in <b>1.46 ms</b> — about <b>120,000×</b> faster than a 3D numerical reference and <b>~200×</b> faster than the fast 2D numerical method — at <b>1.26%</b> normalized RMSE and <b>2.21%</b> peak-warpage error against numerical ground truth. It also trains efficiently: ~33 minutes, roughly <b>70% less</b> training time than a comparable AI baseline at equal accuracy.</div>
+          <div class="note"><b style="color:#c4b5fd">WarpStack-AI (GNN)</b> returns a full warpage map in <b>1.46 ms</b> — about <b>120,000×</b> faster than a 3D numerical reference — at <b>1.26%</b> normalized RMSE and <b>2.21%</b> peak-warpage error against numerical ground truth. It also trains efficiently: ~33 minutes, roughly <b>70% less</b> training time than a comparable AI baseline at equal accuracy.</div>
         </div>
 
         <!-- transferability -->
@@ -902,7 +887,7 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top"><span class="dot"></span>WarpStack</a>
-        <p>Hybrid numerical + AI warpage analysis for 2.5D and 3D chiplet reliability — fast 2D numerical, detailed 3D numerical, and WarpStack-AI (GNN) inference, from a single design description.</p>
+        <p>Hybrid numerical + AI warpage analysis for 2.5D and 3D chiplet reliability — detailed 3D numerical, the MOR-model, and WarpStack-AI (GNN) inference, from a single design description.</p>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
@@ -915,12 +900,12 @@
         </div>
         <div class="foot-col">
           <h5>Capabilities</h5>
-          <span>Fast 2D numerical screening</span>
           <span>Detailed 3D numerical sign-off</span>
+          <span>MOR-model design-space exploration</span>
           <span>WarpStack-AI (GNN) inference</span>
           <span>IEEE 3Dblox input</span>
           <span>Agentic-flow integration</span>
-          <span>2.5D / 3D · up to 11 layers</span>
+          <span>2.5D / 3D · 200+ layer stacks</span>
         </div>
         <div class="foot-col">
           <h5>Contact</h5>
@@ -930,7 +915,7 @@
       </div>
     </div>
     <div class="cite">
-      WarpStack is a hybrid warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks, combining fast and detailed <b>numerical</b> analysis with an <b>AI-accelerated</b> approach. Reported figures and timings are from a batch of nine benchmark designs (3–11 layers, 10–18 dies).
+      WarpStack is a hybrid warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks, combining detailed <b>numerical</b> analysis with a compact <b>MOR-model</b> and an <b>AI-accelerated</b> approach. The 3D and MOR-model figures on this page are measured on a 2nm CoWoS reference design (8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances) at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so absolute warpage in microns is indicative; timings and the 3D-vs-MOR agreement are not affected.
     </div>
     <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
   </div>
