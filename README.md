@@ -15,7 +15,7 @@ three methods on the same inputs — numerical when you need ground truth, AI wh
   Once built it answers a new material or thermal design point in well under a millisecond, turning
   design-space exploration from an overnight batch into an interactive sweep.
 - **WarpStack-AI (GNN)** — an AI-accelerated method trained on numerical ground truth that predicts the
-  full warpage map in **13.7 ms** at **0.5% error**, 1,315x faster than solving the same package in 3D.
+  full warpage map in **19.4 ms** at **0.5% error**, 2,146x faster than solving the same package in 3D.
   Fast enough to put warpage inside a live optimization loop.
 
 This repository hosts the **WarpStack** promotion site, live at
@@ -51,7 +51,7 @@ The 3D and MOR-model results use one reference design, measured end to end:
 **2nm CoWoS - 8 HBM stacks x 12-hi DRAM + 2 GPUs - 108 chiplets** — a 56.2 × 57.5 mm package with
 135 die regions and 237 mechanical layers, imported from IEEE 3Dblox.
 At FEM mesh 64 that is 169,602 degrees of freedom and 45,035 solid elements.
-WarpStack-AI (GNN) is measured separately, on the 7nm HBM + CPU stepped package described below.
+WarpStack-AI (GNN) is measured on this same package, described again below.
 
 Measured on an Apple M3, single core. Full data in
 `warpstack/tests/warpstack_io_results_sept_2026/` and `warpstack/src_gcn/docs/`.
@@ -113,34 +113,34 @@ warpage is therefore indicative; timings and the 3D-vs-MOR agreement do not depe
 **WarpStack-AI (GNN)** learns a package's warpage behaviour from results produced by the detailed 3D
 method, then returns the full warpage map without solving. A network is trained per design.
 
-Measured on a different design from the MOR results above: the **7nm HBM + CPU stepped** package,
-55.0 x 30.0 mm, 63 stacked columns, 48 mechanical layers, 24,132 solid elements, 93,138 degrees of
-freedom at FEM mesh 64. Full data in `warpstack/src_gcn/docs/`.
+Measured on the same **2nm CoWoS** package as the 3D and MOR results above: 56.2 x 57.5 mm, 135
+stacked die columns, 237 mechanical layers, 45,035 solid elements, 169,602 degrees of freedom at FEM
+mesh 64. Full data in `warpstack/tests/TVLSI_data_sept_2026/results/`.
 
 | Method | Type | Runtime / design | Speedup vs 3D | Error vs 3D |
 | --- | --- | ---: | ---: | ---: |
-| 3D numerical | numerical | 17.97 s | 1x (reference) | ground truth |
-| **WarpStack-AI (GNN)** | **AI** | **13.7 ms** | **1,315x** | **0.25% whole-map** |
+| 3D numerical | numerical | 41.54 s | 1x (reference) | ground truth |
+| **WarpStack-AI (GNN)** | **AI** | **19.4 ms** | **2,146x** | **0.49% whole-map** |
 
 Accuracy is reported two ways, against the same 3D method:
 
-| Quantity | 512 held-out design points | 3 fresh 3D solves |
+| Quantity | 512 held-out design points | 6 fresh 3D solves |
 | --- | ---: | ---: |
-| Mean 3D peak-to-peak | 869 µm | 974 µm |
-| Whole-map difference (RMSE / p2p) | 0.48% | 0.25% |
-| Peak-to-peak error | 1.65% | 0.18% |
-| Correlation with 3D | 0.9998 | 0.99997 |
+| Mean 3D peak-to-peak | 1,393 µm | 1,699 µm |
+| Whole-map difference (RMSE / p2p) | 0.38% | 0.49% |
+| Peak-to-peak error | 1.41% | 1.89% |
+| Correlation with 3D | 0.9996 | 0.99996 |
 
-- **1,315x faster than the 3D numerical reference**, single core, at 0.25% whole-map difference against
-  three independently solved 3D fields.
+- **2,146x faster than the 3D numerical reference**, single core, at 0.49% whole-map difference against
+  six independently solved 3D fields.
 - **Genuinely held out:** the 512 scored points come from material configurations kept entirely out of
   training, so the network is scored on combinations it was never shown. Each point varies the material
   set *and* the thermal load.
-- **Efficient to train:** 16.2 min to generate 1,792 labelled 3D warpage fields plus 23.1 min of
-  training — 39.3 min one-time. Training data comes from WarpStack's own 3D formulation, generated far
+- **Efficient to train:** 32.2 min to generate 1,792 labelled 3D warpage fields plus 50.8 min of
+  training — 83.1 min one-time. Training data comes from WarpStack's own 3D formulation, generated far
   more efficiently than a brute-force sweep of solves.
-- **Break-even at 131 design points.** Past that the network is cheaper than solving directly: a
-  1,000-point sweep drops from 5.0 hours to 39 minutes.
+- **Break-even at 120 design points.** Past that the network is cheaper than solving directly: a
+  1,000-point sweep drops from 11.5 hours to 83 minutes.
 
 Generalization to designs outside the one a network was trained on has not yet been measured.
 
@@ -159,7 +159,7 @@ AI inference, warpage finally runs at the speed of the loop itself.
 - **CLI-first & headless** — every method is scriptable from the command line.
 - **Structured data interface** — machine-readable floorplans in; warpage surfaces, peak-to-peak bow,
   and signed difference maps out, ready for closed-loop automation.
-- **Warpage-aware optimization** — at 13.7 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands
+- **Warpage-aware optimization** — at 19.4 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands
   of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow.
 - **Reliability sign-off** — the MOR-model or AI screens the whole design space; detailed 3D
   numerical signs off the critical designs against warpage limits before tape-out and assembly.
@@ -189,7 +189,7 @@ Fed back to the agent  ──►  steers the next floorplan / stack / material i
 │       ├── warpage_hbm4_2nm_3d_whatif.png  3D numerical, stiffened-substrate what-if
 │       ├── warpage_hbm4_2nm_mor_whatif.png MOR-model, same what-if
 │       ├── warpage_hbm4_2nm_diff.png       signed 3D − MOR-model difference
-│       └── warpage_hbm_7nm_gnn_vs_3d.png   3D numerical vs WarpStack-AI (GNN), with the difference
+│       └── warpage_hbm4_2nm_gnn_vs_3d.png 3D numerical vs WarpStack-AI (GNN), with the difference
 └── README.md
 ```
 
