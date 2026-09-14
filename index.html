@@ -8,18 +8,21 @@
 <meta property="og:title" content="WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets" />
 <meta property="og:description" content="Accurate 3D numerical sign-off, the MOR-model for fast design-space exploration, and WarpStack-AI (GNN) inference in ~19 ms at 0.5% numerical-grade accuracy — one hybrid warpage engine." />
 <meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#070b16; --bg-2:#0a1020; --surface:#0e1628; --surface-2:#13203b;
-    --border:rgba(148,163,184,.14); --border-strong:rgba(148,163,184,.26);
-    --text:#e9eef8; --muted:#9aabc6; --muted-2:#6f829f;
-    --cyan:#22d3ee; --blue:#3b82f6; --indigo:#6366f1;
-    --amber:#fbbf24; --orange:#fb923c; --red:#ef4444;
-    --warp:linear-gradient(90deg,#1d4ed8 0%,#3b82f6 20%,#22d3ee 38%,#e2e8f0 52%,#fbbf24 68%,#fb923c 84%,#ef4444 100%);
-    --accent-grad:linear-gradient(135deg,#22d3ee 0%,#3b82f6 55%,#6366f1 100%);
+    --bg:#f7f9fc; --bg-2:#f0f4fa; --surface:#ffffff; --surface-2:#f0f4fa;
+    --border:#dfe6f0; --border-strong:#cdd8e6;
+    --text:#0d1b2e; --muted:#4f6280; --muted-2:#7b8ca6;
+    --cyan:#0aa088; --blue:#1668d8; --indigo:#7a4fe0;
+    --amber:#c2670a; --orange:#1668d8; --red:#d63a49;
+    --warp:linear-gradient(100deg,#0aa088 0%,#1668d8 100%);
+    --accent-grad:linear-gradient(135deg,#0aa088 0%,#1668d8 100%);
     --radius:16px; --radius-sm:11px;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --maxw:1180px;
   }
   *{box-sizing:border-box}
@@ -32,9 +35,8 @@
   body::before{
     content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
     background:
-      radial-gradient(900px 480px at 80% -8%, rgba(239,68,68,.14), transparent 60%),
-      radial-gradient(820px 520px at 6% 2%, rgba(34,211,238,.15), transparent 58%),
-      radial-gradient(1000px 700px at 50% 112%, rgba(59,130,246,.10), transparent 60%),
+      radial-gradient(820px 520px at 8% 0%, rgba(10,160,136,.09), transparent 58%),
+      radial-gradient(900px 620px at 90% 2%, rgba(22,104,216,.07), transparent 60%),
       var(--bg);
   }
   a{color:inherit; text-decoration:none}
@@ -43,7 +45,7 @@
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
   .mono{font-family:var(--mono)}
   .grad-text{
-    background:linear-gradient(100deg,#67e8f9 0%,#60a5fa 45%,#fb923c 100%);
+    background:linear-gradient(100deg,#0aa088 0%,#1668d8 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
 
@@ -51,14 +53,14 @@
   header.nav{
     position:sticky; top:0; z-index:50;
     backdrop-filter:saturate(140%) blur(12px);
-    background:rgba(7,11,22,.72);
+    background:rgba(255,255,255,.82);
     border-bottom:1px solid var(--border);
   }
   .nav-inner{display:flex; align-items:center; justify-content:space-between; height:64px}
   .brand{display:flex; align-items:center; gap:11px; font-weight:700; font-size:18px; letter-spacing:-.02em}
   .brand .dot{
     width:22px; height:22px; border-radius:7px; background:var(--warp);
-    box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 18px rgba(34,211,238,.5);
+    box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 18px rgba(10,160,136,.5);
     position:relative; overflow:hidden;
   }
   .brand .dot::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.5), transparent 55%)}
@@ -72,8 +74,8 @@
     padding:12px 20px; border-radius:11px; transition:transform .12s ease, box-shadow .2s ease, background .2s;
     white-space:nowrap;
   }
-  .btn-primary{background:var(--accent-grad); color:#04101f; box-shadow:0 8px 26px -8px rgba(56,189,248,.6)}
-  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 34px -8px rgba(56,189,248,.7)}
+  .btn-primary{background:var(--accent-grad); color:#ffffff; box-shadow:0 8px 26px -8px rgba(22,104,216,.6)}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 34px -8px rgba(22,104,216,.7)}
   .btn-ghost{background:rgba(148,163,184,.08); color:var(--text); border:1px solid var(--border-strong)}
   .btn-ghost:hover{background:rgba(148,163,184,.16); transform:translateY(-2px)}
   .btn-lg{padding:15px 28px; font-size:15.5px; border-radius:13px}
@@ -86,7 +88,7 @@
     display:inline-flex; align-items:center; gap:9px; font-family:var(--mono); font-size:12px;
     letter-spacing:.16em; text-transform:uppercase; color:var(--cyan);
     padding:7px 13px; border:1px solid var(--border-strong); border-radius:100px;
-    background:rgba(34,211,238,.06);
+    background:rgba(10,160,136,.06);
   }
   .eyebrow .pulse{width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:pulse 1.8s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
@@ -100,32 +102,32 @@
   /* ---------- HERO VISUAL ---------- */
   .viz-card{
     position:relative; border:1px solid var(--border); border-radius:var(--radius);
-    background:linear-gradient(180deg,rgba(19,32,59,.85),rgba(10,16,32,.9));
-    box-shadow:0 30px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.04);
+    background:linear-gradient(180deg,#ffffff,#ffffff);
+    box-shadow:0 30px 80px -30px rgba(16,34,64,.10), inset 0 1px 0 rgba(255,255,255,.6);
     padding:14px; overflow:hidden;
   }
   .viz-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 6px}
   .viz-title{font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.04em}
   .viz-dots{display:flex; gap:6px}
   .viz-dots i{width:10px; height:10px; border-radius:50%; display:inline-block; opacity:.7}
-  .viz-dots i:nth-child(1){background:#ef4444}.viz-dots i:nth-child(2){background:#fbbf24}.viz-dots i:nth-child(3){background:#22d3ee}
+  .viz-dots i:nth-child(1){background:#d63a49}.viz-dots i:nth-child(2){background:#c2670a}.viz-dots i:nth-child(3){background:#0aa088}
   .viz-card img{display:block; width:100%; height:auto; border-radius:10px; background:#f5f7fb}
   .viz-cap{font-size:12.5px; color:var(--muted); padding:11px 6px 3px; line-height:1.5}
   .viz-cap b{color:var(--text)}
 
   /* ---------- STATS STRIP ---------- */
-  .stats{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:rgba(10,16,32,.5)}
+  .stats{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:#ffffff}
   .stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0}
   .stat{padding:30px 22px; text-align:center; border-right:1px solid var(--border)}
   .stat:last-child{border-right:none}
   .stat .num{font-family:var(--mono); font-size:clamp(26px,3.4vw,38px); font-weight:700; letter-spacing:-.03em}
-  .stat .num.c1{color:#22d3ee}.stat .num.c2{color:#ff7a52}.stat .num.c3{color:#fbbf24}.stat .num.c4{color:#60a5fa}
+  .stat .num.c1{color:#0aa088}.stat .num.c2{color:#1668d8}.stat .num.c3{color:#0aa088}.stat .num.c4{color:#1668d8}
   .stat .lbl{color:var(--muted); font-size:13.5px; margin-top:6px}
 
   /* ---------- SECTIONS ---------- */
   section{padding:84px 0}
   .sec-head{max-width:720px; margin-bottom:46px}
-  .kicker{font-family:var(--mono); font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--orange)}
+  .kicker{font-family:var(--mono); font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan)}
   .sec-head h2{font-size:clamp(28px,3.6vw,42px); margin-top:14px}
   .sec-head p{color:var(--muted); font-size:17px; margin-top:16px}
 
@@ -133,19 +135,19 @@
   .cards-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
   .card{
     border:1px solid var(--border); border-radius:var(--radius); padding:26px;
-    background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(12,19,36,.5)); transition:border-color .2s, transform .2s;
+    background:linear-gradient(180deg,#ffffff,#ffffff); transition:border-color .2s, transform .2s;
   }
   .card:hover{border-color:var(--border-strong); transform:translateY(-3px)}
   .card .ic{
     width:46px; height:46px; border-radius:12px; display:grid; place-items:center; margin-bottom:16px;
-    background:rgba(34,211,238,.1); border:1px solid var(--border-strong); font-size:22px;
+    background:rgba(10,160,136,.1); border:1px solid var(--border-strong); font-size:22px;
   }
   .card h3{font-size:18.5px}
   .card p{color:var(--muted); font-size:14.5px; margin-top:9px}
 
   /* feature grid */
   .features{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
-  .feat{border:1px solid var(--border); border-radius:var(--radius); padding:26px; background:rgba(14,22,40,.55); position:relative; overflow:hidden}
+  .feat{border:1px solid var(--border); border-radius:var(--radius); padding:26px; background:#ffffff; position:relative; overflow:hidden}
   .feat::before{content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--warp); opacity:0; transition:opacity .25s}
   .feat:hover::before{opacity:.85}
   .feat:hover{border-color:var(--border-strong)}
@@ -159,11 +161,11 @@
   .pipe{display:flex; flex-direction:column; gap:14px}
   .pipe-step{
     display:flex; gap:16px; align-items:flex-start; padding:18px 20px; border:1px solid var(--border);
-    border-radius:var(--radius-sm); background:rgba(14,22,40,.6); position:relative;
+    border-radius:var(--radius-sm); background:#ffffff; position:relative;
   }
   .pipe-step .n{
     flex:none; width:34px; height:34px; border-radius:9px; display:grid; place-items:center;
-    font-family:var(--mono); font-weight:700; font-size:15px; color:#04101f; background:var(--accent-grad);
+    font-family:var(--mono); font-weight:700; font-size:15px; color:#ffffff; background:var(--accent-grad);
   }
   .pipe-step h4{margin:0 0 4px; font-size:16px}
   .pipe-step p{color:var(--muted); font-size:14px}
@@ -171,11 +173,11 @@
   .pipe-step:last-child::after{display:none}
   .twocard{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px}
   .threecard{display:flex; flex-direction:column; gap:12px; margin-top:8px}
-  .solver.ai{border-color:rgba(139,147,248,.32)}
-  .solver.ai .nm{color:#a78bfa}
-  .solver{border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px; background:rgba(14,22,40,.6)}
+  .solver.ai{border-color:rgba(122,79,224,.32)}
+  .solver.ai .nm{color:#7a4fe0}
+  .solver{border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px; background:#ffffff}
   .solver .nm{font-family:var(--mono); font-weight:700; font-size:15px}
-  .solver.fast .nm{color:#22d3ee}.solver.acc .nm{color:#ff7a52}
+  .solver.fast .nm{color:#0aa088}.solver.acc .nm{color:#1668d8}
   .solver .role{font-size:11.5px; color:var(--muted-2); font-family:var(--mono); letter-spacing:.05em; text-transform:uppercase; margin-top:3px}
   .solver p{color:var(--muted); font-size:13px; margin-top:10px}
   .solver .kv{margin-top:12px; display:flex; gap:16px; font-family:var(--mono); font-size:12.5px}
@@ -183,12 +185,12 @@
   .solver .paren{color:var(--muted-2); font-weight:400; font-size:.82em}
   .eqbox{
     margin-top:8px; border:1px solid var(--border); border-radius:var(--radius); padding:22px 24px;
-    background:linear-gradient(180deg,rgba(19,32,59,.6),rgba(10,16,32,.7));
+    background:linear-gradient(180deg,#ffffff,#ffffff);
   }
   .eqbox .label{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--orange)}
   .eqbox .why{color:var(--muted); font-size:14.5px; line-height:1.66; margin:12px 0 2px}
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px}
-  .chip{font-family:var(--mono); font-size:12px; color:var(--cyan); border:1px solid var(--border-strong); border-radius:100px; padding:6px 12px; background:rgba(34,211,238,.06)}
+  .chip{font-family:var(--mono); font-size:12px; color:var(--cyan); border:1px solid var(--border-strong); border-radius:100px; padding:6px 12px; background:rgba(10,160,136,.06)}
   .note{color:var(--muted-2); font-size:12.5px; margin-top:16px; line-height:1.65}
 
   /* agentic flow */
@@ -196,13 +198,13 @@
   .flowpts li{position:relative; padding-left:26px; color:var(--muted); font-size:14.5px; line-height:1.6}
   .flowpts li::before{content:"→"; position:absolute; left:0; top:0; color:var(--cyan); font-family:var(--mono)}
   .flowpts li b{color:var(--text)}
-  .floloop{border:1px solid var(--border); border-radius:var(--radius); padding:20px; background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(10,16,32,.6))}
+  .floloop{border:1px solid var(--border); border-radius:var(--radius); padding:20px; background:linear-gradient(180deg,#ffffff,#ffffff)}
   .floloop-head{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted-2); display:flex; align-items:center; gap:9px; margin-bottom:14px}
   .loopdot{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); flex:none}
-  .flonode{border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:14px 16px; background:rgba(14,22,40,.7)}
+  .flonode{border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:14px 16px; background:#ffffff}
   .flonode .ft{font-family:var(--mono); font-size:13px; color:var(--cyan)}
-  .flonode.engine{border-color:rgba(251,146,60,.32)}
-  .flonode.engine .ft{color:#ff7a52}
+  .flonode.engine{border-color:rgba(22,104,216,.32)}
+  .flonode.engine .ft{color:#1668d8}
   .flonode .fd{color:var(--muted); font-size:13px; margin-top:5px; line-height:1.55}
   .floarrow{display:flex; align-items:center; gap:9px; padding:9px 0 9px 4px; color:var(--muted-2); font-size:12.5px; font-family:var(--mono)}
   .floarrow .ax{color:var(--cyan); font-size:16px; line-height:1}
@@ -212,28 +214,28 @@
   .res-label{font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:14px; margin:0 0 18px}
   .res-label::after{content:""; flex:1; height:1px; background:var(--border)}
   .res-label.warm{color:var(--orange)}
-  .res-label.ai{color:#a78bfa}
-  table.data tr.ai td{color:#c4b5fd; font-weight:700}
+  .res-label.ai{color:#7a4fe0}
+  table.data tr.ai td{color:#7a4fe0; font-weight:700}
   .res-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px}
   .panel{
     border:1px solid var(--border); border-radius:var(--radius); padding:26px;
-    background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(12,19,36,.55));
+    background:linear-gradient(180deg,#ffffff,#ffffff);
   }
   .panel.full{grid-column:1/-1}
   .panel{min-width:0}
   .panel .phead{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:6px; flex-wrap:wrap}
   .panel h3{font-size:19px}
   .panel .psub{color:var(--muted); font-size:13.5px}
-  .badge{font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:100px; border:1px solid var(--border-strong); color:var(--cyan); background:rgba(34,211,238,.06); white-space:nowrap}
-  .badge.warn{color:var(--orange); background:rgba(251,146,60,.07)}
-  .badge.ai{color:#c4b5fd; border-color:rgba(167,139,250,.4); background:rgba(167,139,250,.08)}
+  .badge{font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:100px; border:1px solid var(--border-strong); color:var(--cyan); background:rgba(10,160,136,.06); white-space:nowrap}
+  .badge.warn{color:var(--orange); background:rgba(22,104,216,.07)}
+  .badge.ai{color:#7a4fe0; border-color:rgba(122,79,224,.4); background:rgba(122,79,224,.08)}
   table.data{width:100%; border-collapse:collapse; margin-top:14px; font-size:14px}
   table.data th,table.data td{text-align:left; padding:10px 8px; border-bottom:1px solid var(--border)}
   table.data th{color:var(--muted-2); font-weight:600; font-family:var(--mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase}
   table.data td.mono{font-family:var(--mono)}
   table.data td.r,table.data th.r{text-align:right}
   table.data tr:last-child td{border-bottom:none}
-  table.data tr.win td{color:#67e8f9; font-weight:700}
+  table.data tr.win td{color:#0aa088; font-weight:700}
   .muted-tag{color:var(--muted-2); font-weight:400; font-size:.85em}
   .bars{margin-top:8px}
   .bar-row{display:grid; grid-template-columns:150px 1fr 78px; align-items:center; gap:12px; margin:13px 0}
@@ -259,26 +261,26 @@
   .fig-4 .fig{margin-top:0; display:flex; flex-direction:column}
   .fig-4 .fig figcaption{flex:1}
   .fig-4 figcaption{font-size:12px; padding:11px 13px}
-  .figtag.fst{color:#a9b6cc}
+  .figtag.fst{color:#4f6280}
   @media(max-width:900px){.fig-4{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:520px){.fig-4{grid-template-columns:1fr}}
   .warpfig{border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px 6px; margin-top:30px;
-    background:linear-gradient(180deg,rgba(19,32,59,.5),rgba(12,19,36,.55))}
+    background:linear-gradient(180deg,#ffffff,#ffffff)}
   .warpfig svg{display:block; width:100%; height:auto}
   .warpfig figcaption{color:var(--muted); font-size:13.5px; line-height:1.62; padding:14px 4px 10px; border-top:1px solid var(--border); margin-top:8px}
   .warpfig figcaption b{color:var(--text)}
   .figtag{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:5px}
-  .figtag.f2d{color:#22d3ee}.figtag.f3d{color:#ff7a52}.figtag.fai{color:#a78bfa}
+  .figtag.f2d{color:#0aa088}.figtag.f3d{color:#1668d8}.figtag.fai{color:#7a4fe0}
   @media(max-width:860px){.fig-3{grid-template-columns:1fr}}
   @media(max-width:640px){.fig-2{grid-template-columns:1fr}}
 
   /* CTA */
   .cta-band{
     border:1px solid var(--border-strong); border-radius:24px; padding:54px 44px; text-align:center; position:relative; overflow:hidden;
-    background:linear-gradient(180deg,rgba(19,32,59,.8),rgba(10,16,32,.92));
+    background:linear-gradient(180deg,#ffffff,#ffffff);
   }
   .cta-band::before{content:""; position:absolute; inset:0; z-index:0; opacity:.5;
-    background:radial-gradient(600px 240px at 50% -20%, rgba(251,146,60,.2), transparent 60%),radial-gradient(500px 240px at 50% 120%, rgba(34,211,238,.18), transparent 60%)}
+    background:radial-gradient(600px 240px at 50% -20%, rgba(22,104,216,.2), transparent 60%),radial-gradient(500px 240px at 50% 120%, rgba(10,160,136,.18), transparent 60%)}
   .cta-band>*{position:relative; z-index:1}
   .cta-band h2{font-size:clamp(28px,3.6vw,40px)}
   .cta-band p{color:var(--muted); font-size:17px; margin:16px auto 28px; max-width:560px}
@@ -311,7 +313,7 @@
     .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--border)}
     .cards-3,.features,.res-grid{grid-template-columns:1fr}
     .nav-links{display:none}
-    .nav-links.open{display:flex; position:absolute; top:64px; left:0; right:0; flex-direction:column; gap:0; background:rgba(8,12,24,.98); border-bottom:1px solid var(--border); padding:8px 0}
+    .nav-links.open{display:flex; position:absolute; top:64px; left:0; right:0; flex-direction:column; gap:0; background:rgba(255,255,255,.98); border-bottom:1px solid var(--border); padding:8px 0}
     .nav-links.open a{padding:13px 24px}
     .nav-toggle{display:block}
     section{padding:62px 0}
@@ -431,14 +433,14 @@
         </defs>
 
         <!-- CONVEX -->
-        <text x="220" y="30" text-anchor="middle" fill="#e9eef8" font-size="17" font-weight="700">Convex warpage <tspan fill="#7f8ea6" font-weight="400">(∩)</tspan></text>
-        <text x="220" y="49" text-anchor="middle" fill="#9aabc6" font-size="12.5">center domes up · edges pressed down</text>
+        <text x="220" y="30" text-anchor="middle" fill="#0d1b2e" font-size="17" font-weight="700">Convex warpage <tspan fill="#7b8ca6" font-weight="400">(∩)</tspan></text>
+        <text x="220" y="49" text-anchor="middle" fill="#4f6280" font-size="12.5">center domes up · edges pressed down</text>
         <g transform="translate(20,54)">
           <rect x="30" y="250" width="350" height="26" rx="3" fill="#0f5f34" stroke="#0a4526"/>
           <rect x="30" y="249" width="350" height="3" fill="#c98a3c" opacity="0.7"/>
           <text x="205" y="268" text-anchor="middle" fill="#dcece0" font-size="12" font-weight="600" letter-spacing="0.5">Substrate</text>
           <line x1="38" y1="234" x2="362" y2="234" stroke="#64748b" stroke-width="1.4" stroke-dasharray="3 5" opacity="0.5"/>
-          <text x="366" y="237" fill="#6f829f" font-size="10.5" font-family="ui-monospace,monospace">flat</text>
+          <text x="366" y="237" fill="#7b8ca6" font-size="10.5" font-family="ui-monospace,monospace">flat</text>
           <!-- gentle convex bow: thin interposer + wide flat die -->
           <path d="M40,236 Q200,196 360,236 L360,227 Q200,187 40,227 Z" fill="url(#wsSub)" stroke="#0f7a3d" stroke-width="1.3"/>
           <path d="M95,216 Q200,198 305,216 L305,203 Q200,185 95,203 Z" fill="url(#wsDie)" stroke="#8a99ad" stroke-width="1.2"/>
@@ -461,30 +463,30 @@
             <ellipse cx="345" cy="242" rx="8" ry="8" fill="url(#wsSolder)"/>
           </g>
           <!-- OPENING at center (gap under raised interposer) -->
-          <ellipse cx="200" cy="226" rx="15" ry="19" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <ellipse cx="200" cy="226" rx="15" ry="19" fill="none" stroke="#d63a49" stroke-width="1.8" stroke-dasharray="5 4"/>
           <!-- BRIDGING at edges -->
-          <ellipse cx="69" cy="243" rx="27" ry="15" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <ellipse cx="69" cy="243" rx="27" ry="15" fill="none" stroke="#1668d8" stroke-width="1.8" stroke-dasharray="5 4"/>
           <!-- callout: bridging (top-left) -->
-          <text x="22" y="88" fill="#38bdf8" font-size="13.5" font-weight="700">Solder bridging</text>
-          <text x="22" y="104" fill="#9aabc6" font-size="11.5">edge bumps → short</text>
-          <path d="M58,109 Q62,150 69,229" fill="none" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <circle cx="69" cy="231" r="2.3" fill="#38bdf8"/>
+          <text x="22" y="88" fill="#1668d8" font-size="13.5" font-weight="700">Solder bridging</text>
+          <text x="22" y="104" fill="#4f6280" font-size="11.5">edge bumps → short</text>
+          <path d="M58,109 Q62,150 69,229" fill="none" stroke="#1668d8" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="69" cy="231" r="2.3" fill="#1668d8"/>
           <!-- callout: opening (top-right) -->
-          <text x="378" y="88" text-anchor="end" fill="#ef4444" font-size="13.5" font-weight="700">Solder opening</text>
-          <text x="378" y="104" text-anchor="end" fill="#9aabc6" font-size="11.5">center bump → open</text>
-          <path d="M203,209 Q290,150 352,109" fill="none" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <circle cx="201" cy="211" r="2.3" fill="#ef4444"/>
+          <text x="378" y="88" text-anchor="end" fill="#d63a49" font-size="13.5" font-weight="700">Solder opening</text>
+          <text x="378" y="104" text-anchor="end" fill="#4f6280" font-size="11.5">center bump → open</text>
+          <path d="M203,209 Q290,150 352,109" fill="none" stroke="#d63a49" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="201" cy="211" r="2.3" fill="#d63a49"/>
         </g>
 
         <!-- CONCAVE -->
-        <text x="700" y="30" text-anchor="middle" fill="#e9eef8" font-size="17" font-weight="700">Concave warpage <tspan fill="#7f8ea6" font-weight="400">(∪)</tspan></text>
-        <text x="700" y="49" text-anchor="middle" fill="#9aabc6" font-size="12.5">center sags down · edges lift up</text>
+        <text x="700" y="30" text-anchor="middle" fill="#0d1b2e" font-size="17" font-weight="700">Concave warpage <tspan fill="#7b8ca6" font-weight="400">(∪)</tspan></text>
+        <text x="700" y="49" text-anchor="middle" fill="#4f6280" font-size="12.5">center sags down · edges lift up</text>
         <g transform="translate(500,54)">
           <rect x="30" y="250" width="350" height="26" rx="3" fill="#0f5f34" stroke="#0a4526"/>
           <rect x="30" y="249" width="350" height="3" fill="#c98a3c" opacity="0.7"/>
           <text x="205" y="268" text-anchor="middle" fill="#dcece0" font-size="12" font-weight="600" letter-spacing="0.5">Substrate</text>
           <line x1="38" y1="234" x2="362" y2="234" stroke="#64748b" stroke-width="1.4" stroke-dasharray="3 5" opacity="0.5"/>
-          <text x="366" y="237" fill="#6f829f" font-size="10.5" font-family="ui-monospace,monospace">flat</text>
+          <text x="366" y="237" fill="#7b8ca6" font-size="10.5" font-family="ui-monospace,monospace">flat</text>
           <!-- gentle concave bow -->
           <path d="M40,216 Q200,256 360,216 L360,207 Q200,247 40,207 Z" fill="url(#wsSub)" stroke="#0f7a3d" stroke-width="1.3"/>
           <path d="M95,218 Q200,236 305,218 L305,205 Q200,223 95,205 Z" fill="url(#wsDie)" stroke="#8a99ad" stroke-width="1.2"/>
@@ -505,26 +507,26 @@
             <ellipse cx="345" cy="242" rx="8" ry="8" fill="url(#wsSolder)"/>
           </g>
           <!-- BRIDGING at center -->
-          <ellipse cx="200" cy="243" rx="42" ry="15" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <ellipse cx="200" cy="243" rx="42" ry="15" fill="none" stroke="#1668d8" stroke-width="1.8" stroke-dasharray="5 4"/>
           <!-- OPENING at edges -->
-          <ellipse cx="55" cy="226" rx="14" ry="19" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4"/>
-          <ellipse cx="345" cy="226" rx="14" ry="19" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <ellipse cx="55" cy="226" rx="14" ry="19" fill="none" stroke="#d63a49" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <ellipse cx="345" cy="226" rx="14" ry="19" fill="none" stroke="#d63a49" stroke-width="1.8" stroke-dasharray="5 4"/>
           <!-- callout: bridging (top-center, over valley) -->
-          <text x="200" y="80" text-anchor="middle" fill="#38bdf8" font-size="13.5" font-weight="700">Solder bridging</text>
-          <text x="200" y="96" text-anchor="middle" fill="#9aabc6" font-size="11.5">center bumps → short</text>
-          <path d="M200,101 L200,230" fill="none" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <circle cx="200" cy="232" r="2.3" fill="#38bdf8"/>
+          <text x="200" y="80" text-anchor="middle" fill="#1668d8" font-size="13.5" font-weight="700">Solder bridging</text>
+          <text x="200" y="96" text-anchor="middle" fill="#4f6280" font-size="11.5">center bumps → short</text>
+          <path d="M200,101 L200,230" fill="none" stroke="#1668d8" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="200" cy="232" r="2.3" fill="#1668d8"/>
           <!-- callout: opening (top-left, both edges) -->
-          <text x="22" y="116" fill="#ef4444" font-size="13.5" font-weight="700">Solder opening</text>
-          <text x="22" y="132" fill="#9aabc6" font-size="11.5">both edges → open</text>
-          <path d="M50,137 L55,207" fill="none" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <circle cx="55" cy="209" r="2.3" fill="#ef4444"/>
-          <path d="M118,128 Q300,120 345,207" fill="none" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.55"/>
-          <circle cx="345" cy="209" r="2.3" fill="#ef4444"/>
+          <text x="22" y="116" fill="#d63a49" font-size="13.5" font-weight="700">Solder opening</text>
+          <text x="22" y="132" fill="#4f6280" font-size="11.5">both edges → open</text>
+          <path d="M50,137 L55,207" fill="none" stroke="#d63a49" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="55" cy="209" r="2.3" fill="#d63a49"/>
+          <path d="M118,128 Q300,120 345,207" fill="none" stroke="#d63a49" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.55"/>
+          <circle cx="345" cy="209" r="2.3" fill="#d63a49"/>
         </g>
 
         <!-- LEGEND -->
-        <g transform="translate(0,378)" font-size="12" fill="#9aabc6">
+        <g transform="translate(0,378)" font-size="12" fill="#4f6280">
           <rect x="150" y="-11" width="16" height="12" rx="2.5" fill="url(#wsDie)" stroke="#8a99ad"/>
           <text x="172" y="-1">Silicon die</text>
           <rect x="250" y="-11" width="16" height="12" rx="2.5" fill="url(#wsSub)" stroke="#0f7a3d"/>
@@ -533,9 +535,9 @@
           <text x="370" y="-1">Substrate</text>
           <ellipse cx="454" cy="-5" rx="7" ry="7" fill="url(#wsSolder)" stroke="#5b6b7f"/>
           <text x="466" y="-1">Solder bump</text>
-          <circle cx="562" cy="-5" r="7" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="562" cy="-5" r="7" fill="none" stroke="#d63a49" stroke-width="2" stroke-dasharray="4 3"/>
           <text x="574" y="-1">Opening (open)</text>
-          <circle cx="692" cy="-5" r="7" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="692" cy="-5" r="7" fill="none" stroke="#1668d8" stroke-width="2" stroke-dasharray="4 3"/>
           <text x="704" y="-1">Bridging (short)</text>
         </g>
       </svg>
@@ -769,7 +771,7 @@
           <div><h3>A what-if the model was never built at</h3><div class="psub">ABF substrate stiffened 24.0 → 28.8 GPa</div></div>
           <span class="badge">798,000× faster</span>
         </div>
-        <p class="psub" style="margin:2px 0 4px; max-width:860px">The <b style="color:#e9eef8">MOR-model</b> is a physics-based compact model built once per design from the same 3D formulation — not a black-box fit to data. Here the substrate is stiffened, a change that moves peak-to-peak warpage by <b style="color:#e9eef8">+40.9 µm</b>. The MOR-model resolves that shift to within 0.036 µm — in 51 µs rather than 40.6 s.</p>
+        <p class="psub" style="margin:2px 0 4px; max-width:860px">The <b style="color:#0d1b2e">MOR-model</b> is a physics-based compact model built once per design from the same 3D formulation — not a black-box fit to data. Here the substrate is stiffened, a change that moves peak-to-peak warpage by <b style="color:#0d1b2e">+40.9 µm</b>. The MOR-model resolves that shift to within 0.036 µm — in 51 µs rather than 40.6 s.</p>
         <div class="fig-4">
           <figure class="fig reveal">
             <img src="assets/figs/stack_hbm4_2nm.png" alt="3D structure view of the 2nm CoWoS package — two GPU dies flanked by four HBM stacks each side on a silicon interposer over the substrate" loading="lazy">
@@ -837,7 +839,7 @@
           <div><h3>Predicted vs solved, on a design point the network never saw</h3><div class="psub">2nm CoWoS package · 56 × 57 mm · active surface</div></div>
           <span class="badge ai">2,146× faster</span>
         </div>
-        <p class="psub" style="margin:2px 0 10px; max-width:920px"><b style="color:#e9eef8">WarpStack-AI (GNN)</b> learns a package’s warpage behaviour from results produced by the detailed 3D method, then returns the full map without solving. Here it is asked for a design point held out of training, and the same point is solved from scratch in 3D for comparison.</p>
+        <p class="psub" style="margin:2px 0 10px; max-width:920px"><b style="color:#0d1b2e">WarpStack-AI (GNN)</b> learns a package’s warpage behaviour from results produced by the detailed 3D method, then returns the full map without solving. Here it is asked for a design point held out of training, and the same point is solved from scratch in 3D for comparison.</p>
         <figure class="fig reveal" style="margin-top:0">
           <div class="figscroll"><img src="assets/figs/warpage_hbm4_2nm_gnn_vs_3d.png" alt="Three warpage maps side by side: the 3D numerical reference at 1972.3 µm peak-to-peak, the WarpStack-AI (GNN) prediction at 1955.4 µm, and the signed difference between them, which is close to two orders of magnitude smaller than the warpage itself" loading="lazy"></div>
           <figcaption><span class="figtag fai">Detailed 3D · WarpStack-AI (GNN) · difference</span><b>Left — the 3D reference,</b> 1972.3 µm peak-to-peak, solved from scratch in 41.5 s. <b>Centre — the GNN prediction,</b> 1955.4 µm, returned in 19.4 ms. <b>Right — the signed difference,</b> spanning 26.5 µm across a surface that bows by almost two millimetres.</figcaption>
@@ -858,7 +860,7 @@
               <tr class="ai"><td>WarpStack-AI <span class="muted-tag">GNN</span></td><td class="mono r">19.4 ms</td><td class="mono r">2,146×</td><td class="mono r">0.49%</td></tr>
             </tbody>
           </table>
-          <div class="note"><b style="color:#c4b5fd">WarpStack-AI (GNN)</b> returns a full warpage map in <b>19.4 ms</b> — <b>2,146×</b> faster than solving the same package in 3D. Measured against six independent full 3D solves, the whole-map difference is <b>0.49%</b> of peak-to-peak and the peak-to-peak bow itself lands within <b>1.89%</b>.</div>
+          <div class="note"><b style="color:#7a4fe0">WarpStack-AI (GNN)</b> returns a full warpage map in <b>19.4 ms</b> — <b>2,146×</b> faster than solving the same package in 3D. Measured against six independent full 3D solves, the whole-map difference is <b>0.49%</b> of peak-to-peak and the peak-to-peak bow itself lands within <b>1.89%</b>.</div>
         </div>
 
         <!-- held-out accuracy -->
