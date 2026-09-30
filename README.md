@@ -1,25 +1,27 @@
 # WarpStack
 
-**Hybrid numerical + AI warpage analysis for 2.5D / 3D chiplet reliability.**
+**Warpage analysis for 2.5D / 3D chiplet reliability.**
 
 WarpStack predicts how a chiplet, module, or package stack **bends** under thermal load. From a single
 structured floorplan description it builds a mechanical model of the layer stack, applies the
 assembly-to-operating thermal load, and returns the out-of-plane warpage. It is a **hybrid engine** with
-three methods on the same inputs — numerical when you need ground truth, AI when you need it now:
+three methods on the same inputs:
 
-- **3D numerical** — a detailed numerical method that resolves the package through its full thickness,
-  reporting warpage **per surface** (die-level active surface *and* continuous package surface). The
-  ground-truth fidelity for complex, interleaved multi-layer stacks, and the reference the other two
-  methods are measured against.
-- **MOR-model** — a physics-based compact model built once per design from the same 3D formulation.
-  Once built it answers a new material or thermal design point in well under a millisecond, turning
-  design-space exploration from an overnight batch into an interactive sweep.
-- **WarpStack-AI (GNN)** — an AI-accelerated method trained on numerical ground truth that predicts the
+- **High-fidelity at various resolution** — a detailed 3D method that resolves the package through its
+  full thickness, reporting warpage **per surface** (die-level active surface *and* continuous package
+  surface). On the MI350-class study the answer moves **0.33%** across a 2.25x refinement range, so a
+  resolution you can afford already carries the answer a far finer one would give. The reference the
+  other two methods are measured against.
+- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth that predicts the
   full warpage map in **19.4 ms** at **0.5% error**, 2,146x faster than solving the same package in 3D.
-  Fast enough to put warpage inside a live optimization loop.
+  Global exploration: once trained for a design, it answers anywhere in that design's space.
+- **WarpStack-MOR** — a physics-based compact model built once per design over a bounded box around a
+  nominal design. Once built it answers a new material or thermal design point in well under a
+  millisecond, with a rigorous error bound attached. Localized exploration.
 
 This repository hosts the **WarpStack** promotion site, live at
-**<https://sheldonucr.github.io/warpstack_io/>**.
+**<https://sheldonucr.github.io/warpstack_io/>** — a main page covering the tool, its input and its
+output, and a [features page](features.html) with one section per method.
 
 ---
 
@@ -45,13 +47,13 @@ ones.**
 
 ## Headline results
 
-The detailed 3D numerical method is the reference throughout.
+The full 3D solve is the reference throughout.
 
-The 3D and MOR-model results use one reference design, measured end to end:
+The 3D and WarpStack-MOR results use one reference design, measured end to end:
 **2nm CoWoS - 8 HBM stacks x 12-hi DRAM + 2 GPUs - 108 chiplets** — a 56.2 × 57.5 mm package with
 135 die regions and 237 mechanical layers, imported from IEEE 3Dblox.
 At FEM mesh 64 that is 169,602 degrees of freedom and 45,035 solid elements.
-WarpStack-AI (GNN) is measured on this same package, described again below.
+WarpStack-GNN is measured on this same package, described again below.
 
 Measured on an Apple M3, single core. Full data in
 `warpstack/tests/warpstack_io_results_sept_2026/` and `warpstack/src_gcn/docs/`.
@@ -66,16 +68,16 @@ Measured on an Apple M3, single core. Full data in
 | Mechanical layers | 237 |
 | Solid elements | 45,035 |
 | Degrees of freedom | 169,602 |
-| 3D numerical solve | **40.6 s** |
+| Full 3D solve | **40.6 s** |
 
 Peak-to-peak warpage 1332 µm at mesh 64.
 
-### MOR-model vs 3D — a what-if the model was never built at
+### WarpStack-MOR vs 3D — a what-if the model was never built at
 
 Stiffening the ABF substrate from 24.0 to 28.8 GPa moves peak-to-peak warpage by
-**+40.9 µm**. The MOR-model resolves that shift without a new 3D solve:
+**+40.9 µm**. The WarpStack-MOR resolves that shift without a new 3D solve:
 
-| Quantity | 3D numerical | MOR-model |
+| Quantity | Full 3D solve | WarpStack-MOR |
 | --- | ---: | ---: |
 | Peak-to-peak warpage | 1372.7 µm | 1372.6 µm |
 | Time per design point | 40.6 s | **51 µs** |
@@ -85,7 +87,7 @@ Stiffening the ABF substrate from 24.0 to 28.8 GPa moves peak-to-peak warpage by
 | Speedup | 1× | **798,000×** |
 
 This point sits outside the set the model was built from. A further 8 design points drawn
-from across the material design space were each solved with full 3D numerical and compared:
+from across the material design space were each solved with full full 3D solve and compared:
 worst whole-map difference **0.006 %**.
 
 Building the model costs 17 min of 3D solves up front — about
@@ -108,10 +110,36 @@ the 3D-vs-MOR agreement are unaffected — both are measured at one fixed mesh.
 (silicon, ABF substrate, BEOL, bond layers), not calibrated 2nm, HBM4 or CoWoS process data. Absolute
 warpage is therefore indicative; timings and the 3D-vs-MOR agreement do not depend on them.
 
-### WarpStack-AI (GNN) — AI inference, benchmarked against numerical ground truth
+### High-fidelity at various resolution — a separate, converged study
 
-**WarpStack-AI (GNN)** learns a package's warpage behaviour from results produced by the detailed 3D
-method, then returns the full warpage map without solving. A network is trained per design.
+The table above is a *different design* from the one below. The reference design used for speed and
+for 3D-vs-MOR agreement has absolute warpage that is still moving with the mesh. The resolution
+evidence comes from a study of an **AMD MI350-class** package — 64 x 72 mm, 457 mechanical layers,
+273 footprint regions, 8 compute dies + 2 I/O dies + 8 twelve-high HBM3E stacks, cooled 200 -> 85 C:
+
+| resolution | free DOFs | peak-to-peak | change |
+| --- | ---: | ---: | ---: |
+| 1143 µm | 351,222 | 1828.0 µm | — |
+| 758 µm | 703,230 | 1830.6 µm | 0.14% |
+| 507 µm | 1,427,412 | 1834.0 µm | 0.18% |
+
+Four times the degrees of freedom moves the answer by **6.0 µm — 0.33%** across a 2.25x refinement
+range, and the largest point-by-point difference anywhere on the surface is **3.3 µm (0.18% of
+peak-to-peak)**. Total numerical uncertainty is **+/-0.55%**. The reported run is 507 µm, 1.43 M DOF,
+**11 minutes** and 12.5 GB on an Apple M3 laptop; a 50 µm mesh on the same package would be **107 M
+DOF** and roughly **0.9 TB** — 75x the degrees of freedom, and never solved, because the evidence says
+the answer it would return is already in hand.
+
+**Scope.** Free package body: no board, BGA, lid or stiffener, and no moisture, cure shrinkage or
+gravity — each of which stiffens a real assembly and reduces warpage. Material properties are library
+values, not vendor data. Production parts of this class measure substantially lower; 1834.0 µm is a
+property of the model as specified, **not a prediction of shipping hardware**. AMD, Instinct and MI350
+are trademarks of Advanced Micro Devices, Inc.; NoveetyAI is not affiliated with, endorsed by, or
+sponsored by AMD.
+
+### WarpStack-GNN — AI inference, benchmarked against numerical ground truth
+
+**WarpStack-GNN** learns a package's warpage behaviour from results produced by the full 3D method, then returns the full warpage map without solving. A network is trained per design.
 
 Measured on the same **2nm CoWoS** package as the 3D and MOR results above: 56.2 x 57.5 mm, 135
 stacked die columns, 237 mechanical layers, 45,035 solid elements, 169,602 degrees of freedom at FEM
@@ -119,8 +147,8 @@ mesh 64. Full data in `warpstack/tests/TVLSI_data_sept_2026/results/`.
 
 | Method | Type | Runtime / design | Speedup vs 3D | Error vs 3D |
 | --- | --- | ---: | ---: | ---: |
-| 3D numerical | numerical | 41.54 s | 1x (reference) | ground truth |
-| **WarpStack-AI (GNN)** | **AI** | **19.4 ms** | **2,146x** | **0.49% whole-map** |
+| Full 3D solve | numerical | 41.54 s | 1x (reference) | ground truth |
+| **WarpStack-GNN** | **AI** | **19.4 ms** | **2,146x** | **0.49% whole-map** |
 
 Accuracy is reported two ways, against the same 3D method:
 
@@ -131,7 +159,7 @@ Accuracy is reported two ways, against the same 3D method:
 | Peak-to-peak error | 1.41% | 1.89% |
 | Correlation with 3D | 0.9996 | 0.99996 |
 
-- **2,146x faster than the 3D numerical reference**, single core, at 0.49% whole-map difference against
+- **2,146x faster than the full 3D solve reference**, single core, at 0.49% whole-map difference against
   six independently solved 3D fields.
 - **Genuinely held out:** the 512 scored points come from material configurations kept entirely out of
   training, so the network is scored on combinations it was never shown. Each point varies the material
@@ -150,7 +178,7 @@ Generalization to designs outside the one a network was trained on has not yet b
 
 WarpStack is built to drop straight into **agentic EDA and system-design workflows**, and to work with
 *any* agentic flow. A first-class CLI and structured data interface let autonomous design agents call
-detailed 3D numerical, the **MOR-model**, or **WarpStack-AI (GNN) inference**, read back machine-readable results, and
+a full **3D solve**, **WarpStack-MOR**, or **WarpStack-GNN**, read back machine-readable results, and
 feed them into floorplanning, stack-up, and material-selection loops — for **warpage-aware optimization**
 and **warpage reliability sign-off** of chiplets and advanced packages in system design. With millisecond
 AI inference, warpage finally runs at the speed of the loop itself.
@@ -159,9 +187,9 @@ AI inference, warpage finally runs at the speed of the loop itself.
 - **CLI-first & headless** — every method is scriptable from the command line.
 - **Structured data interface** — machine-readable floorplans in; warpage surfaces, peak-to-peak bow,
   and signed difference maps out, ready for closed-loop automation.
-- **Warpage-aware optimization** — at 19.4 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands
+- **Warpage-aware optimization** — at 19.4 ms per evaluation, WarpStack-GNN lets agents sweep thousands
   of floorplans, stack-ups, and materials in a live loop, steering each candidate toward lower bow.
-- **Reliability sign-off** — the MOR-model or AI screens the whole design space; detailed 3D
+- **Reliability sign-off** — WarpStack-MOR or WarpStack-GNN screens the whole design space; detailed 3D
   numerical signs off the critical designs against warpage limits before tape-out and assembly.
 
 ```text
@@ -180,16 +208,22 @@ Fed back to the agent  ──►  steers the next floorplan / stack / material i
 
 ```text
 .
-├── index.html          Single-file promotion site (self-contained: inline CSS/JS/SVG).
+├── index.html          Main page: what it is, its capabilities, input and output.
+├── features.html       One section per feature: resolution, WarpStack-GNN, WarpStack-MOR.
 ├── assets/
-│   └── figs/           Result figures used by the page.
+│   ├── site.css        Shared stylesheet for both pages.
+│   ├── site.js         Shared behaviour: mobile nav, scroll reveal, bar animation.
+│   └── figs/           Result figures used by the pages.
+│       ├── mi350_floorplan.png             MI350-class package floorplan as modelled
+│       ├── mi350_warpage_map.png           MI350-class warpage, 507 µm resolution
+│       ├── mi350_profile_resolutions.png   two resolutions overlaid, with the residual
 │       ├── stack_hbm4_2nm.png              3D structure view of the 2nm CoWoS stack
-│       ├── warpage_hbm4_2nm_3d_active.png  3D numerical reference surface
-│       ├── warpage_hbm4_2nm_mor.png        MOR-model surface (hero image)
-│       ├── warpage_hbm4_2nm_3d_whatif.png  3D numerical, stiffened-substrate what-if
-│       ├── warpage_hbm4_2nm_mor_whatif.png MOR-model, same what-if
-│       ├── warpage_hbm4_2nm_diff.png       signed 3D − MOR-model difference
-│       └── warpage_hbm4_2nm_gnn_vs_3d.png 3D numerical vs WarpStack-AI (GNN), with the difference
+│       ├── warpage_hbm4_2nm_3d_active.png  full 3D solve reference surface
+│       ├── warpage_hbm4_2nm_mor.png        WarpStack-MOR surface (hero image)
+│       ├── warpage_hbm4_2nm_3d_whatif.png  full 3D solve, stiffened-substrate what-if
+│       ├── warpage_hbm4_2nm_mor_whatif.png WarpStack-MOR, same what-if
+│       ├── warpage_hbm4_2nm_diff.png       signed 3D − WarpStack-MOR difference
+│       └── warpage_hbm4_2nm_gnn_vs_3d.png 3D reference vs WarpStack-GNN, with the difference
 └── README.md
 ```
 
@@ -200,15 +234,15 @@ keep the plot and colorbar.
 
 ## Local preview
 
-The site is a single static HTML file with no build step and no external dependencies. Serve the folder
-and open it in a browser:
+The site is static HTML with no build step. Serve the folder and open it in a browser:
 
 ```bash
 python3 -m http.server 8000
-# then open http://localhost:8000/index.html
+# then open http://localhost:8000/index.html  (and /features.html)
 ```
 
-Or open `index.html` directly in a browser.
+Or open `index.html` directly in a browser — the stylesheet and script are plain relative references,
+so they resolve over `file://` too.
 
 ---
 
@@ -223,12 +257,12 @@ warpage map directly with the trained AI method.
 - **IEEE 3Dblox input** — accepts designs described in **IEEE 3Dblox**, the IEEE-standard modular
   description language for physical stacking, dimensions, and logical connectivity in 2.5D and 3D-IC
   designs, alongside WarpStack's native floorplan JSON.
-- **3D numerical method** (default) — a detailed numerical model that resolves the package through its
+- **full 3D solve method** (default) — a detailed numerical model that resolves the package through its
   full thickness; writes both the active-surface and package-surface warpage.
-- **MOR-model** — a physics-based compact model built once per design from the same 3D formulation.
+- **WarpStack-MOR** — a physics-based compact model built once per design from the same 3D formulation.
   Once built it answers a new material or thermal design point in 51 µs instead of a full solve
   (798,000× faster on the reference design), matching the 3D surface to a small fraction of a micron.
-- **WarpStack-AI (GNN)** — an AI-accelerated method trained on numerical ground truth: it predicts the
+- **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth: it predicts the
   full warpage map directly from the design description and returns warpage in the same format as the
   numerical methods, in milliseconds. A network is trained per design.
 - **Compare mode** (`--compare`) — runs two models on matching surfaces and writes signed difference maps.

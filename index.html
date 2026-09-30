@@ -3,328 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets</title>
-<meta name="description" content="WarpStack is a hybrid warpage analysis engine for 2.5D/3D chiplet packages: detailed 3D numerical sign-off, the MOR-model for design-space exploration at a fraction of the cost, and WarpStack-AI (GNN) — an AI-accelerated method that returns numerical-grade warpage maps in ~19 ms, 2,146x faster than solving in 3D." />
-<meta property="og:title" content="WarpStack — Hybrid Numerical + AI Warpage Analysis for 2.5D/3D Chiplets" />
-<meta property="og:description" content="Accurate 3D numerical sign-off, the MOR-model for fast design-space exploration, and WarpStack-AI (GNN) inference in ~19 ms at 0.5% numerical-grade accuracy — one hybrid warpage engine." />
+<title>WarpStack — Warpage Analysis for 2.5D/3D Chiplet Packages</title>
+<meta name="description" content="WarpStack predicts thermal warpage for 2.5D and 3D chiplet packages: high fidelity at various resolution for trustworthy answers without a fine mesh, WarpStack-GNN for global design-space exploration in milliseconds, and WarpStack-MOR for localized exploration in microseconds. IEEE 3Dblox in, interactive 2D/3D warpage maps out." />
+<meta property="og:title" content="WarpStack — Warpage Analysis for 2.5D/3D Chiplet Packages" />
+<meta property="og:description" content="High fidelity at various resolution, WarpStack-GNN global exploration at 19.4 ms per design point, and WarpStack-MOR localized exploration at 51 µs — one engine, one design description." />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#f7f9fc; --bg-2:#f0f4fa; --surface:#ffffff; --surface-2:#f0f4fa;
-    --border:#dfe6f0; --border-strong:#cdd8e6;
-    --text:#0d1b2e; --muted:#4f6280; --muted-2:#7b8ca6;
-    --cyan:#0aa088; --blue:#1668d8; --indigo:#7a4fe0;
-    --amber:#c2670a; --orange:#1668d8; --red:#d63a49;
-    --warp:linear-gradient(100deg,#0aa088 0%,#1668d8 100%);
-    --accent-grad:linear-gradient(135deg,#0aa088 0%,#1668d8 100%);
-    --radius:16px; --radius-sm:11px;
-    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --maxw:1180px;
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:var(--sans); line-height:1.6; -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  body::before{
-    content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
-    background:
-      radial-gradient(820px 520px at 8% 0%, rgba(10,160,136,.09), transparent 58%),
-      radial-gradient(900px 620px at 90% 2%, rgba(22,104,216,.07), transparent 60%),
-      var(--bg);
-  }
-  a{color:inherit; text-decoration:none}
-  h1,h2,h3{line-height:1.12; margin:0; letter-spacing:-.02em; font-weight:700}
-  p{margin:0}
-  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
-  .mono{font-family:var(--mono)}
-  .grad-text{
-    background:linear-gradient(100deg,#0aa088 0%,#1668d8 100%);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-
-  /* ---------- NAV ---------- */
-  header.nav{
-    position:sticky; top:0; z-index:50;
-    backdrop-filter:saturate(140%) blur(12px);
-    background:rgba(255,255,255,.82);
-    border-bottom:1px solid var(--border);
-  }
-  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:64px}
-  .brand{display:flex; align-items:center; gap:11px; font-weight:700; font-size:18px; letter-spacing:-.02em}
-  .brand .dot{
-    width:22px; height:22px; border-radius:7px; background:var(--warp);
-    box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 18px rgba(10,160,136,.5);
-    position:relative; overflow:hidden;
-  }
-  .brand .dot::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.5), transparent 55%)}
-  .nav-links{display:flex; gap:30px; align-items:center}
-  .nav-links a{color:var(--muted); font-size:14.5px; font-weight:500; transition:color .15s}
-  .nav-links a:hover{color:var(--text)}
-  .nav-cta{display:flex; align-items:center; gap:14px}
-  .btn{
-    display:inline-flex; align-items:center; gap:9px; cursor:pointer; border:none;
-    font-family:var(--sans); font-weight:600; font-size:14.5px; line-height:1;
-    padding:12px 20px; border-radius:11px; transition:transform .12s ease, box-shadow .2s ease, background .2s;
-    white-space:nowrap;
-  }
-  .btn-primary{background:var(--accent-grad); color:#ffffff; box-shadow:0 8px 26px -8px rgba(22,104,216,.6)}
-  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 34px -8px rgba(22,104,216,.7)}
-  .btn-ghost{background:rgba(148,163,184,.08); color:var(--text); border:1px solid var(--border-strong)}
-  .btn-ghost:hover{background:rgba(148,163,184,.16); transform:translateY(-2px)}
-  .btn-lg{padding:15px 28px; font-size:15.5px; border-radius:13px}
-  .nav-toggle{display:none; background:none; border:none; color:var(--text); cursor:pointer; padding:6px}
-
-  /* ---------- HERO ---------- */
-  .hero{position:relative; padding:74px 0 64px}
-  .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:54px; align-items:center}
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:9px; font-family:var(--mono); font-size:12px;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--cyan);
-    padding:7px 13px; border:1px solid var(--border-strong); border-radius:100px;
-    background:rgba(10,160,136,.06);
-  }
-  .eyebrow .pulse{width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:pulse 1.8s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  .hero h1{font-size:clamp(34px,5.2vw,56px); margin:22px 0 0}
-  .hero p.lead{color:var(--muted); font-size:clamp(16px,1.7vw,19px); margin-top:20px; max-width:560px}
-  .hero-cta{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap}
-  .hero-sub{margin-top:22px; display:flex; gap:22px; flex-wrap:wrap; color:var(--muted-2); font-size:13.5px}
-  .hero-sub span{display:inline-flex; align-items:center; gap:7px}
-  .check{color:var(--cyan)}
-
-  /* ---------- HERO VISUAL ---------- */
-  .viz-card{
-    position:relative; border:1px solid var(--border); border-radius:var(--radius);
-    background:linear-gradient(180deg,#ffffff,#ffffff);
-    box-shadow:0 30px 80px -30px rgba(16,34,64,.10), inset 0 1px 0 rgba(255,255,255,.6);
-    padding:14px; overflow:hidden;
-  }
-  .viz-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:2px 6px}
-  .viz-title{font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.04em}
-  .viz-dots{display:flex; gap:6px}
-  .viz-dots i{width:10px; height:10px; border-radius:50%; display:inline-block; opacity:.7}
-  .viz-dots i:nth-child(1){background:#d63a49}.viz-dots i:nth-child(2){background:#c2670a}.viz-dots i:nth-child(3){background:#0aa088}
-  .viz-card img{display:block; width:100%; height:auto; border-radius:10px; background:#f5f7fb}
-  .viz-cap{font-size:12.5px; color:var(--muted); padding:11px 6px 3px; line-height:1.5}
-  .viz-cap b{color:var(--text)}
-
-  /* ---------- STATS STRIP ---------- */
-  .stats{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:#ffffff}
-  .stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0}
-  .stat{padding:30px 22px; text-align:center; border-right:1px solid var(--border)}
-  .stat:last-child{border-right:none}
-  .stat .num{font-family:var(--mono); font-size:clamp(26px,3.4vw,38px); font-weight:700; letter-spacing:-.03em}
-  .stat .num.c1{color:#0aa088}.stat .num.c2{color:#1668d8}.stat .num.c3{color:#0aa088}.stat .num.c4{color:#1668d8}
-  .stat .lbl{color:var(--muted); font-size:13.5px; margin-top:6px}
-
-  /* ---------- SECTIONS ---------- */
-  section{padding:84px 0}
-  .sec-head{max-width:720px; margin-bottom:46px}
-  .kicker{font-family:var(--mono); font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan)}
-  .sec-head h2{font-size:clamp(28px,3.6vw,42px); margin-top:14px}
-  .sec-head p{color:var(--muted); font-size:17px; margin-top:16px}
-
-  /* problem cards */
-  .cards-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
-  .card{
-    border:1px solid var(--border); border-radius:var(--radius); padding:26px;
-    background:linear-gradient(180deg,#ffffff,#ffffff); transition:border-color .2s, transform .2s;
-  }
-  .card:hover{border-color:var(--border-strong); transform:translateY(-3px)}
-  .card .ic{
-    width:46px; height:46px; border-radius:12px; display:grid; place-items:center; margin-bottom:16px;
-    background:rgba(10,160,136,.1); border:1px solid var(--border-strong); font-size:22px;
-  }
-  .card h3{font-size:18.5px}
-  .card p{color:var(--muted); font-size:14.5px; margin-top:9px}
-
-  /* feature grid */
-  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
-  .feat{border:1px solid var(--border); border-radius:var(--radius); padding:26px; background:#ffffff; position:relative; overflow:hidden}
-  .feat::before{content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--warp); opacity:0; transition:opacity .25s}
-  .feat:hover::before{opacity:.85}
-  .feat:hover{border-color:var(--border-strong)}
-  .feat .tag{font-family:var(--mono); font-size:11.5px; color:var(--muted-2); letter-spacing:.08em}
-  .feat h3{font-size:18px; margin-top:10px; display:flex; align-items:center; gap:10px}
-  .feat p{color:var(--muted); font-size:14.5px; margin-top:10px}
-  .feat .emoji{font-size:22px}
-
-  /* technology */
-  .tech-grid{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start}
-  .pipe{display:flex; flex-direction:column; gap:14px}
-  .pipe-step{
-    display:flex; gap:16px; align-items:flex-start; padding:18px 20px; border:1px solid var(--border);
-    border-radius:var(--radius-sm); background:#ffffff; position:relative;
-  }
-  .pipe-step .n{
-    flex:none; width:34px; height:34px; border-radius:9px; display:grid; place-items:center;
-    font-family:var(--mono); font-weight:700; font-size:15px; color:#ffffff; background:var(--accent-grad);
-  }
-  .pipe-step h4{margin:0 0 4px; font-size:16px}
-  .pipe-step p{color:var(--muted); font-size:14px}
-  .pipe-step::after{content:""; position:absolute; left:36px; bottom:-14px; width:2px; height:14px; background:var(--border-strong)}
-  .pipe-step:last-child::after{display:none}
-  .twocard{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px}
-  .threecard{display:flex; flex-direction:column; gap:12px; margin-top:8px}
-  .solver.ai{border-color:rgba(122,79,224,.32)}
-  .solver.ai .nm{color:#7a4fe0}
-  .solver{border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px; background:#ffffff}
-  .solver .nm{font-family:var(--mono); font-weight:700; font-size:15px}
-  .solver.fast .nm{color:#0aa088}.solver.acc .nm{color:#1668d8}
-  .solver .role{font-size:11.5px; color:var(--muted-2); font-family:var(--mono); letter-spacing:.05em; text-transform:uppercase; margin-top:3px}
-  .solver p{color:var(--muted); font-size:13px; margin-top:10px}
-  .solver .kv{margin-top:12px; display:flex; gap:16px; font-family:var(--mono); font-size:12.5px}
-  .solver .kv b{color:var(--text)}
-  .solver .paren{color:var(--muted-2); font-weight:400; font-size:.82em}
-  .eqbox{
-    margin-top:8px; border:1px solid var(--border); border-radius:var(--radius); padding:22px 24px;
-    background:linear-gradient(180deg,#ffffff,#ffffff);
-  }
-  .eqbox .label{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--orange)}
-  .eqbox .why{color:var(--muted); font-size:14.5px; line-height:1.66; margin:12px 0 2px}
-  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px}
-  .chip{font-family:var(--mono); font-size:12px; color:var(--cyan); border:1px solid var(--border-strong); border-radius:100px; padding:6px 12px; background:rgba(10,160,136,.06)}
-  .note{color:var(--muted-2); font-size:12.5px; margin-top:16px; line-height:1.65}
-
-  /* agentic flow */
-  .flowpts{list-style:none; padding:0; margin:6px 0 0; display:flex; flex-direction:column; gap:15px}
-  .flowpts li{position:relative; padding-left:26px; color:var(--muted); font-size:14.5px; line-height:1.6}
-  .flowpts li::before{content:"→"; position:absolute; left:0; top:0; color:var(--cyan); font-family:var(--mono)}
-  .flowpts li b{color:var(--text)}
-  .floloop{border:1px solid var(--border); border-radius:var(--radius); padding:20px; background:linear-gradient(180deg,#ffffff,#ffffff)}
-  .floloop-head{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted-2); display:flex; align-items:center; gap:9px; margin-bottom:14px}
-  .loopdot{width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); flex:none}
-  .flonode{border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:14px 16px; background:#ffffff}
-  .flonode .ft{font-family:var(--mono); font-size:13px; color:var(--cyan)}
-  .flonode.engine{border-color:rgba(22,104,216,.32)}
-  .flonode.engine .ft{color:#1668d8}
-  .flonode .fd{color:var(--muted); font-size:13px; margin-top:5px; line-height:1.55}
-  .floarrow{display:flex; align-items:center; gap:9px; padding:9px 0 9px 4px; color:var(--muted-2); font-size:12.5px; font-family:var(--mono)}
-  .floarrow .ax{color:var(--cyan); font-size:16px; line-height:1}
-
-  /* results */
-  .res-group{margin-bottom:36px}
-  .res-label{font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:14px; margin:0 0 18px}
-  .res-label::after{content:""; flex:1; height:1px; background:var(--border)}
-  .res-label.warm{color:var(--orange)}
-  .res-label.ai{color:#7a4fe0}
-  table.data tr.ai td{color:#7a4fe0; font-weight:700}
-  .res-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px}
-  .panel{
-    border:1px solid var(--border); border-radius:var(--radius); padding:26px;
-    background:linear-gradient(180deg,#ffffff,#ffffff);
-  }
-  .panel.full{grid-column:1/-1}
-  .panel{min-width:0}
-  .panel .phead{display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:6px; flex-wrap:wrap}
-  .panel h3{font-size:19px}
-  .panel .psub{color:var(--muted); font-size:13.5px}
-  .badge{font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:100px; border:1px solid var(--border-strong); color:var(--cyan); background:rgba(10,160,136,.06); white-space:nowrap}
-  .badge.warn{color:var(--orange); background:rgba(22,104,216,.07)}
-  .badge.ai{color:#7a4fe0; border-color:rgba(122,79,224,.4); background:rgba(122,79,224,.08)}
-  table.data{width:100%; border-collapse:collapse; margin-top:14px; font-size:14px}
-  table.data th,table.data td{text-align:left; padding:10px 8px; border-bottom:1px solid var(--border)}
-  table.data th{color:var(--muted-2); font-weight:600; font-family:var(--mono); font-size:11.5px; letter-spacing:.05em; text-transform:uppercase}
-  table.data td.mono{font-family:var(--mono)}
-  table.data td.r,table.data th.r{text-align:right}
-  table.data tr:last-child td{border-bottom:none}
-  table.data tr.win td{color:#0aa088; font-weight:700}
-  .muted-tag{color:var(--muted-2); font-weight:400; font-size:.85em}
-  .bars{margin-top:8px}
-  .bar-row{display:grid; grid-template-columns:150px 1fr 78px; align-items:center; gap:12px; margin:13px 0}
-  .bar-row .blab{font-size:13.5px; color:var(--muted)}
-  .bar-track{height:14px; border-radius:8px; background:rgba(148,163,184,.1); overflow:hidden}
-  .bar-fill{height:100%; border-radius:8px; background:var(--warp); transform-origin:left; transform:scaleX(0); transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
-  .bar-row .bval{font-family:var(--mono); font-size:13.5px; text-align:right; color:var(--text)}
-
-  /* figures (real result images) */
-  .fig{border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:#f5f7fb; margin-top:22px}
-  .fig img{display:block; width:100%; height:auto; background:#f5f7fb}
-  .fig figcaption{padding:13px 18px; color:var(--muted); font-size:13px; border-top:1px solid var(--border); line-height:1.55; background:var(--surface)}
-  .fig figcaption b{color:var(--text)}
-  .figscroll{overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch}
-  .figscroll img{min-width:660px}
-  .figscroll::-webkit-scrollbar{height:8px}
-  .figscroll::-webkit-scrollbar-thumb{background:rgba(120,140,170,.45); border-radius:100px}
-  .fig-2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
-  .fig-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:6px}
-  .fig-3 .fig{margin-top:0}
-  .fig-3 figcaption{font-size:12.5px; padding:12px 14px}
-  .fig-4{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:6px}
-  .fig-4 .fig{margin-top:0; display:flex; flex-direction:column}
-  .fig-4 .fig figcaption{flex:1}
-  .fig-4 figcaption{font-size:12px; padding:11px 13px}
-  .figtag.fst{color:#4f6280}
-  @media(max-width:900px){.fig-4{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:520px){.fig-4{grid-template-columns:1fr}}
-  .warpfig{border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px 6px; margin-top:30px;
-    background:linear-gradient(180deg,#ffffff,#ffffff)}
-  .warpfig svg{display:block; width:100%; height:auto}
-  .warpfig figcaption{color:var(--muted); font-size:13.5px; line-height:1.62; padding:14px 4px 10px; border-top:1px solid var(--border); margin-top:8px}
-  .warpfig figcaption b{color:var(--text)}
-  .figtag{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; display:block; margin-bottom:5px}
-  .figtag.f2d{color:#0aa088}.figtag.f3d{color:#1668d8}.figtag.fai{color:#7a4fe0}
-  @media(max-width:860px){.fig-3{grid-template-columns:1fr}}
-  @media(max-width:640px){.fig-2{grid-template-columns:1fr}}
-
-  /* CTA */
-  .cta-band{
-    border:1px solid var(--border-strong); border-radius:24px; padding:54px 44px; text-align:center; position:relative; overflow:hidden;
-    background:linear-gradient(180deg,#ffffff,#ffffff);
-  }
-  .cta-band::before{content:""; position:absolute; inset:0; z-index:0; opacity:.5;
-    background:radial-gradient(600px 240px at 50% -20%, rgba(22,104,216,.2), transparent 60%),radial-gradient(500px 240px at 50% 120%, rgba(10,160,136,.18), transparent 60%)}
-  .cta-band>*{position:relative; z-index:1}
-  .cta-band h2{font-size:clamp(28px,3.6vw,40px)}
-  .cta-band p{color:var(--muted); font-size:17px; margin:16px auto 28px; max-width:560px}
-  .cta-btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap}
-  .cta-meta{margin-top:20px; color:var(--muted-2); font-size:13.5px; font-family:var(--mono)}
-
-  /* footer */
-  footer{border-top:1px solid var(--border); padding:46px 0 40px; margin-top:30px}
-  .foot-grid{display:flex; justify-content:space-between; gap:30px; flex-wrap:wrap; align-items:flex-start}
-  .foot-brand{max-width:340px}
-  .foot-brand p{color:var(--muted); font-size:14px; margin-top:12px}
-  .foot-cols{display:flex; gap:64px; flex-wrap:wrap}
-  .foot-col h5{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); margin:0 0 14px}
-  .foot-col a,.foot-col span{display:block; color:var(--muted); font-size:14px; margin-bottom:9px; transition:color .15s}
-  .foot-col a:hover{color:var(--text)}
-  .cite{margin-top:34px; padding-top:22px; border-top:1px solid var(--border); color:var(--muted-2); font-size:12.5px; line-height:1.75}
-  .cite b{color:var(--muted)}
-  .copyright{margin-top:18px; color:var(--muted-2); font-size:13px}
-
-  /* reveal */
-  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease}
-  .reveal.in{opacity:1; transform:none}
-
-  /* responsive */
-  @media(max-width:900px){
-    .hero-grid{grid-template-columns:1fr; gap:38px}
-    .tech-grid{grid-template-columns:1fr; gap:30px}
-    .stats-grid{grid-template-columns:repeat(2,1fr)}
-    .stat:nth-child(2){border-right:none}
-    .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--border)}
-    .cards-3,.features,.res-grid{grid-template-columns:1fr}
-    .nav-links{display:none}
-    .nav-links.open{display:flex; position:absolute; top:64px; left:0; right:0; flex-direction:column; gap:0; background:rgba(255,255,255,.98); border-bottom:1px solid var(--border); padding:8px 0}
-    .nav-links.open a{padding:13px 24px}
-    .nav-toggle{display:block}
-    section{padding:62px 0}
-  }
-  @media(max-width:560px){
-    .stats-grid{grid-template-columns:1fr}
-    .stat{border-right:none; border-bottom:1px solid var(--border)}
-    .bar-row{grid-template-columns:110px 1fr 62px}
-    .cta-band{padding:38px 22px}
-  }
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
@@ -333,11 +20,11 @@
   <div class="wrap nav-inner">
     <a class="brand" href="#top"><span class="dot"></span>WarpStack</a>
     <nav class="nav-links" id="navlinks">
-      <a href="#why">Why warpage</a>
-      <a href="#features">Features</a>
-      <a href="#agentic">Agentic flow</a>
-      <a href="#technology">How it works</a>
-      <a href="#results">Results</a>
+      <a href="index.html#why">Why warpage</a>
+      <a href="index.html#capability">Capabilities</a>
+      <a href="index.html#input">Input</a>
+      <a href="index.html#output">Output</a>
+      <a class="xpage" href="features.html">Features</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-cta">
@@ -355,17 +42,17 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow"><span class="pulse"></span>Hybrid numerical + AI warpage analysis</span>
+      <span class="eyebrow"><span class="pulse"></span>Warpage analysis for 2.5D &amp; 3D chiplet packages</span>
       <h1>See how your chiplet stack <span class="grad-text">bends</span> — before it ships.</h1>
-      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages with a <b>hybrid engine</b>: <b>detailed 3D numerical analysis</b> for accurate sign-off, the <b>MOR-model</b> to sweep a whole design space at a fraction of the cost, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method that returns numerical-grade warpage maps in milliseconds. Numerical when you need ground truth, fast when you need to explore.</p>
+      <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages, and gives you three ways to ask: <b>high fidelity at various resolution</b>, so a coarse mesh still gives you the answer; <b>WarpStack-GNN</b> to sweep a whole design space in milliseconds per point; and <b>WarpStack-MOR</b> to explore a bounded box around a nominal design in microseconds. One design description, three ways to get an answer.</p>
       <div class="hero-cta">
         <a class="btn btn-primary btn-lg" href="#contact">Request for demo</a>
-        <a class="btn btn-ghost btn-lg" href="#results">See the results</a>
+        <a class="btn btn-ghost btn-lg" href="features.html">Explore the three methods</a>
       </div>
       <div class="hero-sub">
-        <span><span class="check">✦</span> MOR-model in 51 µs per design point</span>
-        <span><span class="check">✦</span> 3D numerical on 200+ layer stacks</span>
-        <span><span class="check">✦</span> AI inference in 19.4 ms</span>
+        <span><span class="check">✦</span> High fidelity at various resolution</span>
+        <span><span class="check">✦</span> WarpStack-GNN · 19.4 ms</span>
+        <span><span class="check">✦</span> WarpStack-MOR · 51 µs</span>
       </div>
     </div>
 
@@ -376,7 +63,7 @@
         <span class="viz-dots"><i></i><i></i><i></i></span>
       </div>
       <img src="assets/figs/warpage_hbm4_2nm_mor.png" alt="WarpStack warpage map of a 2nm CoWoS package — a broad central dome falling away toward the package corners, with the GPU and HBM outlines drawn" loading="eager">
-      <div class="viz-cap"><b>A real WarpStack result.</b> The predicted warpage surface of a 2nm CoWoS package — 8 HBM stacks, 2 GPU dies, 108 chiplets — returned by the MOR-model in 51 µs, matching the full 3D solve to within 0.04 µm.</div>
+      <div class="viz-cap"><b>A real WarpStack result.</b> The predicted warpage surface of a 2nm CoWoS package — 8 HBM stacks, 2 GPU dies, 108 chiplets — returned by WarpStack-MOR in 51 µs, matching the full 3D solve to within 0.04 µm.</div>
     </div>
   </div>
 </section>
@@ -384,10 +71,10 @@
 <!-- ============ STATS ============ -->
 <div class="stats">
   <div class="wrap stats-grid">
-    <div class="stat reveal"><div class="num c1">51 µs</div><div class="lbl">MOR-model per design point</div></div>
-    <div class="stat reveal"><div class="num c2">798,000×</div><div class="lbl">MOR-model faster than 3D numerical</div></div>
-    <div class="stat reveal"><div class="num c3">0.04 µm</div><div class="lbl">largest difference vs 3D reference</div></div>
-    <div class="stat reveal"><div class="num c4">3</div><div class="lbl">methods — 3D · MOR · AI</div></div>
+    <div class="stat reveal"><div class="num c1">±0.55%</div><div class="lbl">across resolutions · MI350 study</div></div>
+    <div class="stat reveal"><div class="num c2">19.4 ms</div><div class="lbl">per design point · WarpStack-GNN</div></div>
+    <div class="stat reveal"><div class="num c3">798,000×</div><div class="lbl">vs a full solve · WarpStack-MOR</div></div>
+    <div class="stat reveal"><div class="num c4">3</div><div class="lbl">solvers, one workflow</div></div>
   </div>
 </div>
 
@@ -546,54 +233,115 @@
   </div>
 </section>
 
-<!-- ============ FEATURES ============ -->
-<section id="features">
+<!-- ============ CAPABILITY ============ -->
+<section id="capability">
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="kicker">What it does</div>
-      <h2>Three methods, one workflow — numerical and AI</h2>
-      <p>WarpStack is a hybrid engine: a detailed 3D numerical method for accurate sign-off, the <b>MOR-model</b> for sweeping a design space at a fraction of the cost, and <b>WarpStack-AI (GNN)</b> — an AI-accelerated method for near-instant, numerical-grade warpage. All three run from the same simple design description, so you move between accuracy, exploration, and real-time inference without changing your inputs.</p>
+      <h2>Three ways to get a warpage answer</h2>
+      <p>The same package description drives all three. Start where the cost fits the question — a converged answer on a coarse mesh, a whole design space swept by a trained network, or a bounded box explored in microseconds — and move between them without changing your inputs.</p>
+    </div>
+    <div class="cards-3">
+      <a class="solver acc reveal" href="features.html#resolution">
+        <div class="nm">High-fidelity at various resolution</div>
+        <div class="role">numerical · detailed · sign-off</div>
+        <p>The answer stops depending on the mesh well before the resolution you were told to ask for. Explore at coarse resolution, commit to a fine localized analysis only where it earns its cost.</p>
+        <div class="kv"><span><b>±0.55%</b><br>across resolutions</span><span><b>11 min</b><br>on a laptop</span></div>
+        <span class="go">See the evidence →</span>
+      </a>
+      <a class="solver ai reveal" href="features.html#gnn">
+        <div class="nm">WarpStack-GNN</div>
+        <div class="role">AI · global exploration</div>
+        <p>A network trained on WarpStack's own 3D output returns the full warpage map without solving — fast enough to put warpage inside a live optimization loop.</p>
+        <div class="kv"><span><b>19.4 ms</b><br>per design</span><span><b>2,146×</b><br>vs a full solve</span></div>
+        <span class="go">See the numbers →</span>
+      </a>
+      <a class="solver fast reveal" href="features.html#mor">
+        <div class="nm">WarpStack-MOR</div>
+        <div class="role">compact model · localized exploration</div>
+        <p>A physics-based compact model built once over a bounded box around a nominal design — not a fit to data — answering material and thermal what-ifs with an error bound attached.</p>
+        <div class="kv"><span><b>51 µs</b><br>per design</span><span><b>798,000×</b><br>vs a full solve</span></div>
+        <span class="go">See the numbers →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INPUT ============ -->
+<section id="input">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Input</div>
+      <h2>Describe the package once</h2>
+      <p>Bring the stack straight from the ecosystem. WarpStack reads the design, partitions the geometry, and builds the mechanical model itself — no hand re-entry, no simplified stand-in stack.</p>
     </div>
     <div class="features">
       <div class="feat reveal">
-        <div class="tag">FAST · COMPACT MODEL</div>
-        <h3><span class="emoji">⚡</span> MOR-model — a design space in the time of one solve</h3>
-        <p>Built once per design from the same 3D formulation, the MOR-model then returns a full warpage map in 51 µs. Sweep thousands of material and thermal design points in the time a single 3D solve would take.</p>
+        <div class="tag">STANDARDS · GEOMETRY</div>
+        <h3><span class="emoji">🧩</span> IEEE 3Dblox</h3>
+        <p>Import designs described in <b>IEEE 3Dblox</b> (<span class="mono">.3dbx</span>), the IEEE-standard modular description language for physical stacking, dimensions, and connectivity in 2.5D and 3D-IC designs. Recursive includes, per-file units, rotations and mirrors, and molding autofill are all handled on the way in.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">ACCURATE · NUMERICAL</div>
-        <h3><span class="emoji">🎯</span> 3D numerical for the hard cases</h3>
-        <p>The detailed 3D numerical resolves the package through its full thickness, layer by layer — the fidelity you want for complex, interleaved multi-layer stacks where a fast estimate isn't enough.</p>
+        <div class="tag">NATIVE</div>
+        <h3><span class="emoji">🧱</span> WarpStack floorplan JSON</h3>
+        <p>Or describe it directly: an arbitrary layer stack — substrates, interposers, bumps, dies, spreaders, lids — with per-layer materials and per-die placement, in one structured file.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">REAL-TIME · AI</div>
-        <h3><span class="emoji">🧠</span> WarpStack-AI (GNN) inference</h3>
-        <p>An AI-accelerated method, trained on numerical ground truth, predicts full warpage maps in <b>19.4 ms</b> at <b>0.5% error</b> — 2,146x faster than solving the same package in 3D, and fast enough to put warpage inside a live optimization loop.</p>
+        <div class="tag">MATERIALS</div>
+        <h3><span class="emoji">📐</span> Properties from a profile</h3>
+        <p>Modulus, Poisson ratio and CTE come from a material profile you supply or from the bundled library — <b>never inferred</b> from thermal or power data that cannot determine them. An unmatched material stops the run rather than quietly guessing, which is what makes a result reproducible.</p>
       </div>
-      <div class="feat reveal">
-        <div class="tag">SCOPE</div>
-        <h3><span class="emoji">🧱</span> Real multi-layer stacks</h3>
-        <p>Handles arbitrary layer stacks — substrates, interposers, bumps, dies, spreaders, lids — with per-layer materials and per-die placement. The reference design below is a 2nm CoWoS package: 237 mechanical layers, 135 die regions, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer.</p>
+    </div>
+    <div class="tech-grid" style="margin-top:34px">
+      <div class="reveal">
+        <ul class="flowpts">
+          <li><b>Hands-off at real scale.</b> A production-class accelerator package imported to <b>457 mechanical layers</b>, <b>273 footprint regions</b> and <b>138 instances</b> — with one line changed.</li>
+          <li><b>CLI-first.</b> Structured data in, CSV and JSON out. Run one design or a whole batch; nothing in the loop needs a GUI.</li>
+          <li><b>It tells you what it cannot take.</b> Constructs outside the mechanical importer raise an error naming the construct, rather than being silently dropped from the stack.</li>
+        </ul>
+        <p class="note"><b>On the roadmap:</b> importers for broader geometry formats. Today the supported inputs are IEEE 3Dblox and WarpStack floorplan JSON — those two, and no others.</p>
       </div>
+      <figure class="fig reveal">
+        <img src="assets/figs/stack_hbm4_2nm.png" alt="Cross-section of the modelled mechanical stack for a 2nm CoWoS package, showing substrate, interposer, dies and mould layers" loading="lazy">
+        <figcaption><span class="figtag f3d">The stack as WarpStack builds it</span><b>A different design — the 2nm CoWoS reference.</b> Whichever package you bring, every mechanical layer is resolved through the full thickness — no plate approximation, no smeared effective stiffness.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUTPUT ============ -->
+<section id="output">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Output</div>
+      <h2>A warpage map you can turn over</h2>
+      <p>Every method writes the same result format, so the view, the comparison and the downstream script are identical whether the answer came from a full solve, a trained network, or a compact model.</p>
+    </div>
+    <div class="fig-2">
+      <figure class="fig reveal">
+        <img src="assets/figs/warpage_hbm4_2nm_3d_active.png" alt="2D warpage heatmap of a 2nm CoWoS package with contour lines and die outlines overlaid" loading="lazy">
+        <figcaption><span class="figtag f3d">2D · plan view</span>Heatmap with contour lines and die outlines, so you can see which die sits on the steep part of the bow.</figcaption>
+      </figure>
+      <figure class="fig reveal">
+        <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="3D warpage surface of a 2nm CoWoS package with contours projected onto the floor" loading="lazy">
+        <figcaption><span class="figtag f3d">3D · surface</span>The same field as a rotatable surface with projected contours and 1× / 5× / 10× exaggeration.</figcaption>
+      </figure>
+    </div>
+    <div class="features" style="margin-top:34px">
       <div class="feat reveal">
-        <div class="tag">MAPS</div>
-        <h3><span class="emoji">🗺️</span> Clear, visual output</h3>
-        <p>Every run produces warpage heatmaps, cross-sections, and a 3D stack view, plus the peak-to-peak bow in microns — so the shape and the number are both easy to read.</p>
+        <div class="tag">INTERACTIVE</div>
+        <h3><span class="emoji">🗺️</span> Turn it over, slice it</h3>
+        <p>Rotate the 3D stack and the warpage surface, cut XZ and YZ cross-sections on a slider, and exaggerate the z-scale to see a few microns of bow on a 60&nbsp;mm package.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">COMPARE</div>
-        <h3><span class="emoji">⚖️</span> 3D vs MOR-model, side by side</h3>
-        <p>Run both on the same design and compare them map to map. On the reference package below the MOR-model tracks the 3D solve to within 0.04 µm across the whole surface — so you can see exactly what the fast path costs you.</p>
+        <h3><span class="emoji">⚖️</span> Signed difference maps</h3>
+        <p>Put any two answers side by side — two methods, two resolutions, two material sets — and read the signed difference across the whole surface, not just the peak-to-peak number.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">SCRIPTABLE</div>
-        <h3><span class="emoji">🔭</span> Batched &amp; automatable</h3>
-        <p>A command-line interface and structured JSON in, CSV/JSON out make WarpStack easy to script — run one design or a whole batch, and feed the results straight into your own design flow.</p>
-      </div>
-      <div class="feat reveal">
-        <div class="tag">STANDARDS · INPUT</div>
-        <h3><span class="emoji">🧩</span> Speaks IEEE 3Dblox</h3>
-        <p>Import designs described in <b>IEEE 3Dblox</b> — the IEEE-standard modular description language for physical stacking, dimensions, and logical connectivity in 2.5D and 3D-IC designs. Bring your stack straight from the ecosystem, no hand re-entry.</p>
+        <div class="tag">SHAREABLE · SCRIPTABLE</div>
+        <h3><span class="emoji">📤</span> A report and the raw data</h3>
+        <p>A self-contained interactive HTML report to send on, plus warpage CSVs, <span class="mono">geometry.json</span> and <span class="mono">simulation_report.json</span> to feed straight into your own flow.</p>
       </div>
     </div>
   </div>
@@ -605,7 +353,7 @@
     <div class="sec-head reveal">
       <div class="kicker">Workflow · agentic integration</div>
       <h2>Built for agentic EDA flows</h2>
-      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call detailed 3D numerical, the <b>MOR-model</b>, or <b>WarpStack-AI (GNN) inference</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
+      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call a full <b>3D solve</b>, <b>WarpStack-MOR</b>, or <b>WarpStack-GNN</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
     </div>
     <div class="tech-grid">
       <div class="reveal">
@@ -613,8 +361,8 @@
           <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
           <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
           <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed difference maps out, ready for closed-loop automation.</li>
-          <li><b>Warpage-aware optimization</b> — at 19.4 ms per evaluation, WarpStack-AI (GNN) lets agents sweep thousands of material and thermal design points in a live loop, steering each candidate toward lower bow in real time.</li>
-          <li><b>Reliability sign-off</b> — the MOR-model or AI screens the whole design space; detailed 3D numerical signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
+          <li><b>Warpage-aware optimization</b> — at 19.4 ms per evaluation, WarpStack-GNN lets agents sweep thousands of material and thermal design points in a live loop, steering each candidate toward lower bow in real time.</li>
+          <li><b>Reliability sign-off</b> — WarpStack-MOR or WarpStack-GNN screens the whole design space; a full 3D solve signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
         </ul>
         <div class="chips" style="margin-top:24px">
           <span class="chip">agentic-flow ready</span>
@@ -636,7 +384,7 @@
           <div class="floarrow"><span class="ax">↓</span> invokes WarpStack — CLI + structured data interface</div>
           <div class="flonode engine">
             <div class="ft">▣ WarpStack warpage analysis</div>
-            <div class="fd">WarpStack-AI (GNN) inference, the MOR-model, or detailed 3D numerical runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
+            <div class="fd">WarpStack-GNN, WarpStack-MOR, or a full 3D solve runs headless, producing warpage maps and peak-to-peak margins directly for automation.</div>
           </div>
           <div class="floarrow"><span class="ax">↓</span> returns structured, machine-readable results</div>
           <div class="flonode">
@@ -646,281 +394,6 @@
         </div>
         <p class="note">Warpage analysis becomes a callable step inside your agentic flow — not a hand-run GUI task.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ TECHNOLOGY ============ -->
-<section id="technology">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="kicker">How it works</div>
-      <h2>From one floorplan to a warpage map</h2>
-      <p>You describe the package once — its layers, materials, and where each die sits. WarpStack builds a mechanical model of the stack, applies the thermal load, and solves for how the surface deflects. Then pick the method that fits the moment: detailed 3D numerical, the MOR-model, or WarpStack-AI (GNN) inference. The inputs are identical.</p>
-    </div>
-    <div class="tech-grid">
-      <div class="pipe reveal">
-        <div class="pipe-step">
-          <span class="n">1</span>
-          <div><h4>Describe the package</h4><p>A single structured file lists the layer stack, each layer's material, and the placement of every die or module — the whole design in one place. WarpStack also reads <b>IEEE 3Dblox</b>, the standard modular description language for 2.5D/3D-IC stacking and connectivity, so you can bring designs straight from the ecosystem.</p></div>
-        </div>
-        <div class="pipe-step">
-          <span class="n">2</span>
-          <div><h4>Apply the thermal load</h4><p>WarpStack takes the package from its stress-free assembly temperature down to operating temperature, so the expansion mismatches between layers turn into real bending.</p></div>
-        </div>
-        <div class="pipe-step">
-          <span class="n">3</span>
-          <div><h4>Solve — or predict — the shape</h4><p>A numerical solver computes how the surface deflects — the detailed 3D method for sign-off, or the <b>MOR-model</b> when you need to sweep. Or skip the solve entirely and let <b>WarpStack-AI (GNN)</b> — an AI-accelerated method trained on that same numerical output — predict the warpage map in milliseconds.</p></div>
-        </div>
-        <div class="pipe-step">
-          <span class="n">4</span>
-          <div><h4>Read the result</h4><p>Out come warpage heatmaps, cross-sections, and the peak-to-peak bow in microns — identical format from every method, ready to view, compare, or drop into your own scripts.</p></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="threecard reveal">
-          <div class="solver fast">
-            <div class="nm">MOR-model</div>
-            <div class="role">compact model · fast · exploration</div>
-            <p>A physics-based compact model, built once per design from the same 3D formulation — not a black-box fit to data.</p>
-            <div class="kv"><span><b>51 µs</b><br>per design</span><span><b>0.04 µm</b><br>vs 3D reference</span></div>
-          </div>
-          <div class="solver acc">
-            <div class="nm">3D numerical</div>
-            <div class="role">numerical · detailed · sign-off</div>
-            <p>A detailed numerical method that resolves the package through its full thickness — the ground-truth fidelity for complex, interleaved stacks.</p>
-            <div class="kv"><span><b>40.6 s</b><br>per design</span><span><b>full</b><br>3D field</span></div>
-          </div>
-          <div class="solver ai">
-            <div class="nm">WarpStack-AI (GNN)</div>
-            <div class="role">AI · real-time · in-the-loop</div>
-            <p>An AI-accelerated method, trained on numerical ground truth, that predicts the full warpage map directly from the design description — no solve required.</p>
-            <div class="kv"><span><b>19.4 ms</b><br>per design</span><span><b>0.5%</b><br>error vs numerical</span></div>
-          </div>
-        </div>
-
-        <div class="eqbox reveal">
-          <div class="label">Numerical for truth, AI for speed</div>
-          <p class="why">The three methods are built to work together. Sign off the critical designs with the detailed 3D method, sweep the design space with the MOR-model built from that same formulation, and — once WarpStack-AI (GNN) is trained on the numerical output — call the AI for near-instant maps whenever you need warpage inside a live loop. Every method is measured against the same 3D reference, so the numbers stay comparable. Same floorplan, same materials — you simply choose truth, exploration, or speed.</p>
-          <div class="chips">
-            <span class="chip">3D numerical sign-off</span>
-            <span class="chip">MOR-model exploration</span>
-            <span class="chip">AI-accelerated</span>
-            <span class="chip">trained on numerical data</span>
-            <span class="chip">CLI &amp; structured data</span>
-            <span class="chip">IEEE 3Dblox input</span>
-          </div>
-        </div>
-        <p class="note">Warpage is reported as peak-to-peak deflection in microns with the full surface map — in the same format from the numerical methods and from the AI.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ RESULTS ============ -->
-<section id="results">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="kicker">Results</div>
-      <h2>Sign off with 3D, explore with the MOR-model, iterate with AI</h2>
-      <p>Measured end to end on real designs, with the detailed 3D numerical method as the reference throughout. The 3D and <b>MOR-model</b> results below are a <b>2nm CoWoS</b> package — 8 HBM stacks of 12-hi DRAM, 2 GPU dies, 108 chiplet instances on a 56&nbsp;×&nbsp;57&nbsp;mm interposer — where the MOR-model reproduces the 3D surface to within 0.036 µm at 798,000× the speed. <b>WarpStack-AI (GNN)</b> is measured on the same package, where it predicts the warpage map 2,146× faster than solving it.</p>
-    </div>
-
-    <!-- DESIGN + 3D REFERENCE -->
-    <div class="res-group">
-      <div class="res-label warm reveal">Detailed 3D — the reference answer</div>
-      <div class="res-grid">
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>The design WarpStack solves</h3><div class="psub">2nm CoWoS · 8 HBM stacks × 12-hi DRAM + 2 GPUs</div></div>
-            <span class="badge warn">40.6 s</span>
-          </div>
-          <table class="data">
-            <tbody>
-              <tr><td>Package</td><td class="mono r">56.2 × 57.5 mm</td></tr>
-              <tr><td>Chiplet instances</td><td class="mono r">108</td></tr>
-              <tr><td>Die regions</td><td class="mono r">135</td></tr>
-              <tr><td>Mechanical layers</td><td class="mono r">237</td></tr>
-              <tr><td>Solid elements</td><td class="mono r">45,035</td></tr>
-              <tr><td>Degrees of freedom</td><td class="mono r">169,602</td></tr>
-              <tr class="win"><td>3D numerical solve</td><td class="mono r">40.6 s</td></tr>
-            </tbody>
-          </table>
-          <div class="note">A full 3D solve through the thickness of the stack — 8 memory stacks, 12 DRAM tiers each, two large compute dies, every bond layer resolved. One design point, 40.6 s on a single core. Imported straight from the IEEE 3Dblox description, with no hand re-entry.</div>
-        </div>
-
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>Its warpage surface</h3><div class="psub">Active surface, assembly to operating temperature</div></div>
-            <span class="badge warn">3D reference</span>
-          </div>
-          <figure class="fig" style="margin-top:14px">
-            <img src="assets/figs/warpage_hbm4_2nm_3d_active.png" alt="3D numerical warpage map of the 2nm CoWoS package — a broad central dome falling away toward the package corners, with GPU and HBM outlines drawn" loading="lazy">
-            <figcaption><b>The 3D answer.</b> A broad central dome falling away at the corners — <b>1332 µm</b> peak-to-peak at FEM mesh 64. This is the surface every other method on this page is measured against.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </div>
-
-    <!-- MOR vs 3D -->
-    <div class="res-group">
-      <div class="res-label reveal">MOR-model vs 3D — change a material, get the answer now</div>
-      <div class="panel full reveal">
-        <div class="phead">
-          <div><h3>A what-if the model was never built at</h3><div class="psub">ABF substrate stiffened 24.0 → 28.8 GPa</div></div>
-          <span class="badge">798,000× faster</span>
-        </div>
-        <p class="psub" style="margin:2px 0 4px; max-width:860px">The <b style="color:#0d1b2e">MOR-model</b> is a physics-based compact model built once per design from the same 3D formulation — not a black-box fit to data. Here the substrate is stiffened, a change that moves peak-to-peak warpage by <b style="color:#0d1b2e">+40.9 µm</b>. The MOR-model resolves that shift to within 0.036 µm — in 51 µs rather than 40.6 s.</p>
-        <div class="fig-4">
-          <figure class="fig reveal">
-            <img src="assets/figs/stack_hbm4_2nm.png" alt="3D structure view of the 2nm CoWoS package — two GPU dies flanked by four HBM stacks each side on a silicon interposer over the substrate" loading="lazy">
-            <figcaption><span class="figtag fst">Design · 3D structure</span><b>The stack.</b> 108 chiplet instances, 237 mechanical layers, straight from IEEE 3Dblox.</figcaption>
-          </figure>
-          <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by the 3D numerical method for the stiffened-substrate variant — a broad dome peaking at the package centre and falling away steeply at the corners" loading="lazy">
-            <figcaption><span class="figtag f3d">Detailed 3D · reference</span><b>3D numerical.</b> 1372.7 µm peak-to-peak, solved from scratch in 40.6 s.</figcaption>
-          </figure>
-          <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm4_2nm_mor_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by the MOR-model for the same stiffened-substrate variant — visually indistinguishable from the 3D numerical surface beside it" loading="lazy">
-            <figcaption><span class="figtag f2d">MOR-model · same point</span><b>MOR-model.</b> 1372.6 µm peak-to-peak — returned in 51 µs.</figcaption>
-          </figure>
-          <figure class="fig reveal">
-            <img src="assets/figs/warpage_hbm4_2nm_diff.png" alt="Signed difference map between the 3D numerical and MOR-model surfaces, four orders of magnitude smaller than the warpage itself" loading="lazy">
-            <figcaption><span class="figtag fst">3D − MOR-model</span><b>The difference.</b> Signed residual, at most 0.036 µm — 0.003% of the warpage being predicted.</figcaption>
-          </figure>
-        </div>
-        <div class="note">Both maps are the active surface at the same mesh and the same thermal load, so this compares the two methods like for like rather than against measurement. On this package the active and continuous package surfaces agree to within 0.1% of peak-to-peak — the bow is global, so the die-level and package-level views coincide.</div>
-      </div>
-    </div>
-
-    <!-- AGREEMENT + SPEEDUP -->
-    <div class="res-group">
-      <div class="res-grid">
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>How closely the MOR-model tracks 3D</h3><div class="psub">Stiffened-substrate what-if · same mesh, same load</div></div>
-            <span class="badge">within 0.036 µm</span>
-          </div>
-          <table class="data">
-            <thead><tr><th>Quantity</th><th class="r">3D numerical</th><th class="r">MOR-model</th></tr></thead>
-            <tbody>
-              <tr><td>Peak-to-peak warpage</td><td class="mono r">1372.7 µm</td><td class="mono r">1372.6 µm</td></tr>
-              <tr><td>Time per design point</td><td class="mono r">40.6 s</td><td class="mono r">51 µs</td></tr>
-              <tr class="win"><td>Peak-to-peak difference</td><td class="mono r">reference</td><td class="mono r">0.043 µm</td></tr>
-              <tr><td>Whole-map difference</td><td class="mono r">—</td><td class="mono r">0.003%</td></tr>
-              <tr><td>Largest local difference</td><td class="mono r">—</td><td class="mono r">0.036 µm</td></tr>
-            </tbody>
-          </table>
-          <div class="note">This point was deliberately chosen <em>outside</em> the set the model was built from. A further 8 design points drawn from across the material design space were each solved with full 3D numerical and compared: worst whole-map difference 0.006%.</div>
-        </div>
-
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>What that buys you</h3><div class="psub">Design points per hour, single core</div></div>
-            <span class="badge">798,000×</span>
-          </div>
-          <div class="bars" id="speedbars">
-            <div class="bar-row"><span class="blab">MOR-model</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bval">70.8M</span></div>
-            <div class="bar-row"><span class="blab">3D numerical</span><div class="bar-track"><div class="bar-fill" data-w="1"></div></div><span class="bval">89</span></div>
-          </div>
-          <div class="note">Building the MOR-model for this design costs 17 min of 3D solves up front — about 25× a single 3D run — after which each additional design point is 51 µs. The investment pays for itself within roughly 25 evaluations, and everything past that is effectively free. That is what turns warpage from a sign-off check into something you sweep.</div>
-        </div>
-      </div>
-      <div class="note" style="margin-top:22px">Mechanical properties for this reference design are <b>illustrative</b> values for the material classes involved, not calibrated 2nm, HBM4 or CoWoS process data — so absolute warpage in microns is indicative rather than a prediction about specific hardware, and it is quoted at FEM mesh 64. Solver timings, the speedup, and the agreement between the 3D reference and the MOR-model do not depend on those values.</div>
-    </div>
-
-    <!-- AI RESULTS -->
-    <div class="res-group">
-      <div class="res-label ai reveal">WarpStack-AI (GNN) — numerical-grade warpage maps in milliseconds</div>
-
-      <div class="panel full reveal">
-        <div class="phead">
-          <div><h3>Predicted vs solved, on a design point the network never saw</h3><div class="psub">2nm CoWoS package · 56 × 57 mm · active surface</div></div>
-          <span class="badge ai">2,146× faster</span>
-        </div>
-        <p class="psub" style="margin:2px 0 10px; max-width:920px"><b style="color:#0d1b2e">WarpStack-AI (GNN)</b> learns a package’s warpage behaviour from results produced by the detailed 3D method, then returns the full map without solving. Here it is asked for a design point held out of training, and the same point is solved from scratch in 3D for comparison.</p>
-        <figure class="fig reveal" style="margin-top:0">
-          <div class="figscroll"><img src="assets/figs/warpage_hbm4_2nm_gnn_vs_3d.png" alt="Three warpage maps side by side: the 3D numerical reference at 1972.3 µm peak-to-peak, the WarpStack-AI (GNN) prediction at 1955.4 µm, and the signed difference between them, which is close to two orders of magnitude smaller than the warpage itself" loading="lazy"></div>
-          <figcaption><span class="figtag fai">Detailed 3D · WarpStack-AI (GNN) · difference</span><b>Left — the 3D reference,</b> 1972.3 µm peak-to-peak, solved from scratch in 41.5 s. <b>Centre — the GNN prediction,</b> 1955.4 µm, returned in 19.4 ms. <b>Right — the signed difference,</b> spanning 26.5 µm across a surface that bows by almost two millimetres.</figcaption>
-        </figure>
-      </div>
-
-      <div class="res-grid" style="margin-top:18px">
-        <!-- AI vs numerical table -->
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>AI inference vs numerical solve</h3><div class="psub">Per-design runtime and accuracy · single core</div></div>
-            <span class="badge ai">2,146×</span>
-          </div>
-          <table class="data">
-            <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D numerical</th><th class="r">Error vs 3D</th></tr></thead>
-            <tbody>
-              <tr><td>3D numerical <span class="muted-tag">reference</span></td><td class="mono r">41.54 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
-              <tr class="ai"><td>WarpStack-AI <span class="muted-tag">GNN</span></td><td class="mono r">19.4 ms</td><td class="mono r">2,146×</td><td class="mono r">0.49%</td></tr>
-            </tbody>
-          </table>
-          <div class="note"><b style="color:#7a4fe0">WarpStack-AI (GNN)</b> returns a full warpage map in <b>19.4 ms</b> — <b>2,146×</b> faster than solving the same package in 3D. Measured against six independent full 3D solves, the whole-map difference is <b>0.49%</b> of peak-to-peak and the peak-to-peak bow itself lands within <b>1.89%</b>.</div>
-        </div>
-
-        <!-- held-out accuracy -->
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>How closely the GNN tracks 3D</h3><div class="psub">512 held-out design points, materials and thermal load varied</div></div>
-            <span class="badge ai">0.38% RMSE</span>
-          </div>
-          <table class="data">
-            <thead><tr><th>Quantity</th><th class="r">Held-out set</th><th class="r">Fresh 3D solves</th></tr></thead>
-            <tbody>
-              <tr><td>Design points</td><td class="mono r">512</td><td class="mono r">6</td></tr>
-              <tr><td>Mean 3D peak-to-peak</td><td class="mono r">1,393 µm</td><td class="mono r">1,699 µm</td></tr>
-              <tr class="ai"><td>Whole-map difference</td><td class="mono r">0.38%</td><td class="mono r">0.49%</td></tr>
-              <tr><td>Peak-to-peak error</td><td class="mono r">1.41%</td><td class="mono r">1.89%</td></tr>
-              <tr><td>Correlation with 3D</td><td class="mono r">0.9996</td><td class="mono r">0.99996</td></tr>
-            </tbody>
-          </table>
-          <div class="note">Every held-out point varies the material set <em>and</em> the thermal load, and the held-out material configurations are kept entirely out of training — so the network is scored on combinations it was never shown.</div>
-        </div>
-      </div>
-
-      <div class="res-grid" style="margin-top:18px">
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>The design it was measured on</h3><div class="psub">2nm CoWoS HBM4 + GPU stack, imported from IEEE 3Dblox</div></div>
-            <span class="badge warn">3D reference</span>
-          </div>
-          <table class="data">
-            <tbody>
-              <tr><td>Package</td><td class="mono r">56.2 × 57.5 mm</td></tr>
-              <tr><td>Stacked die columns</td><td class="mono r">135</td></tr>
-              <tr><td>Mechanical layers</td><td class="mono r">237</td></tr>
-              <tr><td>Solid elements</td><td class="mono r">45,035</td></tr>
-              <tr><td>Degrees of freedom</td><td class="mono r">169,602</td></tr>
-              <tr class="win"><td>3D numerical solve</td><td class="mono r">41.54 s</td></tr>
-            </tbody>
-          </table>
-          <div class="note">An 8-stack HBM4 + dual-GPU CoWoS package read straight from its IEEE 3Dblox description — every layer, material, and die placement taken from the source design with no hand re-entry. WarpStack-AI is trained per design, on warpage produced by the detailed 3D method for that same stack.</div>
-        </div>
-
-        <div class="panel reveal">
-          <div class="phead">
-            <div><h3>What it costs to get there</h3><div class="psub">One-time training, then milliseconds per design point</div></div>
-            <span class="badge ai">pays back in 120 points</span>
-          </div>
-          <table class="data">
-            <tbody>
-              <tr><td>Training labels (1,792 points)</td><td class="mono r">32.2 min</td></tr>
-              <tr><td>Network training</td><td class="mono r">50.8 min</td></tr>
-              <tr class="win"><td>Total one-time cost</td><td class="mono r">83.1 min</td></tr>
-              <tr><td>Per design point afterwards</td><td class="mono r">19.4 ms</td></tr>
-              <tr><td>Break-even vs solving directly</td><td class="mono r">120 points</td></tr>
-            </tbody>
-          </table>
-          <div class="note">Training data comes from WarpStack’s own 3D formulation, generated far more efficiently than a brute-force sweep of solves — 1,792 labelled warpage fields in 32 minutes rather than the day a design point at a time would cost. Past 120 design points the network is cheaper than solving directly, and a 1,000-point sweep drops from 11.5 hours to 83 minutes.</div>
-        </div>
-      </div>
-
-      <div class="note" style="margin-top:22px">WarpStack-AI (GNN) is an <b>AI-accelerated</b> warpage predictor trained on numerical ground truth. Because it learns from the same numerical engine that validates it, the numerical and AI paths stay consistent — so you get numerical-grade warpage maps at AI speed. The figures quoted here are measured on the 2nm CoWoS package above, on an Apple M3 with inference on a single CPU core; a network is trained per design, and accuracy is reported against the 3D method rather than against measurement.</div>
     </div>
   </div>
 </section>
@@ -946,25 +419,24 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top"><span class="dot"></span>WarpStack</a>
-        <p>Hybrid numerical + AI warpage analysis for 2.5D and 3D chiplet reliability — detailed 3D numerical, the MOR-model, and WarpStack-AI (GNN) inference, from a single design description.</p>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
           <h5>Product</h5>
-          <a href="#why">Why warpage</a>
-          <a href="#features">Features</a>
-          <a href="#agentic">Agentic flow</a>
-          <a href="#technology">How it works</a>
-          <a href="#results">Results</a>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#input">Input</a>
+          <a href="index.html#output">Output</a>
+          <a href="index.html#agentic">Agentic flow</a>
         </div>
         <div class="foot-col">
-          <h5>Capabilities</h5>
-          <span>Detailed 3D numerical sign-off</span>
-          <span>MOR-model design-space exploration</span>
-          <span>WarpStack-AI (GNN) inference</span>
+          <h5>Features</h5>
+          <a href="features.html#resolution">High-fidelity at various resolution</a>
+          <a href="features.html#gnn">WarpStack-GNN — global exploration</a>
+          <a href="features.html#mor">WarpStack-MOR — localized exploration</a>
           <span>IEEE 3Dblox input</span>
-          <span>Agentic-flow integration</span>
-          <span>2.5D / 3D · 200+ layer stacks</span>
+          <span>Interactive 2D / 3D output</span>
         </div>
         <div class="foot-col">
           <h5>Contact</h5>
@@ -974,36 +446,12 @@
       </div>
     </div>
     <div class="cite">
-      WarpStack is a hybrid warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks, combining detailed <b>numerical</b> analysis with a compact <b>MOR-model</b> and an <b>AI-accelerated</b> approach. The 3D and MOR-model figures on this page are measured on a 2nm CoWoS reference design (8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances) at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so absolute warpage in microns is indicative; timings and the 3D-vs-MOR agreement are not affected.
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. <b>Speed and method-agreement figures</b> (WarpStack-MOR and WarpStack-GNN) are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected. <b>Resolution and accuracy figures</b> come from a separate study of an AMD MI350-class package, presented with its full scope and caveats on the features page. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
     </div>
     <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
   </div>
 </footer>
 
-<script>
-  // mobile nav
-  var t=document.getElementById('navtoggle'), l=document.getElementById('navlinks');
-  t&&t.addEventListener('click',function(){l.classList.toggle('open')});
-  l&&l.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){l.classList.remove('open')})});
-
-  // scroll reveal
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  },{threshold:.14});
-  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
-
-  // animate bars when they scroll into view
-  document.querySelectorAll('.bars').forEach(function(group){
-    var bo=new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if(e.isIntersecting){
-          group.querySelectorAll('.bar-fill').forEach(function(f){ f.style.transform='scaleX('+(f.dataset.w/100)+')'; });
-          bo.disconnect();
-        }
-      });
-    },{threshold:.35});
-    bo.observe(group);
-  });
-</script>
+<script src="assets/site.js"></script>
 </body>
 </html>
