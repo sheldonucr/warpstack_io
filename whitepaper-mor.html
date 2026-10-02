@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WarpStack White Paper 03 — WarpStack-MOR, Localized Design-Space Exploration</title>
+<meta name="description" content="WarpStack white paper: a physics-based compact model built once over a bounded box around a nominal design tracks the full 3D solve to within 0.036 µm on an out-of-box what-if, while running in 51 µs — 798,000× faster — with an error bound attached." />
+<meta property="og:title" content="WarpStack White Paper 03 — WarpStack-MOR" />
+<meta property="og:description" content="Localized design-space exploration: method agreement on an out-of-box what-if, the eight-point validation, and the cost model." />
+<meta property="og:type" content="article" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+    <nav class="nav-links" id="navlinks">
+      <a class="xpage" href="index.html">Features &amp; capabilities</a>
+      <a href="whitepapers.html">White papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Request for demo</a>
+      <button class="nav-toggle" id="navtoggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ PAPER HEAD ============ -->
+<section class="wp-head">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="wp-eyebrow"><span class="pulse"></span>White paper · No. 03</span>
+      <h1>WarpStack-MOR — localized design-space exploration</h1>
+      <div class="wp-meta">
+        <span><b>Method:</b> physics-based compact model</span>
+        <span><b>Package:</b> 2nm CoWoS HBM4 + GPU</span>
+        <span><b>Scope:</b> localized exploration</span>
+        <span><b>Series:</b> <a href="whitepapers.html" style="color:var(--blue)">WarpStack white papers</a></span>
+      </div>
+      <div class="abstract">
+        <div class="label">Abstract</div>
+        <p><b>Localized</b> means something precise here: the compact model is built once over a <b>bounded box around a nominal design</b> — by default ±10% on each material property — and inside that box every answer carries a rigorous error bound with it. It is a physics-based reduction of the same 3D formulation, not a black-box fit to data. On a what-if deliberately chosen <em>outside</em> the box (ABF substrate stiffened 24.0→28.8 GPa, a change that moves peak-to-peak warpage by <b>+40.9 µm</b>) it tracks the full 3D solve to within <b>0.036 µm</b> while running in <b>51 µs — 798,000× faster</b>. This paper reports the method agreement, the eight-point validation across the material design space, and the cost model.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §3 MOR ============ -->
+<section id="mor" style="padding-top:34px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">A what-if, resolved</div>
+      <h2>Microseconds per design point, with a bound attached</h2>
+      <p>The compact model is built over a <b>bounded box around a nominal design</b> — by default ±10% on each material property — and inside that box every answer carries a rigorous error bound with it. Ask for a point outside the box and it still answers, still reports its bound, and tells you that you have left the region it was built for. Change the floorplan and it refuses to load at all.</p>
+    </div>
+
+      <div class="panel full reveal">
+        <div class="phead">
+          <div><h3>The nominal design, before any what-if</h3><div class="psub">2nm CoWoS · 8 HBM stacks, 2 GPUs, 108 chiplets · active surface</div></div>
+          <span class="badge">51 µs</span>
+        </div>
+        <figure class="fig reveal" style="margin-top:14px">
+          <div class="figscroll"><img src="assets/figs/warpage_hbm4_2nm_mor.png" alt="WarpStack-MOR warpage map of the nominal 2nm CoWoS package — a broad central dome falling away toward the package corners, with the GPU and HBM outlines drawn" loading="lazy"></div>
+          <figcaption><span class="figtag f2d">WarpStack-MOR · nominal · µm</span><b>The nominal result.</b> The warpage surface of the 2nm CoWoS package at its nominal material set — returned by WarpStack-MOR in 51 µs, matching the full 3D solve to within 0.04 µm. The what-if below starts from here.</figcaption>
+        </figure>
+      </div>
+
+      <div class="panel full reveal">
+        <div class="phead">
+          <div><h3>A what-if the model was never built at</h3><div class="psub">ABF substrate stiffened 24.0 → 28.8 GPa</div></div>
+          <span class="badge">798,000× faster</span>
+        </div>
+        <p class="psub" style="margin:2px 0 4px; max-width:860px">The <b style="color:#0d1b2e">WarpStack-MOR</b> is a physics-based compact model built once per design from the same 3D formulation — not a black-box fit to data. Here the substrate is stiffened, a change that moves peak-to-peak warpage by <b style="color:#0d1b2e">+40.9 µm</b>. The WarpStack-MOR resolves that shift to within 0.036 µm — in 51 µs rather than 40.6 s.</p>
+        <div class="fig-4">
+          <figure class="fig reveal">
+            <img src="assets/figs/stack_hbm4_2nm.png" alt="3D structure view of the 2nm CoWoS package — two GPU dies flanked by four HBM stacks each side on a silicon interposer over the substrate" loading="lazy">
+            <figcaption><span class="figtag fst">Design · 3D structure</span><b>The stack.</b> 108 chiplet instances, 237 mechanical layers, straight from IEEE 3Dblox.</figcaption>
+          </figure>
+          <figure class="fig reveal">
+            <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by the full 3D solve for the stiffened-substrate variant — a broad dome peaking at the package centre and falling away steeply at the corners" loading="lazy">
+            <figcaption><span class="figtag f3d">Detailed 3D · reference</span><b>full 3D solve.</b> 1372.7 µm peak-to-peak, solved from scratch in 40.6 s.</figcaption>
+          </figure>
+          <figure class="fig reveal">
+            <img src="assets/figs/warpage_hbm4_2nm_mor_whatif.png" alt="Three-dimensional surface rendering of the warpage predicted by WarpStack-MOR for the same stiffened-substrate variant — visually indistinguishable from the full 3D solve surface beside it" loading="lazy">
+            <figcaption><span class="figtag f2d">WarpStack-MOR · same point</span><b>WarpStack-MOR.</b> 1372.6 µm peak-to-peak — returned in 51 µs.</figcaption>
+          </figure>
+          <figure class="fig reveal">
+            <img src="assets/figs/warpage_hbm4_2nm_diff.png" alt="Signed difference map between the full 3D solve and WarpStack-MOR surfaces, four orders of magnitude smaller than the warpage itself" loading="lazy">
+            <figcaption><span class="figtag fst">3D − WarpStack-MOR</span><b>The difference.</b> Signed residual, at most 0.036 µm — 0.003% of the warpage being predicted.</figcaption>
+          </figure>
+        </div>
+        <div class="note">Both maps are the active surface at the same mesh and the same thermal load, so this compares the two methods like for like rather than against measurement. On this package the active and continuous package surfaces agree to within 0.1% of peak-to-peak — the bow is global, so the die-level and package-level views coincide.</div>
+      </div>
+
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>How closely WarpStack-MOR tracks 3D</h3><div class="psub">Stiffened-substrate what-if · same mesh, same load</div></div>
+            <span class="badge">within 0.036 µm</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Quantity</th><th class="r">Full 3D solve</th><th class="r">WarpStack-MOR</th></tr></thead>
+            <tbody>
+              <tr><td>Peak-to-peak warpage</td><td class="mono r">1372.7 µm</td><td class="mono r">1372.6 µm</td></tr>
+              <tr><td>Time per design point</td><td class="mono r">40.6 s</td><td class="mono r">51 µs</td></tr>
+              <tr class="win"><td>Peak-to-peak difference</td><td class="mono r">reference</td><td class="mono r">0.043 µm</td></tr>
+              <tr><td>Whole-map difference</td><td class="mono r">—</td><td class="mono r">0.003%</td></tr>
+              <tr><td>Largest local difference</td><td class="mono r">—</td><td class="mono r">0.036 µm</td></tr>
+            </tbody>
+          </table>
+          <div class="note">This point was deliberately chosen <em>outside</em> the set the model was built from. A further 8 design points drawn from across the material design space were each solved with a full 3D solve and compared: worst whole-map difference 0.006%.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What that buys you</h3><div class="psub">Design points per hour, single core</div></div>
+            <span class="badge">798,000×</span>
+          </div>
+          <div class="bars" id="speedbars">
+            <div class="bar-row"><span class="blab">WarpStack-MOR</span><div class="bar-track"><div class="bar-fill" data-w="100"></div></div><span class="bval">70.8M</span></div>
+            <div class="bar-row"><span class="blab">full 3D solve</span><div class="bar-track"><div class="bar-fill" data-w="1"></div></div><span class="bval">89</span></div>
+          </div>
+          <div class="note">Building WarpStack-MOR for this design costs 17 min of 3D solves up front — about 25× a single 3D run — after which each additional design point is 51 µs. The investment pays for itself within roughly 25 evaluations, and everything past that is effectively free. That is what turns warpage from a sign-off check into something you sweep.</div>
+        </div>
+      </div>
+
+    <div class="note" style="margin-top:22px"><b>Read these numbers for speed and for agreement, not for absolute warpage.</b> Mechanical properties for this reference design are illustrative values for the material classes involved, not calibrated 2nm, HBM4 or CoWoS process data, and its peak-to-peak figures are quoted at a fixed resolution rather than settled against refinement. The timings, the speedup, and the agreement between the 3D reference and WarpStack-MOR do not depend on either. For warpage that has been checked across resolutions, see <a href="whitepaper-resolution.html" style="color:var(--blue)">white paper No. 01</a>.</div>
+  </div>
+</section>
+
+<!-- ============ SERIES NAV ============ -->
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="res-label reveal">More in this series</div>
+    <div class="series-nav reveal">
+      <a href="whitepaper-resolution.html">
+        <div class="dir">White paper · No. 01</div>
+        <div class="ttl">High-fidelity at various resolution</div>
+      </a>
+      <a href="whitepaper-gnn.html">
+        <div class="dir">White paper · No. 02</div>
+        <div class="ttl">WarpStack-GNN — sweep the whole design space</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Put warpage in the loop.</h2>
+      <p>WarpStack is in active development. Request a demo or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20a%20demo%20of%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request for demo</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com">Email us</a>
+      </div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Features &amp; capabilities</h5>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#io">Input &amp; output</a>
+          <a href="index.html#agentic">Agentic flow</a>
+        </div>
+        <div class="foot-col">
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
+          <a href="#contact">Request for demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="cite">
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. The <b>speed and method-agreement figures</b> in this white paper are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected.
+    </div>
+    <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WarpStack White Papers — Technical Library</title>
+<meta name="description" content="The WarpStack white-paper series: high fidelity at various resolution, WarpStack-GNN global design-space exploration, and WarpStack-MOR localized exploration — each method's full detail, the package it was measured on, and the scope and caveats." />
+<meta property="og:title" content="WarpStack White Papers — Technical Library" />
+<meta property="og:description" content="A growing series of short technical white papers behind WarpStack: resolution convergence, the GNN surrogate, and the MOR compact model." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+    <nav class="nav-links" id="navlinks">
+      <a class="xpage" href="index.html">Features &amp; capabilities</a>
+      <a href="whitepapers.html">White papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Request for demo</a>
+      <button class="nav-toggle" id="navtoggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ PAGE HEAD ============ -->
+<section class="wp-head">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="wp-eyebrow"><span class="pulse"></span>Technical library</span>
+      <h1>WarpStack white papers</h1>
+      <p class="lead">A growing series of short technical notes behind WarpStack. Each one takes a single method, states the package it was measured on, shows the tables and figures, and sets out the scope and caveats — so every number on the <a href="index.html" style="color:var(--blue)">capabilities page</a> can be read in full here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERIES INDEX ============ -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="paper-list">
+
+      <a class="paper-card reveal" href="whitepaper-resolution.html">
+        <div class="paper-no">No. 01</div>
+        <div>
+          <div class="ptopic">Fidelity · numerical</div>
+          <h3>High-fidelity at various resolution</h3>
+          <p>Resolution is an input, not a result. On a production-class AMD MI350-class accelerator package, peak-to-peak warpage moves <b>0.33% across a 2.25× refinement range</b> and the whole deflected field is unchanged to the width of a plotted line — so a resolution that runs in <b>11 minutes on a laptop</b> already carries the answer a ~0.9 TB, day-long solve would return. Includes the convergence evidence, the surface-by-surface agreement, and the projected cost of the fine mesh we did not need to solve.</p>
+          <div class="chips">
+            <span class="chip">±0.55% total uncertainty</span>
+            <span class="chip">1.43 M DOF</span>
+            <span class="chip">AMD MI350-class</span>
+          </div>
+          <span class="go">Read the white paper →</span>
+        </div>
+      </a>
+
+      <a class="paper-card reveal" href="whitepaper-gnn.html">
+        <div class="paper-no">No. 02</div>
+        <div>
+          <div class="ptopic">Global exploration · AI</div>
+          <h3>WarpStack-GNN — sweep the whole design space</h3>
+          <p>A graph neural network trained on WarpStack's own 3D output returns the full warpage map in <b>19.4 ms — 2,146× faster</b> than solving the same package in 3D, at <b>0.49% whole-map difference</b> against independent 3D solves. Scored on <b>512 held-out</b> material and thermal configurations it was never shown. Includes the accuracy tables, the per-design training cost, and the break-even point.</p>
+          <div class="chips">
+            <span class="chip">19.4 ms per design</span>
+            <span class="chip">512 held-out points</span>
+            <span class="chip">2nm CoWoS</span>
+          </div>
+          <span class="go">Read the white paper →</span>
+        </div>
+      </a>
+
+      <a class="paper-card reveal" href="whitepaper-mor.html">
+        <div class="paper-no">No. 03</div>
+        <div>
+          <div class="ptopic">Localized exploration · compact model</div>
+          <h3>WarpStack-MOR — localized design-space exploration</h3>
+          <p>A physics-based compact model built once over a bounded box around a nominal design — not a fit to data — carrying a rigorous error bound. On a what-if outside the box (ABF substrate stiffened 24.0→28.8 GPa, +40.9 µm of bow) it tracks the full 3D solve to within <b>0.036 µm</b> while running in <b>51 µs — 798,000× faster</b>. Includes the method agreement, the eight-point validation, and the cost model.</p>
+          <div class="chips">
+            <span class="chip">51 µs per design</span>
+            <span class="chip">within 0.036 µm</span>
+            <span class="chip">error bound attached</span>
+          </div>
+          <span class="go">Read the white paper →</span>
+        </div>
+      </a>
+
+    </div>
+    <p class="note" style="margin-top:28px">More white papers will be added to this series as the methods and the measured designs grow. The three above share a design description, a thermal load, and a result format — so the methods they document are interchangeable on the same inputs.</p>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Put warpage in the loop.</h2>
+      <p>WarpStack is in active development. Request a demo or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20a%20demo%20of%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request for demo</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com">Email us</a>
+      </div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Features &amp; capabilities</h5>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#io">Input &amp; output</a>
+          <a href="index.html#agentic">Agentic flow</a>
+        </div>
+        <div class="foot-col">
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
+          <a href="#contact">Request for demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="cite">
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. <b>Speed and method-agreement figures</b> (WarpStack-MOR and WarpStack-GNN) are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected. <b>Resolution and accuracy figures</b> come from a separate study of an AMD MI350-class package, presented with its full scope and caveats in the white papers. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
+    </div>
+    <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

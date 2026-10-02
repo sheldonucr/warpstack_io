@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WarpStack White Paper 01 — High-Fidelity at Various Resolution</title>
+<meta name="description" content="WarpStack white paper: on a production-class AMD MI350-class accelerator package, peak-to-peak warpage moves 0.33% across a 2.25× refinement range — so a resolution you can run on a laptop already carries the answer a far finer mesh would give." />
+<meta property="og:title" content="WarpStack White Paper 01 — High-Fidelity at Various Resolution" />
+<meta property="og:description" content="Resolution is an input, not a result. The convergence evidence on an MI350-class package, and the cost of the fine mesh you did not need to solve." />
+<meta property="og:type" content="article" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+    <nav class="nav-links" id="navlinks">
+      <a class="xpage" href="index.html">Features &amp; capabilities</a>
+      <a href="whitepapers.html">White papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Request for demo</a>
+      <button class="nav-toggle" id="navtoggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ PAPER HEAD ============ -->
+<section class="wp-head">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="wp-eyebrow"><span class="pulse"></span>White paper · No. 01</span>
+      <h1>High-fidelity at various resolution</h1>
+      <div class="wp-meta">
+        <span><b>Method:</b> numerical · detailed 3D</span>
+        <span><b>Package:</b> AMD MI350-class accelerator</span>
+        <span><b>Hardware:</b> Apple M3 laptop</span>
+        <span><b>Series:</b> <a href="whitepapers.html" style="color:var(--blue)">WarpStack white papers</a></span>
+      </div>
+      <div class="abstract">
+        <div class="label">Abstract</div>
+        <p>Customers usually specify a mesh — 50&nbsp;µm is the common number — but resolution is something you <b>choose</b>: it is an input, not a result, and no single run can tell you whether the one you picked was fine enough. The question that <em>can</em> be checked is whether the answer still moves when you refine. On a production-class AMD MI350-class accelerator package, peak-to-peak warpage moves <b>6.0&nbsp;µm — 0.33%</b> across a 2.25× refinement range, and the whole deflected field is unchanged to the width of a plotted line. A resolution that runs in <b>11 minutes on a laptop</b> therefore already carries the answer a <b>~0.9&nbsp;TB, day-long</b> 50&nbsp;µm solve would return. This paper reports the convergence evidence, the surface-by-surface agreement, and the projected cost of the fine mesh we did not need to solve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §1 RESOLUTION ============ -->
+<section id="resolution" style="padding-top:34px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">The question worth asking</div>
+      <h2>Does the answer still change when you refine?</h2>
+      <p>Resolution is an input, not a result, and no single run can tell you whether the one you picked was fine enough. The question worth asking is the one you can actually check: <b>does the answer still change when you refine?</b> On the package below, it does not — which means a resolution you can afford already carries the answer a far finer one would give.</p>
+    </div>
+
+    <div class="res-group">
+      <div class="res-label warm reveal">The case — a production-class accelerator package</div>
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>The package</h3><div class="psub">AMD MI350-class · 8 compute dies, 2 I/O dies, 8 HBM3E stacks</div></div>
+            <span class="badge warn">1.43 M DOF</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Package</td><td class="mono r">64 × 72 mm</td></tr>
+              <tr><td>Silicon interposer</td><td class="mono r">54 × 62 mm</td></tr>
+              <tr><td>Mechanical layers</td><td class="mono r">457</td></tr>
+              <tr><td>Footprint regions</td><td class="mono r">273</td></tr>
+              <tr><td>Modelled instances</td><td class="mono r">138</td></tr>
+              <tr><td>Material entries</td><td class="mono r">140</td></tr>
+              <tr><td>Stack height</td><td class="mono r">1327 µm</td></tr>
+              <tr class="win"><td>Thermal load</td><td class="mono r">200 → 85 °C</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig" style="margin-top:14px">
+            <img src="assets/figs/mi350_floorplan.png" alt="Plan view of the modelled package: eight teal compute dies and two I/O dies in the centre, flanked by eight purple HBM3E stacks, on a silicon interposer over a build-up substrate" loading="lazy">
+            <figcaption><span class="figtag fst">The floorplan as modelled</span>Every die, stack and mould region resolved as its own mechanical footprint — 273 of them.</figcaption>
+          </figure>
+          <div class="note">Imported from a 3Dblox description and solved as a 3D solid, layer by layer, through the full thickness of the stack — no plate approximation and no smeared effective stiffness. Eight XCD compute dies, two I/O dies and eight twelve-high HBM3E stacks, cooled from assembly to operating temperature.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>The warpage</h3><div class="psub">Active surface · assembly to operating temperature</div></div>
+            <span class="badge warn">1834.0 µm</span>
+          </div>
+          <figure class="fig" style="margin-top:14px">
+            <img src="assets/figs/mi350_warpage_map.png" alt="Warpage map of the modelled MI350-class package — a broad symmetric dome, red and rising at the centre, falling away to deep blue at all four corners, with contour lines labelled in microns" loading="lazy">
+            <figcaption><span class="figtag f3d">Out-of-plane displacement · µm</span><b>A symmetric dome.</b> The centre rises 597.9 µm and the corners fall 1236.1 µm — <b>1834.0 µm</b> peak to peak.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-group">
+      <div class="res-label reveal">The same answer at three resolutions</div>
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>Refine it and watch</h3><div class="psub">Three resolutions spanning a 2.25× range</div></div>
+            <span class="badge">spread 0.33%</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Resolution</th><th class="r">Degrees of freedom</th><th class="r">Peak-to-peak</th></tr></thead>
+            <tbody>
+              <tr><td>1143 µm</td><td class="mono r">351,222</td><td class="mono r">1828.0 µm</td></tr>
+              <tr><td>758 µm</td><td class="mono r">703,230</td><td class="mono r">1830.6 µm</td></tr>
+              <tr><td>507 µm</td><td class="mono r">1,427,412</td><td class="mono r">1834.0 µm</td></tr>
+              <tr class="win"><td>Spread across all three</td><td class="mono r">4.1× the DOF</td><td class="mono r">6.0 µm · 0.33%</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Four times the degrees of freedom moves the answer by six microns on a package that bows by eighteen hundred. Counting everything — the spread above, the surface-by-surface agreement beside it, and the solver's own tolerances — total numerical uncertainty on this result is <b>±0.55%</b>.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>Not just the headline number</h3><div class="psub">The whole surface, point by point</div></div>
+            <span class="badge">3.3 µm</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Peak-to-peak warpage</td><td class="mono r">1834.0 µm</td></tr>
+              <tr><td>Corners</td><td class="mono r">−1236.1 µm</td></tr>
+              <tr><td>Centre</td><td class="mono r">+597.9 µm</td></tr>
+              <tr class="win"><td>Largest point-by-point difference</td><td class="mono r">3.3 µm · 0.18%</td></tr>
+              <tr><td>Total numerical uncertainty</td><td class="mono r">±0.55%</td></tr>
+            </tbody>
+          </table>
+          <div class="note">A single peak-to-peak number could agree between two resolutions by coincidence. This is the whole field compared point by point along the package diagonal — the largest disagreement anywhere on the surface is 3.3 µm, less than a fifth of one percent of the bow.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel full reveal">
+      <div class="phead">
+        <div><h3>Two resolutions, drawn on top of each other</h3><div class="psub">Displacement along the package diagonal · 0.70 M and 1.43 M degrees of freedom</div></div>
+        <span class="badge">0.18% apart</span>
+      </div>
+      <figure class="fig reveal" style="margin-top:14px">
+        <div class="figscroll"><img src="assets/figs/mi350_profile_resolutions.png" alt="Displacement along the package diagonal computed at two resolutions, plotted on top of one another and visually indistinguishable, with a residual panel below showing the difference never exceeds 3.3 microns" loading="lazy"></div>
+        <figcaption><span class="figtag f3d">758 µm mesh · 507 µm mesh · difference</span><b>Two curves are plotted here, not one.</b> Doubling the degrees of freedom leaves the deflected shape unchanged to the width of the line; the panel below shows the residual, which never exceeds <b>3.3 µm — 0.18% of peak-to-peak</b>.</figcaption>
+      </figure>
+    </div>
+
+    <div class="res-group" style="margin-top:26px">
+      <div class="res-label reveal">What the finer mesh would have cost</div>
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What this run cost</h3><div class="psub">The reported result, end to end</div></div>
+            <span class="badge">11 minutes</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Resolution</td><td class="mono r">507 µm</td></tr>
+              <tr><td>Degrees of freedom</td><td class="mono r">1.43 M</td></tr>
+              <tr><td>Peak memory</td><td class="mono r">12.5 GB</td></tr>
+              <tr class="win"><td>Solve time</td><td class="mono r">11 min</td></tr>
+              <tr><td>Hardware</td><td class="mono r">Apple M3 laptop</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Eight cores and 24 GB — a laptop, not a cluster. All three resolutions together cost under an hour.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What 50 µm would cost</h3><div class="psub">Projected from the structure of the mesh — not solved</div></div>
+            <span class="badge warn">≈0.9 TB</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Resolution</th><th class="r">Degrees of freedom</th><th class="r">Memory</th></tr></thead>
+            <tbody>
+              <tr><td>338 µm</td><td class="mono r">2.7 M</td><td class="mono r">23 GB</td></tr>
+              <tr><td>225 µm</td><td class="mono r">5.7 M</td><td class="mono r">50 GB</td></tr>
+              <tr><td>150 µm</td><td class="mono r">12.4 M</td><td class="mono r">109 GB</td></tr>
+              <tr><td>100 µm</td><td class="mono r">27.2 M</td><td class="mono r">239 GB</td></tr>
+              <tr><td>67 µm</td><td class="mono r">60.2 M</td><td class="mono r">530 GB</td></tr>
+              <tr class="win"><td>50 µm</td><td class="mono r">107 M</td><td class="mono r">≈0.9 TB</td></tr>
+            </tbody>
+          </table>
+          <div class="note">A 50 µm mesh on this package is <b>75× the degrees of freedom</b> of the run above and needs roughly <b>0.9 TB</b> of memory; solve time scales at least with degrees of freedom, putting it on the order of a day. <b>These rows are projections, not results</b> — none of them was solved, because the evidence above says the answer they would return is already in hand.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eqbox reveal" style="margin-top:26px">
+      <div class="label">What this buys you</div>
+      <p class="why"><b>Explore coarse, commit fine.</b> Because the answer has stopped moving well above the resolution you were told to ask for, early design work can run at a resolution that costs minutes on a laptop instead of a day on a machine you would have to buy. You spend the fine-resolution budget once, late, on the localized region that actually needs it — rather than paying it on every candidate in a sweep.</p>
+      <div class="chips">
+        <span class="chip">minutes, not days</span>
+        <span class="chip">a laptop, not a cluster</span>
+        <span class="chip">±0.55% total numerical uncertainty</span>
+        <span class="chip">the whole field, not just peak-to-peak</span>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:22px"><b>Scope of this study.</b> The model is a free package body: the board, the BGA layer, the lid and any stiffener are excluded, and it includes no moisture, no cure shrinkage and no gravity. Each of those stiffens a real assembly and reduces warpage. Material properties are library values for the material classes involved, not vendor data. <b>Production parts of this class measure substantially lower</b>; the 1834.0 µm above is a property of the model as specified and is not a prediction of shipping hardware. What transfers to your design is the method and its cost — the agreement across resolutions, and the price of the mesh you were about to pay for. <b>AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc.</b> NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this study was not produced in cooperation with AMD.</div>
+  </div>
+</section>
+
+<!-- ============ SERIES NAV ============ -->
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="res-label reveal">More in this series</div>
+    <div class="series-nav reveal">
+      <a href="whitepaper-gnn.html">
+        <div class="dir">White paper · No. 02</div>
+        <div class="ttl">WarpStack-GNN — sweep the whole design space</div>
+      </a>
+      <a href="whitepaper-mor.html">
+        <div class="dir">White paper · No. 03</div>
+        <div class="ttl">WarpStack-MOR — localized design-space exploration</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Put warpage in the loop.</h2>
+      <p>WarpStack is in active development. Request a demo or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20a%20demo%20of%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request for demo</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com">Email us</a>
+      </div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Features &amp; capabilities</h5>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#io">Input &amp; output</a>
+          <a href="index.html#agentic">Agentic flow</a>
+        </div>
+        <div class="foot-col">
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
+          <a href="#contact">Request for demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="cite">
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. The <b>resolution and accuracy figures</b> in this white paper come from a study of an AMD MI350-class package, presented above with its full scope and caveats. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
+    </div>
+    <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

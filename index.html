@@ -20,11 +20,8 @@
   <div class="wrap nav-inner">
     <a class="brand" href="#top"><span class="dot"></span>WarpStack</a>
     <nav class="nav-links" id="navlinks">
-      <a href="index.html#why">Why warpage</a>
-      <a href="index.html#capability">Capabilities</a>
-      <a href="index.html#input">Input</a>
-      <a href="index.html#output">Output</a>
-      <a class="xpage" href="features.html">Features</a>
+      <a href="#top">Features &amp; capabilities</a>
+      <a class="xpage" href="whitepapers.html">White papers</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-cta">
@@ -47,7 +44,7 @@
       <p class="lead">WarpStack predicts thermal warpage for advanced 2.5D and 3D chiplet packages, and gives you three ways to ask: <b>high fidelity at various resolution</b>, so a coarse mesh still gives you the answer; <b>WarpStack-GNN</b> to sweep a whole design space in milliseconds per point; and <b>WarpStack-MOR</b> to explore a bounded box around a nominal design in microseconds. One design description, three ways to get an answer.</p>
       <div class="hero-cta">
         <a class="btn btn-primary btn-lg" href="#contact">Request for demo</a>
-        <a class="btn btn-ghost btn-lg" href="features.html">Explore the three methods</a>
+        <a class="btn btn-ghost btn-lg" href="whitepapers.html">Read the white papers</a>
       </div>
       <div class="hero-sub">
         <span><span class="check">✦</span> High fidelity at various resolution</span>
@@ -56,15 +53,6 @@
       </div>
     </div>
 
-    <!-- Real result visual -->
-    <div class="viz-card reveal">
-      <div class="viz-head">
-        <span class="viz-title">2nm CoWoS · warpage · µm</span>
-        <span class="viz-dots"><i></i><i></i><i></i></span>
-      </div>
-      <img src="assets/figs/warpage_hbm4_2nm_mor.png" alt="WarpStack warpage map of a 2nm CoWoS package — a broad central dome falling away toward the package corners, with the GPU and HBM outlines drawn" loading="eager">
-      <div class="viz-cap"><b>A real WarpStack result.</b> The predicted warpage surface of a 2nm CoWoS package — 8 HBM stacks, 2 GPU dies, 108 chiplets — returned by WarpStack-MOR in 51 µs, matching the full 3D solve to within 0.04 µm.</div>
-    </div>
   </div>
 </section>
 
@@ -239,109 +227,72 @@
     <div class="sec-head reveal">
       <div class="kicker">What it does</div>
       <h2>Three ways to get a warpage answer</h2>
-      <p>The same package description drives all three. Start where the cost fits the question — a converged answer on a coarse mesh, a whole design space swept by a trained network, or a bounded box explored in microseconds — and move between them without changing your inputs.</p>
+      <p>The same package description drives all three. Start where the cost fits the question — a converged answer on a coarse mesh, a whole design space swept by a trained network, or a bounded box explored in microseconds — and move between them without changing your inputs. Each is backed by a technical white paper.</p>
     </div>
     <div class="cards-3">
-      <a class="solver acc reveal" href="features.html#resolution">
+      <a class="solver acc reveal" href="whitepaper-resolution.html">
         <div class="nm">High-fidelity at various resolution</div>
         <div class="role">numerical · detailed · sign-off</div>
         <p>The answer stops depending on the mesh well before the resolution you were told to ask for. Explore at coarse resolution, commit to a fine localized analysis only where it earns its cost.</p>
         <div class="kv"><span><b>±0.55%</b><br>across resolutions</span><span><b>11 min</b><br>on a laptop</span></div>
-        <span class="go">See the evidence →</span>
+        <span class="go">Read the white paper →</span>
       </a>
-      <a class="solver ai reveal" href="features.html#gnn">
+      <a class="solver ai reveal" href="whitepaper-gnn.html">
         <div class="nm">WarpStack-GNN</div>
         <div class="role">AI · global exploration</div>
         <p>A network trained on WarpStack's own 3D output returns the full warpage map without solving — fast enough to put warpage inside a live optimization loop.</p>
         <div class="kv"><span><b>19.4 ms</b><br>per design</span><span><b>2,146×</b><br>vs a full solve</span></div>
-        <span class="go">See the numbers →</span>
+        <span class="go">Read the white paper →</span>
       </a>
-      <a class="solver fast reveal" href="features.html#mor">
+      <a class="solver fast reveal" href="whitepaper-mor.html">
         <div class="nm">WarpStack-MOR</div>
         <div class="role">compact model · localized exploration</div>
         <p>A physics-based compact model built once over a bounded box around a nominal design — not a fit to data — answering material and thermal what-ifs with an error bound attached.</p>
         <div class="kv"><span><b>51 µs</b><br>per design</span><span><b>798,000×</b><br>vs a full solve</span></div>
-        <span class="go">See the numbers →</span>
+        <span class="go">Read the white paper →</span>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ============ INPUT ============ -->
-<section id="input">
+<!-- ============ INPUT & OUTPUT ============ -->
+<section id="io">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="kicker">Input</div>
-      <h2>Describe the package once</h2>
-      <p>Bring the stack straight from the ecosystem. WarpStack reads the design, partitions the geometry, and builds the mechanical model itself — no hand re-entry, no simplified stand-in stack.</p>
+      <div class="kicker">Input &amp; output</div>
+      <h2>One description in, a warpage map you can turn over</h2>
+      <p>Bring the stack straight from the ecosystem: WarpStack reads the design, builds the mechanical model itself, and every method writes the same result format — so the view, the comparison and the downstream script are identical whichever one answered.</p>
     </div>
     <div class="features">
       <div class="feat reveal">
-        <div class="tag">STANDARDS · GEOMETRY</div>
-        <h3><span class="emoji">🧩</span> IEEE 3Dblox</h3>
-        <p>Import designs described in <b>IEEE 3Dblox</b> (<span class="mono">.3dbx</span>), the IEEE-standard modular description language for physical stacking, dimensions, and connectivity in 2.5D and 3D-IC designs. Recursive includes, per-file units, rotations and mirrors, and molding autofill are all handled on the way in.</p>
+        <div class="tag">INPUT · STANDARDS</div>
+        <h3><span class="emoji">🧩</span> IEEE 3Dblox &amp; native JSON</h3>
+        <p>Import designs described in <b>IEEE 3Dblox</b> (<span class="mono">.3dbx</span>) — the IEEE-standard language for physical stacking, dimensions, and connectivity in 2.5D/3D-IC — or describe the stack directly in WarpStack's floorplan JSON. Recursive includes, rotations, mirrors and molding autofill are handled on the way in.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">NATIVE</div>
-        <h3><span class="emoji">🧱</span> WarpStack floorplan JSON</h3>
-        <p>Or describe it directly: an arbitrary layer stack — substrates, interposers, bumps, dies, spreaders, lids — with per-layer materials and per-die placement, in one structured file.</p>
-      </div>
-      <div class="feat reveal">
-        <div class="tag">MATERIALS</div>
+        <div class="tag">INPUT · MATERIALS</div>
         <h3><span class="emoji">📐</span> Properties from a profile</h3>
-        <p>Modulus, Poisson ratio and CTE come from a material profile you supply or from the bundled library — <b>never inferred</b> from thermal or power data that cannot determine them. An unmatched material stops the run rather than quietly guessing, which is what makes a result reproducible.</p>
+        <p>Modulus, Poisson ratio and CTE come from a material profile you supply or the bundled library — <b>never inferred</b>. An unmatched material stops the run rather than quietly guessing, which is what makes a result reproducible.</p>
       </div>
-    </div>
-    <div class="tech-grid" style="margin-top:34px">
-      <div class="reveal">
-        <ul class="flowpts">
-          <li><b>Hands-off at real scale.</b> A production-class accelerator package imported to <b>457 mechanical layers</b>, <b>273 footprint regions</b> and <b>138 instances</b> — with one line changed.</li>
-          <li><b>CLI-first.</b> Structured data in, CSV and JSON out. Run one design or a whole batch; nothing in the loop needs a GUI.</li>
-          <li><b>It tells you what it cannot take.</b> Constructs outside the mechanical importer raise an error naming the construct, rather than being silently dropped from the stack.</li>
-        </ul>
-        <p class="note"><b>On the roadmap:</b> importers for broader geometry formats. Today the supported inputs are IEEE 3Dblox and WarpStack floorplan JSON — those two, and no others.</p>
-      </div>
-      <figure class="fig reveal">
-        <img src="assets/figs/stack_hbm4_2nm.png" alt="Cross-section of the modelled mechanical stack for a 2nm CoWoS package, showing substrate, interposer, dies and mould layers" loading="lazy">
-        <figcaption><span class="figtag f3d">The stack as WarpStack builds it</span><b>A different design — the 2nm CoWoS reference.</b> Whichever package you bring, every mechanical layer is resolved through the full thickness — no plate approximation, no smeared effective stiffness.</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<!-- ============ OUTPUT ============ -->
-<section id="output">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="kicker">Output</div>
-      <h2>A warpage map you can turn over</h2>
-      <p>Every method writes the same result format, so the view, the comparison and the downstream script are identical whether the answer came from a full solve, a trained network, or a compact model.</p>
-    </div>
-    <div class="fig-2">
-      <figure class="fig reveal">
-        <img src="assets/figs/warpage_hbm4_2nm_3d_active.png" alt="2D warpage heatmap of a 2nm CoWoS package with contour lines and die outlines overlaid" loading="lazy">
-        <figcaption><span class="figtag f3d">2D · plan view</span>Heatmap with contour lines and die outlines, so you can see which die sits on the steep part of the bow.</figcaption>
-      </figure>
-      <figure class="fig reveal">
-        <img src="assets/figs/warpage_hbm4_2nm_3d_whatif.png" alt="3D warpage surface of a 2nm CoWoS package with contours projected onto the floor" loading="lazy">
-        <figcaption><span class="figtag f3d">3D · surface</span>The same field as a rotatable surface with projected contours and 1× / 5× / 10× exaggeration.</figcaption>
-      </figure>
-    </div>
-    <div class="features" style="margin-top:34px">
       <div class="feat reveal">
-        <div class="tag">INTERACTIVE</div>
+        <div class="tag">OUTPUT · INTERACTIVE</div>
         <h3><span class="emoji">🗺️</span> Turn it over, slice it</h3>
-        <p>Rotate the 3D stack and the warpage surface, cut XZ and YZ cross-sections on a slider, and exaggerate the z-scale to see a few microns of bow on a 60&nbsp;mm package.</p>
+        <p>Rotate the 3D stack and warpage surface, cut XZ/YZ cross-sections on a slider, and exaggerate the z-scale to see a few microns of bow on a 60&nbsp;mm package — in a self-contained HTML report you can send on.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">COMPARE</div>
+        <div class="tag">OUTPUT · COMPARE</div>
         <h3><span class="emoji">⚖️</span> Signed difference maps</h3>
         <p>Put any two answers side by side — two methods, two resolutions, two material sets — and read the signed difference across the whole surface, not just the peak-to-peak number.</p>
       </div>
       <div class="feat reveal">
-        <div class="tag">SHAREABLE · SCRIPTABLE</div>
-        <h3><span class="emoji">📤</span> A report and the raw data</h3>
-        <p>A self-contained interactive HTML report to send on, plus warpage CSVs, <span class="mono">geometry.json</span> and <span class="mono">simulation_report.json</span> to feed straight into your own flow.</p>
+        <div class="tag">OUTPUT · SCRIPTABLE</div>
+        <h3><span class="emoji">📤</span> Report and raw data</h3>
+        <p>Warpage CSVs, <span class="mono">geometry.json</span> and <span class="mono">simulation_report.json</span> out of every run — ready to feed straight into your own flow.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="tag">SCALE</div>
+        <h3><span class="emoji">🧱</span> Hands-off at real scale</h3>
+        <p>A production-class accelerator package imports to <b>457 mechanical layers</b>, <b>273 footprint regions</b> and <b>138 instances</b> — with one line changed. Every layer is resolved through the full thickness; no plate approximation, no smeared stiffness.</p>
       </div>
     </div>
   </div>
@@ -353,16 +304,16 @@
     <div class="sec-head reveal">
       <div class="kicker">Workflow · agentic integration</div>
       <h2>Built for agentic EDA flows</h2>
-      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call a full <b>3D solve</b>, <b>WarpStack-MOR</b>, or <b>WarpStack-GNN</b>, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops — for <b>warpage-aware optimization</b> and <b>warpage reliability sign-off</b> of chiplets and advanced packages in system design. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
+      <p>WarpStack is designed to drop straight into agentic EDA and system-design workflows. A first-class CLI and structured data interface let autonomous design agents call a full 3D solve, WarpStack-MOR, or WarpStack-GNN, read back machine-readable warpage maps and peak-to-peak margins, and feed them into floorplanning, stack-up, and material-selection loops. With millisecond AI inference, warpage finally runs at the speed of the loop itself.</p>
     </div>
     <div class="tech-grid">
       <div class="reveal">
         <ul class="flowpts">
           <li><b>Agentic-flow ready</b> — built to be driven by autonomous EDA and system-design agents, and to plug into <i>any</i> agentic flow.</li>
           <li><b>CLI-first</b> — every warpage analysis is scriptable from the command line; nothing in the loop needs a GUI.</li>
-          <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed difference maps out, ready for closed-loop automation.</li>
-          <li><b>Warpage-aware optimization</b> — at 19.4 ms per evaluation, WarpStack-GNN lets agents sweep thousands of material and thermal design points in a live loop, steering each candidate toward lower bow in real time.</li>
-          <li><b>Reliability sign-off</b> — WarpStack-MOR or WarpStack-GNN screens the whole design space; a full 3D solve signs off the critical chiplet and advanced-package designs against warpage limits before tape-out and assembly.</li>
+          <li><b>Structured data interface</b> — machine-readable floorplans in; warpage surfaces, peak-to-peak bow, and signed difference maps out.</li>
+          <li><b>Warpage-aware optimization</b> — at 19.4 ms per evaluation, WarpStack-GNN lets agents sweep thousands of material and thermal design points in a live loop.</li>
+          <li><b>Reliability sign-off</b> — screen the whole space with WarpStack-MOR or WarpStack-GNN; sign off the critical designs with a full 3D solve before tape-out.</li>
         </ul>
         <div class="chips" style="margin-top:24px">
           <span class="chip">agentic-flow ready</span>
@@ -370,8 +321,6 @@
           <span class="chip">structured data interface</span>
           <span class="chip">IEEE 3Dblox input</span>
           <span class="chip">AI-accelerated</span>
-          <span class="chip">warpage-aware optimization</span>
-          <span class="chip">reliability sign-off</span>
         </div>
       </div>
       <div class="reveal">
@@ -394,6 +343,40 @@
         </div>
         <p class="note">Warpage analysis becomes a callable step inside your agentic flow — not a hand-run GUI task.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHITE PAPERS TEASER ============ -->
+<section id="papers">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Technical library</div>
+      <h2>The detail lives in the white papers</h2>
+      <p>Every number on this page is backed by a short technical white paper — the full method, the package it was measured on, the tables and figures, and the scope and caveats. Read the ones that matter to your design.</p>
+    </div>
+    <div class="cards-3">
+      <a class="solver acc reveal" href="whitepaper-resolution.html">
+        <div class="role">White paper · No. 01</div>
+        <div class="nm">High-fidelity at various resolution</div>
+        <p>The convergence evidence on an AMD MI350-class package, and the cost of the fine mesh you did not need to solve.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="solver ai reveal" href="whitepaper-gnn.html">
+        <div class="role">White paper · No. 02</div>
+        <div class="nm">WarpStack-GNN</div>
+        <p>Global design-space exploration: accuracy on 512 held-out points, training cost, and the break-even point.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="solver fast reveal" href="whitepaper-mor.html">
+        <div class="role">White paper · No. 03</div>
+        <div class="nm">WarpStack-MOR</div>
+        <p>Localized exploration: method agreement on an out-of-box what-if, the validation set, and the cost model.</p>
+        <span class="go">Read →</span>
+      </a>
+    </div>
+    <div style="margin-top:26px">
+      <a class="btn btn-ghost btn-lg" href="whitepapers.html">Browse all white papers →</a>
     </div>
   </div>
 </section>
@@ -423,20 +406,18 @@
       </div>
       <div class="foot-cols">
         <div class="foot-col">
-          <h5>Product</h5>
+          <h5>Features &amp; capabilities</h5>
           <a href="index.html#why">Why warpage</a>
           <a href="index.html#capability">Capabilities</a>
-          <a href="index.html#input">Input</a>
-          <a href="index.html#output">Output</a>
+          <a href="index.html#io">Input &amp; output</a>
           <a href="index.html#agentic">Agentic flow</a>
         </div>
         <div class="foot-col">
-          <h5>Features</h5>
-          <a href="features.html#resolution">High-fidelity at various resolution</a>
-          <a href="features.html#gnn">WarpStack-GNN — global exploration</a>
-          <a href="features.html#mor">WarpStack-MOR — localized exploration</a>
-          <span>IEEE 3Dblox input</span>
-          <span>Interactive 2D / 3D output</span>
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
         </div>
         <div class="foot-col">
           <h5>Contact</h5>
@@ -446,7 +427,7 @@
       </div>
     </div>
     <div class="cite">
-      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. <b>Speed and method-agreement figures</b> (WarpStack-MOR and WarpStack-GNN) are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected. <b>Resolution and accuracy figures</b> come from a separate study of an AMD MI350-class package, presented with its full scope and caveats on the features page. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. <b>Speed and method-agreement figures</b> (WarpStack-MOR and WarpStack-GNN) are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected. <b>Resolution and accuracy figures</b> come from a separate study of an AMD MI350-class package, presented with its full scope and caveats in the white papers. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
     </div>
     <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
   </div>

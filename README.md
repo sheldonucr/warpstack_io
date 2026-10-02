@@ -20,8 +20,11 @@ three methods on the same inputs:
   millisecond, with a rigorous error bound attached. Localized exploration.
 
 This repository hosts the **WarpStack** promotion site, live at
-**<https://sheldonucr.github.io/warpstack_io/>** — a main page covering the tool, its input and its
-output, and a [features page](features.html) with one section per method.
+**<https://sheldonucr.github.io/warpstack_io/>**. It is organised into three areas: a **features &
+capabilities** page ([index.html](index.html)) that highlights the tool, its input and its output; a
+**white-paper series** ([whitepapers.html](whitepapers.html)) that holds all the technical detail and
+results, one paper per method; and a **contact** section on every page. Each figure and table appears
+once, in the white paper it belongs to.
 
 ---
 
@@ -208,12 +211,15 @@ Fed back to the agent  ──►  steers the next floorplan / stack / material i
 
 ```text
 .
-├── index.html          Main page: what it is, its capabilities, input and output.
-├── features.html       One section per feature: resolution, WarpStack-GNN, WarpStack-MOR.
+├── index.html                 Features & capabilities: what it is, its capabilities, input and output.
+├── whitepapers.html           White-paper series index — one card per paper.
+├── whitepaper-resolution.html White paper 01 · high-fidelity at various resolution (MI350 study).
+├── whitepaper-gnn.html        White paper 02 · WarpStack-GNN, global design-space exploration.
+├── whitepaper-mor.html        White paper 03 · WarpStack-MOR, localized design-space exploration.
 ├── assets/
-│   ├── site.css        Shared stylesheet for both pages.
+│   ├── site.css        Shared stylesheet for every page.
 │   ├── site.js         Shared behaviour: mobile nav, scroll reveal, bar animation.
-│   └── figs/           Result figures used by the pages.
+│   └── figs/           Result figures — each used once, in its white paper (hero map on index).
 │       ├── mi350_floorplan.png             MI350-class package floorplan as modelled
 │       ├── mi350_warpage_map.png           MI350-class warpage, 507 µm resolution
 │       ├── mi350_profile_resolutions.png   two resolutions overlaid, with the residual
@@ -238,7 +244,7 @@ The site is static HTML with no build step. Serve the folder and open it in a br
 
 ```bash
 python3 -m http.server 8000
-# then open http://localhost:8000/index.html  (and /features.html)
+# then open http://localhost:8000/index.html  (and /whitepapers.html)
 ```
 
 Or open `index.html` directly in a browser — the stylesheet and script are plain relative references,

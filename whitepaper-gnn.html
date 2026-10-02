@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WarpStack White Paper 02 — WarpStack-GNN, Global Design-Space Exploration</title>
+<meta name="description" content="WarpStack white paper: a graph neural network trained on WarpStack's own 3D output returns the full warpage map in 19.4 ms — 2,146× faster than a 3D solve — at 0.49% whole-map difference, scored on 512 held-out material and thermal configurations." />
+<meta property="og:title" content="WarpStack White Paper 02 — WarpStack-GNN" />
+<meta property="og:description" content="Global design-space exploration: accuracy on 512 held-out points, per-design training cost, and the break-even point." />
+<meta property="og:type" content="article" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+    <nav class="nav-links" id="navlinks">
+      <a class="xpage" href="index.html">Features &amp; capabilities</a>
+      <a href="whitepapers.html">White papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Request for demo</a>
+      <button class="nav-toggle" id="navtoggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ PAPER HEAD ============ -->
+<section class="wp-head">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="wp-eyebrow"><span class="pulse"></span>White paper · No. 02</span>
+      <h1>WarpStack-GNN — sweep the whole design space</h1>
+      <div class="wp-meta">
+        <span><b>Method:</b> AI · graph neural network</span>
+        <span><b>Package:</b> 2nm CoWoS HBM4 + GPU</span>
+        <span><b>Scope:</b> global exploration</span>
+        <span><b>Series:</b> <a href="whitepapers.html" style="color:var(--blue)">WarpStack white papers</a></span>
+      </div>
+      <div class="abstract">
+        <div class="label">Abstract</div>
+        <p>WarpStack-GNN is a graph neural network trained on WarpStack's own 3D output. It is <b>global</b>: once trained for a design, it answers anywhere in that design's material and thermal space, returning the full warpage map in <b>19.4 ms — 2,146× faster</b> than solving the same package in 3D. Measured against independent full 3D solves, the whole-map difference is <b>0.49% of peak-to-peak</b> and the correlation with 3D is <b>0.99996</b>. It is scored on <b>512 held-out</b> material and thermal configurations kept entirely out of training. This paper reports the accuracy, the per-design training cost, and the point past which the network is cheaper than solving directly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §2 GNN ============ -->
+<section id="gnn" style="padding-top:34px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Predicted vs solved</div>
+      <h2>The full map, without the solve</h2>
+      <p>A network trained on WarpStack's own 3D output returns the full warpage map without solving. It is <b>global</b>: once trained for a design, it answers anywhere in that design's material and thermal space, in milliseconds. The figures below are measured on the <b>2nm CoWoS</b> reference design.</p>
+    </div>
+
+      <div class="panel full reveal">
+        <div class="phead">
+          <div><h3>Predicted vs solved, on a design point the network never saw</h3><div class="psub">2nm CoWoS package · 56 × 57 mm · active surface</div></div>
+          <span class="badge ai">2,146× faster</span>
+        </div>
+        <p class="psub" style="margin:2px 0 10px; max-width:920px"><b style="color:#0d1b2e">WarpStack-GNN</b> learns a package’s warpage behaviour from results produced by the detailed 3D method, then returns the full map without solving. Here it is asked for a design point held out of training, and the same point is solved from scratch in 3D for comparison.</p>
+        <figure class="fig reveal" style="margin-top:0">
+          <div class="figscroll"><img src="assets/figs/warpage_hbm4_2nm_gnn_vs_3d.png" alt="Three warpage maps side by side: the full 3D solve reference at 1972.3 µm peak-to-peak, the WarpStack-GNN prediction at 1955.4 µm, and the signed difference between them, which is close to two orders of magnitude smaller than the warpage itself" loading="lazy"></div>
+          <figcaption><span class="figtag fai">Detailed 3D · WarpStack-GNN · difference</span><b>Left — the 3D reference,</b> 1972.3 µm peak-to-peak, solved from scratch in 41.5 s. <b>Centre — the GNN prediction,</b> 1955.4 µm, returned in 19.4 ms. <b>Right — the signed difference,</b> spanning 26.5 µm across a surface that bows by almost two millimetres.</figcaption>
+        </figure>
+      </div>
+
+      <div class="res-grid" style="margin-top:18px">
+        <!-- AI vs numerical table -->
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>AI inference vs numerical solve</h3><div class="psub">Per-design runtime and accuracy · single core</div></div>
+            <span class="badge ai">2,146×</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Method</th><th class="r">Runtime</th><th class="r">vs 3D</th><th class="r">Error vs 3D</th></tr></thead>
+            <tbody>
+              <tr><td>Full 3D solve <span class="muted-tag">reference</span></td><td class="mono r">41.54 s</td><td class="mono r">1×</td><td class="mono r">—</td></tr>
+              <tr class="ai"><td>WarpStack-GNN <span class="muted-tag">GNN</span></td><td class="mono r">19.4 ms</td><td class="mono r">2,146×</td><td class="mono r">0.49%</td></tr>
+            </tbody>
+          </table>
+          <div class="note"><b style="color:#7a4fe0">WarpStack-GNN</b> returns a full warpage map in <b>19.4 ms</b> — <b>2,146×</b> faster than solving the same package in 3D. Measured against six independent full 3D solves, the whole-map difference is <b>0.49%</b> of peak-to-peak and the peak-to-peak bow itself lands within <b>1.89%</b>.</div>
+        </div>
+
+        <!-- held-out accuracy -->
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>How closely the GNN tracks 3D</h3><div class="psub">512 held-out design points, materials and thermal load varied</div></div>
+            <span class="badge ai">0.38% RMSE</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Quantity</th><th class="r">Held-out set</th><th class="r">Fresh 3D solves</th></tr></thead>
+            <tbody>
+              <tr><td>Design points</td><td class="mono r">512</td><td class="mono r">6</td></tr>
+              <tr><td>Mean 3D peak-to-peak</td><td class="mono r">1,393 µm</td><td class="mono r">1,699 µm</td></tr>
+              <tr class="ai"><td>Whole-map difference</td><td class="mono r">0.38%</td><td class="mono r">0.49%</td></tr>
+              <tr><td>Peak-to-peak error</td><td class="mono r">1.41%</td><td class="mono r">1.89%</td></tr>
+              <tr><td>Correlation with 3D</td><td class="mono r">0.9996</td><td class="mono r">0.99996</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Every held-out point varies the material set <em>and</em> the thermal load, and the held-out material configurations are kept entirely out of training — so the network is scored on combinations it was never shown.</div>
+        </div>
+      </div>
+
+      <div class="res-grid" style="margin-top:18px">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>The design it was measured on</h3><div class="psub">2nm CoWoS HBM4 + GPU stack, imported from IEEE 3Dblox</div></div>
+            <span class="badge warn">3D reference</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Package</td><td class="mono r">56.2 × 57.5 mm</td></tr>
+              <tr><td>Stacked die columns</td><td class="mono r">135</td></tr>
+              <tr><td>Mechanical layers</td><td class="mono r">237</td></tr>
+              <tr><td>Solid elements</td><td class="mono r">45,035</td></tr>
+              <tr><td>Degrees of freedom</td><td class="mono r">169,602</td></tr>
+              <tr class="win"><td>Full 3D solve</td><td class="mono r">41.54 s</td></tr>
+            </tbody>
+          </table>
+          <div class="note">An 8-stack HBM4 + dual-GPU CoWoS package read straight from its IEEE 3Dblox description — every layer, material, and die placement taken from the source design with no hand re-entry. WarpStack-GNN is trained per design, on warpage produced by the detailed 3D method for that same stack.</div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What it costs to get there</h3><div class="psub">One-time training, then milliseconds per design point</div></div>
+            <span class="badge ai">pays back in 120 points</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Training labels (1,792 points)</td><td class="mono r">32.2 min</td></tr>
+              <tr><td>Network training</td><td class="mono r">50.8 min</td></tr>
+              <tr class="win"><td>Total one-time cost</td><td class="mono r">83.1 min</td></tr>
+              <tr><td>Per design point afterwards</td><td class="mono r">19.4 ms</td></tr>
+              <tr><td>Break-even vs solving directly</td><td class="mono r">120 points</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Training data comes from WarpStack’s own 3D formulation, generated far more efficiently than a brute-force sweep of solves — 1,792 labelled warpage fields in 32 minutes rather than the day a design point at a time would cost. Past 120 design points the network is cheaper than solving directly, and a 1,000-point sweep drops from 11.5 hours to 83 minutes.</div>
+        </div>
+      </div>
+
+    <div class="note" style="margin-top:22px"><b>What to know before you rely on it.</b> A network is trained <b>per design</b>: changing a thickness or a footprint changes the model and requires retraining, and the checkpoint refuses to load against a design it was not built for rather than returning plausible numbers for the wrong stack. Accuracy is reported against WarpStack's own 3D method at a fixed resolution, not against measurement. Generalization to designs outside the one a network was trained on has not yet been measured. The 2nm CoWoS mechanical properties are illustrative values for the material classes involved, not calibrated process data — so absolute warpage in microns is indicative; the speedup and the method-to-method agreement do not depend on it. For warpage checked across resolutions, see <a href="whitepaper-resolution.html" style="color:var(--blue)">white paper No. 01</a>.</div>
+  </div>
+</section>
+
+<!-- ============ SERIES NAV ============ -->
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="res-label reveal">More in this series</div>
+    <div class="series-nav reveal">
+      <a href="whitepaper-resolution.html">
+        <div class="dir">White paper · No. 01</div>
+        <div class="ttl">High-fidelity at various resolution</div>
+      </a>
+      <a href="whitepaper-mor.html">
+        <div class="dir">White paper · No. 03</div>
+        <div class="ttl">WarpStack-MOR — localized design-space exploration</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Put warpage in the loop.</h2>
+      <p>WarpStack is in active development. Request a demo or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20a%20demo%20of%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request for demo</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com">Email us</a>
+      </div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Features &amp; capabilities</h5>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#io">Input &amp; output</a>
+          <a href="index.html#agentic">Agentic flow</a>
+        </div>
+        <div class="foot-col">
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
+          <a href="#contact">Request for demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="cite">
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. The <b>speed and method-agreement figures</b> in this white paper are measured on a 2nm CoWoS reference design — 8 HBM stacks × 12-hi DRAM + 2 GPUs, 108 chiplet instances — at FEM mesh 64, single core. Mechanical properties for that design are illustrative, not calibrated process data, so its absolute warpage in microns is indicative; timings and method-to-method agreement are not affected.
+    </div>
+    <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
