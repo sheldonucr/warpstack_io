@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WarpStack White Papers — Technical Library</title>
-<meta name="description" content="The WarpStack white-paper series: high fidelity at various resolution, WarpStack-GNN global design-space exploration, and WarpStack-MOR localized exploration — each method's full detail, the package it was measured on, and the scope and caveats." />
+<meta name="description" content="The WarpStack white-paper series: high fidelity at various resolution, resolution on demand, WarpStack-GNN global design-space exploration, and WarpStack-MOR localized exploration — each method's full detail, the package it was measured on, and the scope and caveats." />
 <meta property="og:title" content="WarpStack White Papers — Technical Library" />
-<meta property="og:description" content="A growing series of short technical white papers behind WarpStack: resolution convergence, the GNN surrogate, and the MOR compact model." />
+<meta property="og:description" content="A growing series of short technical white papers behind WarpStack: resolution convergence, resolution on demand, the GNN surrogate, and the MOR compact model." />
 <meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,8 +96,23 @@
         </div>
       </a>
 
+      <a class="paper-card reveal" href="whitepaper-apr.html">
+        <div class="paper-no">No. 04</div>
+        <div>
+          <div class="ptopic">Fidelity · numerical</div>
+          <h3>Resolution on demand — 10 µm where it matters</h3>
+          <p>Warpage settles on a coarse mesh; corner stress does not. Name the critical regions and the resolution you need, and WarpStack returns package warpage and local stress together. On the AMD MI350-class package it delivers <b>10 µm at five critical corners in 5.4 minutes</b> in 27 GB on one desktop — where a uniform 10 µm mesh is projected at <b>2.9 billion DOF and ~25 TB</b>. Warpage lands within <b>0.2%</b> of the converged reference, and the peak corner stress comes in <b>5.6×</b> higher than the coarse mesh reports.</p>
+          <div class="chips">
+            <span class="chip">5.4 min at 10 µm</span>
+            <span class="chip">27 GB, not 25 TB</span>
+            <span class="chip">AMD MI350-class</span>
+          </div>
+          <span class="go">Read the white paper →</span>
+        </div>
+      </a>
+
     </div>
-    <p class="note" style="margin-top:28px">More white papers will be added to this series as the methods and the measured designs grow. The three above share a design description, a thermal load, and a result format — so the methods they document are interchangeable on the same inputs.</p>
+    <p class="note" style="margin-top:28px">More white papers will be added to this series as the methods and the measured designs grow. The four above share a design description, a thermal load, and a result format — so the methods they document are interchangeable on the same inputs.</p>
   </div>
 </section>
 
@@ -138,6 +153,7 @@
           <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
           <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
           <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+          <a href="whitepaper-apr.html">04 · Resolution on demand</a>
         </div>
         <div class="foot-col">
           <h5>Contact</h5>

@@ -11,7 +11,10 @@ three methods on the same inputs:
   full thickness, reporting warpage **per surface** (die-level active surface *and* continuous package
   surface). On the MI350-class study the answer moves **0.33%** across a 2.25x refinement range, so a
   resolution you can afford already carries the answer a far finer one would give. The reference the
-  other two methods are measured against.
+  other two methods are measured against. With **resolution on demand** it also delivers 50 µm or
+  10 µm at the corners and gaps you name: on the MI350-class package, 10 µm at five critical regions
+  in **5.4 min and 27 GB** on one desktop, where a uniform 10 µm mesh is projected at 2.9 B DOF and
+  ~25 TB — and the peak corner stress comes in 5.6x above what the coarse mesh reports.
 - **WarpStack-GNN** — an AI-accelerated method trained on numerical ground truth that predicts the
   full warpage map in **19.4 ms** at **0.5% error**, 2,146x faster than solving the same package in 3D.
   Global exploration: once trained for a design, it answers anywhere in that design's space.
@@ -216,6 +219,7 @@ Fed back to the agent  ──►  steers the next floorplan / stack / material i
 ├── whitepaper-resolution.html White paper 01 · high-fidelity at various resolution (MI350 study).
 ├── whitepaper-gnn.html        White paper 02 · WarpStack-GNN, global design-space exploration.
 ├── whitepaper-mor.html        White paper 03 · WarpStack-MOR, localized design-space exploration.
+├── whitepaper-apr.html        White paper 04 · resolution on demand (MI350 study, 50 µm / 10 µm).
 ├── assets/
 │   ├── site.css        Shared stylesheet for every page.
 │   ├── site.js         Shared behaviour: mobile nav, scroll reveal, bar animation.

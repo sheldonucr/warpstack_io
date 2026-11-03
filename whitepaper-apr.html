@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WarpStack White Paper 04 — Resolution on Demand</title>
+<meta name="description" content="WarpStack white paper: on an AMD MI350-class accelerator package, WarpStack delivers 50 µm and 10 µm resolution at the critical corners in 4–5 minutes on one desktop — where a uniform mesh would need 1 TB to 25 TB of memory — and shows why that resolution matters for stress even when warpage has converged." />
+<meta property="og:title" content="WarpStack White Paper 04 — Resolution on Demand" />
+<meta property="og:description" content="Warpage converges on a coarse mesh. Corner stress does not. 10 µm where it matters, in five minutes, on a desktop." />
+<meta property="og:type" content="article" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+    <nav class="nav-links" id="navlinks">
+      <a class="xpage" href="index.html">Features &amp; capabilities</a>
+      <a href="whitepapers.html">White papers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Request for demo</a>
+      <button class="nav-toggle" id="navtoggle" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ============ PAPER HEAD ============ -->
+<section class="wp-head">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="wp-eyebrow"><span class="pulse"></span>White paper · No. 04</span>
+      <h1>Resolution on demand</h1>
+      <div class="wp-meta">
+        <span><b>Method:</b> numerical · detailed 3D</span>
+        <span><b>Package:</b> AMD MI350-class accelerator</span>
+        <span><b>Hardware:</b> one NVIDIA GB10 desktop</span>
+        <span><b>Series:</b> <a href="whitepapers.html" style="color:var(--blue)">WarpStack white papers</a></span>
+      </div>
+      <div class="abstract">
+        <div class="label">Abstract</div>
+        <p>Warpage is a whole-package quantity, and it settles on a coarse mesh — <a href="whitepaper-resolution.html" style="color:var(--blue)">white paper No. 01</a> shows it. Stress is not. It concentrates at die corners and gaps a few tens of microns across, and a coarse mesh averages it away. <b>Resolution on demand</b> lets you name the critical regions and the resolution you need there — 50&nbsp;µm, 10&nbsp;µm — and returns the package warpage and those regions' stresses together. On a production-class AMD MI350-class package it delivers <b>10&nbsp;µm at five critical corners in 5.4 minutes</b> on a single desktop, where a uniform 10&nbsp;µm mesh is projected at <b>2.9 billion degrees of freedom and ~25&nbsp;TB</b> of memory. Warpage matches the converged reference to <b>0.2%</b>; the peak corner stress rises <b>5.6×</b> over what the coarse mesh reports.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HEADLINE NUMBERS ============ -->
+<section class="stats" style="padding:0">
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat reveal"><div class="num c1">5.4 min</div><div class="lbl">10 µm at five critical corners, end to end</div></div>
+      <div class="stat reveal"><div class="num c2">27 GB</div><div class="lbl">peak memory — vs ~25 TB for a uniform 10 µm mesh</div></div>
+      <div class="stat reveal"><div class="num c3">0.2%</div><div class="lbl">warpage vs the converged fine-mesh reference</div></div>
+      <div class="stat reveal"><div class="num c4">5.6×</div><div class="lbl">corner stress the coarse mesh does not see</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §1 ============ -->
+<section id="on-demand" style="padding-top:34px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Two answers, two resolutions</div>
+      <h2>Warpage settles early. Stress does not.</h2>
+      <p>A package bows over tens of millimetres; a die corner concentrates stress over tens of microns. One uniform mesh cannot serve both without becoming unaffordable. With resolution on demand you ask for exactly what each question needs: the package at the resolution where warpage has converged, and <b>50&nbsp;µm or 10&nbsp;µm at the corners and gaps you name</b> — in one run, in minutes.</p>
+    </div>
+
+    <div class="res-group">
+      <div class="res-label warm reveal">The case — the same package as white paper No. 01</div>
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>The package and the request</h3><div class="psub">AMD MI350-class · 8 compute dies, 2 I/O dies, 8 HBM3E stacks</div></div>
+            <span class="badge warn">5 critical regions</span>
+          </div>
+          <table class="data">
+            <tbody>
+              <tr><td>Package</td><td class="mono r">64 × 72 mm</td></tr>
+              <tr><td>Mechanical layers</td><td class="mono r">457</td></tr>
+              <tr><td>Thermal load</td><td class="mono r">200 → 85 °C</td></tr>
+              <tr><td>Package resolution</td><td class="mono r">380 µm · 2.4 M DOF</td></tr>
+              <tr class="win"><td>Requested resolution</td><td class="mono r">50 µm and 10 µm</td></tr>
+              <tr><td>Critical regions</td><td class="mono r">substrate, interposer, HBM-stack and compute-die corners; the gap between the I/O dies</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig" style="margin-top:14px">
+            <img src="assets/figs/mi350_floorplan.png" alt="Plan view of the modelled package: eight teal compute dies and two I/O dies in the centre, flanked by eight purple HBM3E stacks, on a silicon interposer over a build-up substrate" loading="lazy">
+            <figcaption><span class="figtag fst">The floorplan as modelled</span>The five regions sit in one quadrant; the package is symmetric, so the other three mirror them.</figcaption>
+          </figure>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>What it cost</h3><div class="psub">One desktop · package warpage plus all five regions</div></div>
+            <span class="badge">minutes</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Requested resolution</th><th class="r">Wall time</th><th class="r">Peak memory</th></tr></thead>
+            <tbody>
+              <tr><td>50 µm at 5 regions</td><td class="mono r">4.1 min</td><td class="mono r">27 GB</td></tr>
+              <tr class="win"><td>10 µm at 5 regions</td><td class="mono r">5.4 min</td><td class="mono r">27 GB</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Wall time covers the whole job: the full-package warpage and every requested region, with each region's consistency with the full package verified automatically. Hardware is a single NVIDIA GB10 desktop — not a cluster.</div>
+
+          <table class="data" style="margin-top:18px">
+            <thead><tr><th>Warpage</th><th class="r">Peak-to-peak</th></tr></thead>
+            <tbody>
+              <tr><td>This run</td><td class="mono r">1838.5 µm</td></tr>
+              <tr><td>Converged fine-mesh reference</td><td class="mono r">1842.7 µm</td></tr>
+              <tr class="win"><td>Difference</td><td class="mono r">0.2%</td></tr>
+            </tbody>
+          </table>
+          <div class="note">The warpage answer is already in hand at package resolution. Going to 10 µm in the critical regions changes local surface shape by about 1 µm — warpage did not need the fine mesh. Stress does.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-group">
+      <div class="res-label reveal">Why the resolution still matters — peak interface stress, coarse vs requested</div>
+      <div class="res-grid">
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>At 50 µm</h3><div class="psub">1 mm critical regions · MPa</div></div>
+            <span class="badge">up to 1.7×</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Region</th><th class="r">Package mesh</th><th class="r">50 µm</th></tr></thead>
+            <tbody>
+              <tr class="win"><td>Compute-die / I/O-die corner</td><td class="mono r">185</td><td class="mono r">228</td></tr>
+              <tr><td>Gap between the I/O dies</td><td class="mono r">36</td><td class="mono r">62</td></tr>
+              <tr><td>HBM-stack corner</td><td class="mono r">38</td><td class="mono r">47</td></tr>
+              <tr><td>Interposer corner</td><td class="mono r">34</td><td class="mono r">47</td></tr>
+              <tr><td>Substrate corner</td><td class="mono r">&lt;0.1</td><td class="mono r">&lt;0.1</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel reveal">
+          <div class="phead">
+            <div><h3>At 10 µm</h3><div class="psub">0.4 mm critical regions · MPa</div></div>
+            <span class="badge warn">up to 5.6×</span>
+          </div>
+          <table class="data">
+            <thead><tr><th>Region</th><th class="r">Package mesh</th><th class="r">10 µm</th></tr></thead>
+            <tbody>
+              <tr class="win"><td>Compute-die / I/O-die corner</td><td class="mono r">84</td><td class="mono r">472</td></tr>
+              <tr><td>Gap between the I/O dies</td><td class="mono r">16</td><td class="mono r">9</td></tr>
+              <tr><td>HBM-stack corner</td><td class="mono r">27</td><td class="mono r">57</td></tr>
+              <tr><td>Interposer corner</td><td class="mono r">30</td><td class="mono r">74</td></tr>
+              <tr><td>Substrate corner</td><td class="mono r">&lt;0.1</td><td class="mono r">&lt;0.1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="note reveal" style="margin-top:16px">Each table compares like with like: the package-mesh value and the refined value over the same region. The 10 µm regions are smaller than the 50 µm ones, so their package-mesh values differ between the two tables. <b>Read the ratio in each row.</b> At 10 µm the compute-die corner stress is <b>5.6×</b> what the package mesh reports, the interposer corner <b>2.5×</b> and the HBM-stack corner <b>2.1×</b>. Resolution also removes false alarms: the gap between the I/O dies comes in <b>lower</b> at 10 µm than the coarse mesh suggests.</div>
+    </div>
+
+    <div class="res-group" style="margin-top:26px">
+      <div class="res-label reveal">What a uniform mesh would have cost</div>
+      <div class="panel full reveal">
+        <div class="phead">
+          <div><h3>The same resolution everywhere</h3><div class="psub">Projected from the structure of the mesh — not solved</div></div>
+          <span class="badge warn">≈25 TB at 10 µm</span>
+        </div>
+        <table class="data">
+          <thead><tr><th>Approach</th><th class="r">Degrees of freedom</th><th class="r">Memory</th><th class="r">Wall time</th></tr></thead>
+          <tbody>
+            <tr><td>Uniform 50 µm mesh <span class="muted-tag">(projected)</span></td><td class="mono r">116 M</td><td class="mono r">≈1.0 TB</td><td class="mono r">≈76 h</td></tr>
+            <tr><td>Uniform 10 µm mesh <span class="muted-tag">(projected)</span></td><td class="mono r">2.9 B</td><td class="mono r">≈25 TB</td><td class="mono r">≈3,600 h · 5 months</td></tr>
+            <tr><td>WarpStack, 50 µm on demand <span class="muted-tag">(measured)</span></td><td class="mono r">2.4 M + regions</td><td class="mono r">27 GB</td><td class="mono r">4.1 min</td></tr>
+            <tr class="win"><td>WarpStack, 10 µm on demand <span class="muted-tag">(measured)</span></td><td class="mono r">2.4 M + regions</td><td class="mono r">27 GB</td><td class="mono r">5.4 min</td></tr>
+          </tbody>
+        </table>
+        <div class="note">A uniform 50 µm mesh needs about a terabyte and three days; a uniform 10 µm mesh needs roughly <b>1,000× the memory this run used</b> — some 200× what the desktop even holds — and about five months. Resolution on demand delivered both resolutions in minutes, in 27 GB. <b>The uniform rows are projections, not results</b> — they were never solved, because no single machine on hand could hold them.</div>
+      </div>
+    </div>
+
+    <div class="eqbox reveal" style="margin-top:26px">
+      <div class="label">What this buys you</div>
+      <p class="why"><b>One run, both answers.</b> Package warpage at the resolution where it has converged, and the stress at every corner and gap you care about at the resolution you ask for — 50 µm, 10 µm — in minutes on a desktop. The corners that will crack first are seen at the scale they fail at, without paying for that scale across the whole 64 × 72 mm package.</p>
+      <div class="chips">
+        <span class="chip">10 µm where it matters</span>
+        <span class="chip">5.4 min end to end</span>
+        <span class="chip">27 GB, not 25 TB</span>
+        <span class="chip">warpage within 0.2%</span>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:22px"><b>Scope of this study.</b> Same package model as <a href="whitepaper-resolution.html" style="color:var(--blue)">white paper No. 01</a>, solved with the current WarpStack release: a free package body with no board, BGA layer, lid or stiffener, no moisture, cure shrinkage or gravity, and library material properties rather than vendor data. Stresses are linear-elastic peak interface stresses for the 200 → 85 °C load. <b>At a sharp corner where two materials meet, peak stress keeps rising as resolution increases</b>; the compute-die corner value is a severity indicator to be read alongside your design rules, not a converged material stress. Uniform-mesh figures are projections. None of these numbers is a prediction of shipping hardware. <b>AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc.</b> NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this study was not produced in cooperation with AMD.</div>
+  </div>
+</section>
+
+<!-- ============ SERIES NAV ============ -->
+<section style="padding-top:10px">
+  <div class="wrap">
+    <div class="res-label reveal">More in this series</div>
+    <div class="series-nav reveal">
+      <a href="whitepaper-resolution.html">
+        <div class="dir">White paper · No. 01</div>
+        <div class="ttl">High-fidelity at various resolution</div>
+      </a>
+      <a href="whitepaper-gnn.html">
+        <div class="dir">White paper · No. 02</div>
+        <div class="ttl">WarpStack-GNN — sweep the whole design space</div>
+      </a>
+      <a href="whitepaper-mor.html">
+        <div class="dir">White paper · No. 03</div>
+        <div class="ttl">WarpStack-MOR — localized design-space exploration</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <h2>Put warpage in the loop.</h2>
+      <p>WarpStack is in active development. Request a demo or a walkthrough on your own 2.5D/3D chiplet designs, and we'll get you set up.</p>
+      <div class="cta-btns">
+        <a class="btn btn-primary btn-lg" href="mailto:noveetyai@noveetymanagement.com?subject=WarpStack%20demo%20request&amp;body=Hi%2C%20I'd%20like%20to%20request%20a%20demo%20of%20WarpStack.%0A%0AOrganization%3A%0AUse%20case%20(2.5D%2F3D%2C%20layers%2Fdies)%3A%0ADesign%20scale%3A%0A">Request for demo</a>
+        <a class="btn btn-ghost btn-lg" href="mailto:noveetyai@noveetymanagement.com">Email us</a>
+      </div>
+      <div class="cta-meta">noveetyai@noveetymanagement.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="index.html#top"><span class="dot"></span>WarpStack</a>
+        <p>Warpage analysis for 2.5D and 3D chiplet reliability — high fidelity at various resolution, resolution on demand, WarpStack-GNN global exploration, and WarpStack-MOR localized exploration, from a single design description.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Features &amp; capabilities</h5>
+          <a href="index.html#why">Why warpage</a>
+          <a href="index.html#capability">Capabilities</a>
+          <a href="index.html#io">Input &amp; output</a>
+          <a href="index.html#agentic">Agentic flow</a>
+        </div>
+        <div class="foot-col">
+          <h5>White papers</h5>
+          <a href="whitepapers.html">All white papers</a>
+          <a href="whitepaper-resolution.html">01 · High-fidelity at various resolution</a>
+          <a href="whitepaper-gnn.html">02 · WarpStack-GNN</a>
+          <a href="whitepaper-mor.html">03 · WarpStack-MOR</a>
+          <a href="whitepaper-apr.html">04 · Resolution on demand</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:noveetyai@noveetymanagement.com">noveetyai@noveetymanagement.com</a>
+          <a href="#contact">Request for demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="cite">
+      WarpStack is a warpage engine for multi-layer 2.5D/3D chiplet, module, and package stacks. The <b>resolution, timing and stress figures</b> in this white paper come from a study of an AMD MI350-class package, presented above with its full scope and caveats. AMD, Instinct and MI350 are trademarks of Advanced Micro Devices, Inc. NoveetyAI is not affiliated with, endorsed by, or sponsored by AMD, and this material was not produced in cooperation with AMD.
+    </div>
+    <div class="copyright">© 2026 NoveetyAI, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
