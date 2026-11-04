@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WarpStack — Warpage Analysis for 2.5D/3D Chiplet Packages</title>
-<meta name="description" content="WarpStack predicts thermal warpage for 2.5D and 3D chiplet packages: high fidelity at various resolution for trustworthy answers without a fine mesh, WarpStack-GNN for global design-space exploration in milliseconds, and WarpStack-MOR for localized exploration in microseconds. IEEE 3Dblox in, interactive 2D/3D warpage maps out." />
+<meta name="description" content="WarpStack predicts thermal warpage for 2.5D and 3D chiplet packages: high fidelity at various resolution for trustworthy answers without a fine mesh, WarpStack-GNN for global design-space exploration in milliseconds, and WarpStack-MOR for localized exploration in microseconds. IEEE 3Dblox, ODB++ and IPC-2581 in, interactive 2D/3D warpage maps out." />
 <meta property="og:title" content="WarpStack — Warpage Analysis for 2.5D/3D Chiplet Packages" />
 <meta property="og:description" content="High fidelity at various resolution, WarpStack-GNN global exploration at 19.4 ms per design point, and WarpStack-MOR localized exploration at 51 µs — one engine, one design description." />
 <meta property="og:type" content="website" />
@@ -267,7 +267,12 @@
       <div class="feat reveal">
         <div class="tag">INPUT · STANDARDS</div>
         <h3><span class="emoji">🧩</span> IEEE 3Dblox &amp; native JSON</h3>
-        <p>Import designs described in <b>IEEE 3Dblox</b> (<span class="mono">.3dbx</span>) — the IEEE-standard language for physical stacking, dimensions, and connectivity in 2.5D/3D-IC — or describe the stack directly in WarpStack's floorplan JSON. Recursive includes, rotations, mirrors and molding autofill are handled on the way in.</p>
+        <p>Import designs described in <b>IEEE 3Dblox</b> (<span class="mono">.3dbx</span>) — the IEEE-standard language for physical stacking, dimensions, and connectivity in 2.5D/3D-IC — or describe the stack directly in WarpStack's floorplan JSON. Recursive includes, rotations, mirrors and molding autofill are handled on the way in: a production-class accelerator package imports to <b>457 mechanical layers</b>, <b>273 footprint regions</b> and <b>138 instances</b>, each layer resolved through its full thickness.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="tag">INPUT · LAYOUT</div>
+        <h3><span class="emoji">🔌</span> ODB++ &amp; IPC-2581 layouts</h3>
+        <p>Point WarpStack at a substrate or board layout in <b>ODB++</b> or <b>IPC-2581</b>. It reads the copper and drills of every layer itself and builds a model whose stiffness and expansion follow the copper across the board, so <b>no hand-made copper-density maps</b>. Dies and parts sit on the layout as simple bodies or as full 3Dblox models.</p>
       </div>
       <div class="feat reveal">
         <div class="tag">INPUT · MATERIALS</div>
@@ -288,11 +293,6 @@
         <div class="tag">OUTPUT · SCRIPTABLE</div>
         <h3><span class="emoji">📤</span> Report and raw data</h3>
         <p>Warpage CSVs, <span class="mono">geometry.json</span> and <span class="mono">simulation_report.json</span> out of every run — ready to feed straight into your own flow.</p>
-      </div>
-      <div class="feat reveal">
-        <div class="tag">SCALE</div>
-        <h3><span class="emoji">🧱</span> Hands-off at real scale</h3>
-        <p>A production-class accelerator package imports to <b>457 mechanical layers</b>, <b>273 footprint regions</b> and <b>138 instances</b> — with one line changed. Every layer is resolved through the full thickness; no plate approximation, no smeared stiffness.</p>
       </div>
     </div>
   </div>
@@ -320,6 +320,7 @@
           <span class="chip">CLI-first</span>
           <span class="chip">structured data interface</span>
           <span class="chip">IEEE 3Dblox input</span>
+          <span class="chip">ODB++ / IPC-2581 layouts</span>
           <span class="chip">AI-accelerated</span>
         </div>
       </div>

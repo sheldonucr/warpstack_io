@@ -267,6 +267,9 @@ warpage map directly with the trained AI method.
 - **IEEE 3Dblox input** — accepts designs described in **IEEE 3Dblox**, the IEEE-standard modular
   description language for physical stacking, dimensions, and logical connectivity in 2.5D and 3D-IC
   designs, alongside WarpStack's native floorplan JSON.
+- **ODB++ and IPC-2581 layout input** — reads a substrate or board layout's copper and drills on every
+  layer and builds the model from them, so no hand-made copper-density maps; dies and parts sit on the
+  layout as simple bodies or as full 3Dblox models.
 - **full 3D solve method** (default) — a detailed numerical model that resolves the package through its
   full thickness; writes both the active-surface and package-surface warpage.
 - **WarpStack-MOR** — a physics-based compact model built once per design from the same 3D formulation.
